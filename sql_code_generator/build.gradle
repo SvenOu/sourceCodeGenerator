@@ -1,0 +1,37 @@
+
+jar {
+	baseName = 'sqlcodegenerator'
+	version = '0.0.1'
+}
+
+dependencies {
+	compile project(":common_lib")
+
+	// https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
+	compile "org.xerial:sqlite-jdbc:${orgXerialVersion}"
+	// https://mvnrepository.com/artifact/com.squareup/javapoet
+	compile "com.squareup:javapoet:${javapoetVersion}"
+
+	// https://mvnrepository.com/artifact/net.sourceforge.jtds/jtds
+	compile "net.sourceforge.jtds:jtds:${netSourceforgeJtdsVersion}"
+
+	compile "org.springframework.boot:spring-boot-starter:${springBootVersion}"
+	compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+	compile "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
+//	compile "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
+
+	compile "org.springframework.boot:spring-boot-starter-mobile:${springBootMobileVersion}"
+
+	compile "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
+	compile "net.lingala.zip4j:zip4j:${zip4jVersion}"
+
+
+	// 不会打包到部署的 jar 或者 war 里面，只用于开发
+	runtimeOnly "org.springframework.boot:spring-boot-starter-tomcat:${springBootVersion}"
+	runtimeOnly "mysql:mysql-connector-java:${mysqlConnectorVersion}"
+	runtimeOnly "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatEmbedVersion}"
+
+	// 只用于测试
+	testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+	testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc:${springRestdocsVersion}"
+}

@@ -1,0 +1,43 @@
+apply plugin: 'org.springframework.boot'
+apply plugin: 'war'
+
+group = 'com.sven'
+version = '0.0.1'
+
+// 打包war
+bootWar {
+    baseName = 'sourceCodeGenerator'
+    version =  '0.0.1'
+}
+
+// 打包jar
+bootJar {
+    baseName = 'sourceCodeGenerator-application'
+    version = '0.0.1'
+}
+
+// 打包任务
+task bootAll(type: GradleBuild) {
+    tasks = ['bootJar', 'bootWar']
+}
+
+
+dependencies {
+    compile project(":common_lib")
+    compile project(":sql_code_generator")
+
+    compile "org.springframework.boot:spring-boot-starter:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-mobile:${springBootMobileVersion}"
+    compile "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-thymeleaf:${springBootVersion}"
+
+    // 不会打包到部署的 jar 或者 war 里面，只用于开发
+    runtimeOnly "org.springframework.boot:spring-boot-starter-tomcat:${springBootVersion}"
+    runtimeOnly "mysql:mysql-connector-java:${mysqlConnectorVersion}"
+    runtimeOnly "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatEmbedVersion}"
+
+    // 只用于测试
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc:${springRestdocsVersion}"
+}

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Church's YMTC</title>
+<link rel="stylesheet" type="text/css" href="./css/login.css">
+<link rel="stylesheet" type="text/css" href="./libs/jqToast/css/jquery.toastmessage.css">
+</head>
+<body>
+<form id="login"  action="j_spring_security_check"  method="post" data-ajax="false">
+     <input id="username" name="j_username" type="text" value='' autofocus required> 
+     <input id="password" name="j_password" type="password" value='' required >
+     <div class="action">
+     	<label id="btn-login" ></label>
+    	<label id="btn-reset"></label>
+	 </div>
+</form>
+
+<script type="text/javascript" src="./libs/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="./libs/jquery.cookie.js"></script>
+<script type="text/javascript" src="./libs/jqToast/jquery.toastmessage.js"></script>
+<script type="text/javascript" src="./js/login.js"></script>
+</body>
+</html>

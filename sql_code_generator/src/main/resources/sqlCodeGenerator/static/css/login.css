@@ -1,0 +1,76 @@
+html, body
+{
+    height: 100%;
+	overflow: auto;
+}
+
+body
+{
+    font: 12px 'Lucida Sans Unicode', 'Trebuchet MS', Arial, Helvetica;    
+    margin: 0;
+    background: url(../images/img_bg.png) no-repeat;
+    background-color: #ebebeb;
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/img_bg.png' ,sizingMethod= 'scale' );
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='./images/img_bg.png' ,sizingMethod= 'scale' );
+    -moz-background-size:100% 100%;
+    background-size:100% 100%;    
+}
+
+/*--------------------*/
+
+#login{
+	width: 1024px;
+	height: 703px;
+	margin: -361px 0 0 -510px;
+	position: relative;
+	top: 50%;
+	left: 50%;
+	z-index: 0;
+	background: url(../images/login01YMTC.jpg) no-repeat;
+}
+#username, #password {
+	background: transparent;
+	position: absolute;
+	width: 269px;
+	height: 42px;
+	left: 640px;
+	padding: 0;
+	line-height: 40px;
+	border: 1px silver solid;
+}
+#username {
+	top: 310px;
+	padding-left: 2px;
+}
+#password {
+	top: 376px;
+	padding-left: 2px;
+}
+.action {
+	position: absolute;
+	left: 607px;
+	width: 314px;
+	top: 469px;
+}
+#btn-login, #btn-reset {
+	float: left;
+	width: 129px;
+	height: 48px;
+	cursor: pointer;
+}
+#btn-login {
+	margin-left: 35px;
+}
+#btn-reset {
+	margin-left: 3px;
+}
+/*#btn-login:hover {
+	background: url(../images/button_login_over.png) no-repeat;
+}*/
+
+/*#btn-reset:hover {
+	background: url(../images/button_reset_over.png) no-repeat;
+}*/
+
+
+

@@ -1,0 +1,966 @@
+{
+  "name": "android",
+  "path": "/android",
+  "leaf": false,
+  "parent": null,
+  "children": [
+    {
+      "name": "dao",
+      "path": "/dao",
+      "leaf": false,
+      "parent": null,
+      "children": [
+        {
+          "name": "AndroidMetadataDao.java",
+          "path": "/AndroidMetadataDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "CommandDao.java",
+          "path": "/CommandDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ConfGeneralDao.java",
+          "path": "/ConfGeneralDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ConfLibVersionDao.java",
+          "path": "/ConfLibVersionDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ConfZipcodeAreaDao.java",
+          "path": "/ConfZipcodeAreaDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "CouponsDao.java",
+          "path": "/CouponsDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "DataAlignDao.java",
+          "path": "/DataAlignDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "DeviceUdtsDao.java",
+          "path": "/DeviceUdtsDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "EvalBookDao.java",
+          "path": "/EvalBookDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "EvalPerformDao.java",
+          "path": "/EvalPerformDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "impl",
+          "path": "/impl",
+          "leaf": false,
+          "parent": null,
+          "children": [
+            {
+              "name": "AndroidMetadataDaoImpl.java",
+              "path": "/AndroidMetadataDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "CommandDaoImpl.java",
+              "path": "/CommandDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "ConfGeneralDaoImpl.java",
+              "path": "/ConfGeneralDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "ConfLibVersionDaoImpl.java",
+              "path": "/ConfLibVersionDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "ConfZipcodeAreaDaoImpl.java",
+              "path": "/ConfZipcodeAreaDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "CouponsDaoImpl.java",
+              "path": "/CouponsDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "DataAlignDaoImpl.java",
+              "path": "/DataAlignDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "DeviceUdtsDaoImpl.java",
+              "path": "/DeviceUdtsDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "EvalBookDaoImpl.java",
+              "path": "/EvalBookDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "EvalPerformDaoImpl.java",
+              "path": "/EvalPerformDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "LibBookDaoImpl.java",
+              "path": "/LibBookDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "LibVersionsDaoImpl.java",
+              "path": "/LibVersionsDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "ProductsDaoImpl.java",
+              "path": "/ProductsDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "PromoConfActivitityDaoImpl.java",
+              "path": "/PromoConfActivitityDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "PromoOnlineConfigDaoImpl.java",
+              "path": "/PromoOnlineConfigDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "ReceiptFileInfoDaoImpl.java",
+              "path": "/ReceiptFileInfoDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "SqliteSequenceDaoImpl.java",
+              "path": "/SqliteSequenceDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "StickerInfoDaoImpl.java",
+              "path": "/StickerInfoDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "SyncDataDaoImpl.java",
+              "path": "/SyncDataDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "TransBookDaoImpl.java",
+              "path": "/TransBookDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "TransCouponsDaoImpl.java",
+              "path": "/TransCouponsDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "UserDeviceDaoImpl.java",
+              "path": "/UserDeviceDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "UserProfileDaoImpl.java",
+              "path": "/UserProfileDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "UserProfileExtDaoImpl.java",
+              "path": "/UserProfileExtDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            },
+            {
+              "name": "UserRewardsDaoImpl.java",
+              "path": "/UserRewardsDaoImpl.java",
+              "leaf": true,
+              "parent": null,
+              "children": null
+            }
+          ]
+        },
+        {
+          "name": "LibBookDao.java",
+          "path": "/LibBookDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "LibVersionsDao.java",
+          "path": "/LibVersionsDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ProductsDao.java",
+          "path": "/ProductsDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "PromoConfActivitityDao.java",
+          "path": "/PromoConfActivitityDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "PromoOnlineConfigDao.java",
+          "path": "/PromoOnlineConfigDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ReceiptFileInfoDao.java",
+          "path": "/ReceiptFileInfoDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "SqliteSequenceDao.java",
+          "path": "/SqliteSequenceDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "StickerInfoDao.java",
+          "path": "/StickerInfoDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "SyncDataDao.java",
+          "path": "/SyncDataDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "TransBookDao.java",
+          "path": "/TransBookDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "TransCouponsDao.java",
+          "path": "/TransCouponsDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "UserDeviceDao.java",
+          "path": "/UserDeviceDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "UserProfileDao.java",
+          "path": "/UserProfileDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "UserProfileExtDao.java",
+          "path": "/UserProfileExtDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "UserRewardsDao.java",
+          "path": "/UserRewardsDao.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        }
+      ]
+    },
+    {
+      "name": "dataBean",
+      "path": "/dataBean",
+      "leaf": false,
+      "parent": null,
+      "children": [
+        {
+          "name": "AndroidMetadataRowMapper.java",
+          "path": "/AndroidMetadataRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "CommandRowMapper.java",
+          "path": "/CommandRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ConfGeneralRowMapper.java",
+          "path": "/ConfGeneralRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ConfLibVersionRowMapper.java",
+          "path": "/ConfLibVersionRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ConfZipcodeAreaRowMapper.java",
+          "path": "/ConfZipcodeAreaRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "CouponsRowMapper.java",
+          "path": "/CouponsRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "DataAlignRowMapper.java",
+          "path": "/DataAlignRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "DeviceUdtsRowMapper.java",
+          "path": "/DeviceUdtsRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "EvalBookRowMapper.java",
+          "path": "/EvalBookRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "EvalPerformRowMapper.java",
+          "path": "/EvalPerformRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "LibBookRowMapper.java",
+          "path": "/LibBookRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "LibVersionsRowMapper.java",
+          "path": "/LibVersionsRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ProductsRowMapper.java",
+          "path": "/ProductsRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "PromoConfActivitityRowMapper.java",
+          "path": "/PromoConfActivitityRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "PromoOnlineConfigRowMapper.java",
+          "path": "/PromoOnlineConfigRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ReceiptFileInfoRowMapper.java",
+          "path": "/ReceiptFileInfoRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "SqliteSequenceRowMapper.java",
+          "path": "/SqliteSequenceRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "StickerInfoRowMapper.java",
+          "path": "/StickerInfoRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "SyncDataRowMapper.java",
+          "path": "/SyncDataRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "TransBookRowMapper.java",
+          "path": "/TransBookRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "TransCouponsRowMapper.java",
+          "path": "/TransCouponsRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "UserDeviceRowMapper.java",
+          "path": "/UserDeviceRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "UserProfileExtRowMapper.java",
+          "path": "/UserProfileExtRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "UserProfileRowMapper.java",
+          "path": "/UserProfileRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "UserRewardsRowMapper.java",
+          "path": "/UserRewardsRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        }
+      ]
+    },
+    {
+      "name": "test",
+      "path": "/test",
+      "leaf": false,
+      "parent": null,
+      "children": [
+        {
+          "name": "AndroidMetadataTest.java",
+          "path": "/AndroidMetadataTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "CommandTest.java",
+          "path": "/CommandTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ConfGeneralTest.java",
+          "path": "/ConfGeneralTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ConfLibVersionTest.java",
+          "path": "/ConfLibVersionTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ConfZipcodeAreaTest.java",
+          "path": "/ConfZipcodeAreaTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "CouponsTest.java",
+          "path": "/CouponsTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "DataAlignTest.java",
+          "path": "/DataAlignTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "DeviceUdtsTest.java",
+          "path": "/DeviceUdtsTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "EvalBookTest.java",
+          "path": "/EvalBookTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "EvalPerformTest.java",
+          "path": "/EvalPerformTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "LibBookTest.java",
+          "path": "/LibBookTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "LibVersionsTest.java",
+          "path": "/LibVersionsTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ProductsTest.java",
+          "path": "/ProductsTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "PromoConfActivitityTest.java",
+          "path": "/PromoConfActivitityTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "PromoOnlineConfigTest.java",
+          "path": "/PromoOnlineConfigTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ReceiptFileInfoTest.java",
+          "path": "/ReceiptFileInfoTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "SqliteSequenceTest.java",
+          "path": "/SqliteSequenceTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "StickerInfoTest.java",
+          "path": "/StickerInfoTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "SyncDataTest.java",
+          "path": "/SyncDataTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "TransBookTest.java",
+          "path": "/TransBookTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "TransCouponsTest.java",
+          "path": "/TransCouponsTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "UserDeviceTest.java",
+          "path": "/UserDeviceTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "UserProfileExtTest.java",
+          "path": "/UserProfileExtTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "UserProfileTest.java",
+          "path": "/UserProfileTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "UserRewardsTest.java",
+          "path": "/UserRewardsTest.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        }
+      ]
+    },
+    {
+      "name": "utils",
+      "path": "/utils",
+      "leaf": false,
+      "parent": null,
+      "children": [
+        {
+          "name": "BeanPropertyCache.java",
+          "path": "/BeanPropertyCache.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "BeanPropertyContentValues.java",
+          "path": "/BeanPropertyContentValues.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "BeanPropertyHolder.java",
+          "path": "/BeanPropertyHolder.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "BeanPropertyRowMapper.java",
+          "path": "/BeanPropertyRowMapper.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "DisabledForSql.java",
+          "path": "/DisabledForSql.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        }
+      ]
+    },
+    {
+      "name": "vo",
+      "path": "/vo",
+      "leaf": false,
+      "parent": null,
+      "children": [
+        {
+          "name": "AndroidMetadata.java",
+          "path": "/AndroidMetadata.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "Command.java",
+          "path": "/Command.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ConfGeneral.java",
+          "path": "/ConfGeneral.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ConfLibVersion.java",
+          "path": "/ConfLibVersion.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ConfZipcodeArea.java",
+          "path": "/ConfZipcodeArea.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "Coupons.java",
+          "path": "/Coupons.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "DataAlign.java",
+          "path": "/DataAlign.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "DeviceUdts.java",
+          "path": "/DeviceUdts.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "EvalBook.java",
+          "path": "/EvalBook.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "EvalPerform.java",
+          "path": "/EvalPerform.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "LibBook.java",
+          "path": "/LibBook.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "LibVersions.java",
+          "path": "/LibVersions.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "Products.java",
+          "path": "/Products.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "PromoConfActivitity.java",
+          "path": "/PromoConfActivitity.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "PromoOnlineConfig.java",
+          "path": "/PromoOnlineConfig.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "ReceiptFileInfo.java",
+          "path": "/ReceiptFileInfo.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "SqliteSequence.java",
+          "path": "/SqliteSequence.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "StickerInfo.java",
+          "path": "/StickerInfo.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "SyncData.java",
+          "path": "/SyncData.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "TransBook.java",
+          "path": "/TransBook.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "TransCoupons.java",
+          "path": "/TransCoupons.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "UserDevice.java",
+          "path": "/UserDevice.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "UserProfile.java",
+          "path": "/UserProfile.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "UserProfileExt.java",
+          "path": "/UserProfileExt.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        },
+        {
+          "name": "UserRewards.java",
+          "path": "/UserRewards.java",
+          "leaf": true,
+          "parent": null,
+          "children": null
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+// 打包成jar
+jar {
+    baseName = 'common_lib'
+    version = '0.0.1'
+}
+
+dependencies {
+    compile fileTree(dir: "src/main/libs", include: '*.jar')
+    compile "org.springframework.boot:spring-boot-starter:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-mobile:${springBootMobileVersion}"
+//    compile "org.springframework.boot:spring-boot-starter-thymeleaf:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
+    compile "net.lingala.zip4j:zip4j:${zip4jVersion}"
+
+    // 不会打包到部署的 jar 或者 war 里面，只用于开发
+    runtimeOnly "org.springframework.boot:spring-boot-starter-tomcat:${springBootVersion}"
+    runtimeOnly "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatEmbedVersion}"
+
+    // 只用于测试
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc:${springRestdocsVersion}"
+}
