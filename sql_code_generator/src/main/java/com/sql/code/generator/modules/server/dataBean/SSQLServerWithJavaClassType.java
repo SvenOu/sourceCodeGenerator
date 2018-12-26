@@ -36,7 +36,7 @@ public enum SSQLServerWithJavaClassType {
 
     public static Class getJavaTypeClass(String sqliteType) {
         for (SSQLServerWithJavaClassType c : SSQLServerWithJavaClassType.values()) {
-            if (c.getSqliteType().equalsIgnoreCase(sqliteType.replaceAll("[(].*?[)]", ""))) {
+            if (c.getSqliteType().equalsIgnoreCase(sqliteType.replaceAll("\\s*[(].*?[)]", ""))) {
                 return c.getJavaClass();
             }
         }

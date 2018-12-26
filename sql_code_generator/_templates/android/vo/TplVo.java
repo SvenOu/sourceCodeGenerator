@@ -5,10 +5,8 @@ import java.io.Serializable;
 import java.lang.Override;
 $tp-repeat(fielsImport){{import $(name);
 }}
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ${{voClassName}} implements Serializable {
-
   $tp-repeat(sqlFields){{public static final String $(name-upCaseALL) = "$(name)";
   }}
   $tp-repeat(fields){{private $(type) $(name-underlineToCame);

@@ -27,11 +27,10 @@ public final class TextUtils {
         }
     }
 
-    public static String  camelCaseName(String name) {
+    public static String camelCaseName(String name) {
         StringBuffer result = new StringBuffer();
         if (name != null && name.length() > 0) {
             result.append(name.substring(0, 1).toLowerCase());
-
             for (int camelCaseName = 1; camelCaseName < name.length(); ++camelCaseName) {
                 String s = name.substring(camelCaseName, camelCaseName + 1);
                 if (UNDERSCORE_CHAR.equals(s)) {

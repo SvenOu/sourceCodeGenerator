@@ -45,7 +45,7 @@ public class ${{daoImplClassName}} extends DaoSupport implements ${{daoClassName
   }
 
   @Override
-  public int updateFields(String key, Map<String, Object> values) {
+  public int updateFields(${{voClassName}} ${{voSqlName-underlineToCame}}, Map<String, Object> values) {
     return this.getDbTemplate().update(${{voSqlName-upCaseALL}}_TABLE_NAME, values, "key = ?", key);
   }
 

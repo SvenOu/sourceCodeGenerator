@@ -40,8 +40,20 @@ public class SqlTests {
     private SqliteDao sqliteDao;
 
     @Test
-    public void testDaos() {
+    public void testServer() {
+        String driverClassName = "net.sourceforge.jtds.jdbc.Driver";
+        String url = "jdbc:jtds:sqlserver://xxxxxxxxxx";
+        String username = "xx";
+        String password = "xxxxxx";
 
+        ((DyDao) msSqlDao).configDyDao(driverClassName, url, username, password);
+        List<STableInfo> tables = msSqlDao.findAllTable();
+        STableInfo mst = tables.get(0);
+        List<SColumnInfo> mscs = msSqlDao.findColumnsByName(mst.getName());
+        log.debug("");
+    }
+    @Test
+    public void testSqlite() {
         String driverClassName = "org.sqlite.JDBC";
         String url = "jdbc:sqlite:E:/IntenlliJ_IDEA_workspace/sourceCodeGenerator/sql_code_generator/db/dev_test1.sqlite";
         String username = "";
@@ -51,77 +63,5 @@ public class SqlTests {
         SqlliteMaster rs1 = tables1.get(0);
         List<ColumnInfo> r1 = sqliteDao.findColumnsByName(rs1.getName());
         log.debug("");
-
-        driverClassName = "net.sourceforge.jtds.jdbc.Driver";
-        url = "jdbc:jtds:sqlserver://xxxx";
-        username = "xx";
-        password = "xxxxxx";
-
-        ((DyDao) msSqlDao).configDyDao(driverClassName, url, username, password);
-        List<STableInfo> tables = msSqlDao.findAllTable();
-        STableInfo mst = tables.get(0);
-        List<SColumnInfo> mscs = msSqlDao.findColumnsByName(mst.getName());
-        log.debug("");
-    }
-
-    @Test
-    public void test1() {
-        List<SqlliteMaster> results = new ArrayList<>();
-        Connection c = null;
-        Statement stmt = null;
-        try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:E:/IntenlliJ_IDEA_workspace/sourceCodeGenerator/sql_code_generator/db/dev_test1.sqlite");
-            c.setAutoCommit(false);
-            System.out.println("Opened database successfully");
-
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM sqlite_master WHERE type = 'table'");
-            BeanPropertyRowMapper<SqlliteMaster> rowerMappper = BeanPropertyRowMapper.newInstance(SqlliteMaster.class);
-            int i = 0;
-            while (rs.next()) {
-                SqlliteMaster sqlliteMaster = rowerMappper.mapRow(rs, i);
-                results.add(sqlliteMaster);
-                i++;
-                System.out.println();
-            }
-            rs.close();
-            stmt.close();
-            c.close();
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-        System.out.println("Operation done successfully");
-    }
-    @Test
-    public void test2() {
-        List<STableInfo> results = new ArrayList<>();
-        Connection c = null;
-        Statement stmt = null;
-        try {
-            Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            c = DriverManager.getConnection("jdbc:jtds:sqlserver://xxx", "xx", "xxxxxx");
-            c.setAutoCommit(false);
-            System.out.println("Opened database successfully");
-
-            stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM sys.objects where type = 'U'");
-            BeanPropertyRowMapper<STableInfo> rowerMappper = BeanPropertyRowMapper.newInstance(STableInfo.class);
-            int i = 0;
-            while (rs.next()) {
-                STableInfo sqlliteMaster = rowerMappper.mapRow(rs, i);
-                results.add(sqlliteMaster);
-                i++;
-                System.out.println();
-            }
-            rs.close();
-            stmt.close();
-            c.close();
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-        System.out.println("Operation done successfully");
     }
 }

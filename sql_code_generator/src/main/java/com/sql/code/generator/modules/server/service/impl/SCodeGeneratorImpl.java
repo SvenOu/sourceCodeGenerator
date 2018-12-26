@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 
@@ -33,7 +34,7 @@ import java.util.regex.Pattern;
 /**
  * Created by sven-ou on 2017/2/16.
  */
-@Component("sCodeGenerator")
+@Repository
 public class SCodeGeneratorImpl implements SCodeGenerator {
     private static Log log = LogFactory.getLog(SCodeGeneratorImpl.class);
 

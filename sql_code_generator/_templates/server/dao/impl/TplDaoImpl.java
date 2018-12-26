@@ -28,14 +28,14 @@ public class ${{daoImplClassName}} extends NamedParameterJdbcDaoSupport implemen
   private final Map<String, String> sqlCache = new ConcurrentHashMap<>();
 
   private static final String SQL_INSERT = "INSERT INTO ${{voSqlName}} ($tp-repeat(sqlFields-suffixNotIncludeEnd~, ){{$(name)}}) " +
-          " VALUES ($tp-repeat(sqlFields-prefix~:){{$(name)}})";
+          " VALUES ($tp-repeat(sqlFields-suffixNotIncludeEnd~, ){{:$(name-underlineToCame)}})";
   @Override
   public int insert(${{voClassName}} ${{voSqlName-underlineToCame}}) {
     try {
       return this.getNamedParameterJdbcTemplate().update(SQL_INSERT, new BeanPropertySqlParameterSource(${{voSqlName-underlineToCame}}));
     }
     catch(Exception e) {
-      log.error("Error : " + e.getMessage(), e);
+      log.error("Error : " + e.getMessage());
       return -1;
     }
   }
@@ -48,7 +48,7 @@ public class ${{daoImplClassName}} extends NamedParameterJdbcDaoSupport implemen
       return this.getJdbcTemplate().queryForObject(SQL_FIND_BY_KEY, ${{voSqlName-upCaseALL}}_ROW_MAPPER, key);
     }
     catch(Exception e) {
-      log.error("Error : " + e.getMessage(), e);
+      log.error("Error : " + e.getMessage());
       return null;
     }
   }
@@ -59,12 +59,12 @@ public class ${{daoImplClassName}} extends NamedParameterJdbcDaoSupport implemen
       return this.getJdbcTemplate().query(SQL_FIND_BY_KEY, ${{voSqlName-upCaseALL}}_ROW_MAPPER, key);
     }
     catch(Exception e) {
-      log.error("Error : " + e.getMessage(), e);
+      log.error("Error : " + e.getMessage());
       return null;
     }
   }
 
-  private static final String SQL_UPDATE = "UPDATE ${{voSqlName}} SET $tp-repeat(sqlFields-suffixNotIncludeEnd~:, ){{$(name) = :$(name-underlineToCame)}} " +
+  private static final String SQL_UPDATE = "UPDATE ${{voSqlName}} SET $tp-repeat(sqlFields-suffixNotIncludeEnd~, ){{$(name) = :$(name-underlineToCame)}} " +
           " WHERE key = :key";
   @Override
   public int update(${{voClassName}} ${{voSqlName-underlineToCame}}) {
@@ -72,7 +72,7 @@ public class ${{daoImplClassName}} extends NamedParameterJdbcDaoSupport implemen
       return this.getNamedParameterJdbcTemplate().update(SQL_UPDATE, new BeanPropertySqlParameterSource(${{voSqlName-underlineToCame}}));
     }
     catch(Exception e) {
-      log.error("Error : " + e.getMessage(), e);
+      log.error("Error : " + e.getMessage());
       return -1;
     }
   }
@@ -105,7 +105,7 @@ public class ${{daoImplClassName}} extends NamedParameterJdbcDaoSupport implemen
       result = this.getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(${{voSqlName-underlineToCame}}));
     }
     catch(Exception e) {
-      log.error("Error : " + e.getMessage(), e);
+      log.error("Error : " + e.getMessage());
     }
     return result;
   }
@@ -141,7 +141,7 @@ public class ${{daoImplClassName}} extends NamedParameterJdbcDaoSupport implemen
       return this.getJdbcTemplate().update(SQL_DELETE, key);
     }
     catch(Exception e) {
-      log.error("Error : " + e.getMessage(), e);
+      log.error("Error : " + e.getMessage());
       return -1;
     }
   }

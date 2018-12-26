@@ -33,7 +33,7 @@ public enum SQLiteWithJavaClassType {
 
     public static Class getJavaTypeClass(String sqliteType) {
         for (SQLiteWithJavaClassType c : SQLiteWithJavaClassType.values()) {
-            if (c.getSqliteType().equalsIgnoreCase(sqliteType.replaceFirst("[(].*?[)]", ""))) {
+            if (c.getSqliteType().equalsIgnoreCase(sqliteType.replaceFirst("\\s*[(].*?[)]", ""))) {
                 return c.getJavaClass();
             }
         }

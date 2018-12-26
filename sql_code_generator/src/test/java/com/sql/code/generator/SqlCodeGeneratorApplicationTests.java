@@ -48,13 +48,13 @@ public class SqlCodeGeneratorApplicationTests {
 
     @Test
     public void downloadCodeFile() throws IOException {
-        String url = "jdbc:jtds:sqlserver://xxxx";
+        String url = "jdbc:jtds:sqlserver://xxxxxxxxxx";
         String username = "xx";
         String password = "xxxxxx";
         SourceFileInfo info1 = commonService.getCodeFileInfo(SqlType.SQL_SERVER_2005.getName(), url, username, password);
         log.debug("");
 
-        String url2 = "jdbc:sqlite:E:/IntenlliJ_IDEA_workspace/sourceCodeGenerator/sql_code_generator/db/dev_test1.sqlite";
+        String url2 = "jdbc:sqlite:E:/IntenlliJ_IDEA_workspace/sourceCodeGenerator/sql_code_generator/db/SourceGenerator.sqlite3";
         String username2 = "";
         String password2 = "";
         SourceFileInfo info2 = commonService.getCodeFileInfo(SqlType.SQLLITE.getName(), url2, username2, password2);

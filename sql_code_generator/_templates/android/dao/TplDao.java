@@ -15,7 +15,7 @@ public interface ${{daoClassName}} {
 
   int update(${{voClassName}} ${{voSqlName-underlineToCame}});
 
-  int updateFields(String key, Map<String, Object> values);
+  int updateFields(${{voClassName}} ${{voSqlName-underlineToCame}}, Map<String, Object> values);
 
   int updateField(String key, String field, Object value);
 

@@ -15,6 +15,7 @@ public class CaseFormat {
     public static final String UNDERLINE_TO_CAME = "underlineToCame";
     public static final String UNDERLINE_TO_CAMEUPCASE_FIRST = "underlineToCameUPCASEFirst";
     public static final String UP_CASE_FIRST = "upCaseFirst";
+    public static final String LOWER_CASE_FIRST = "lowerCaseFirst";
     public static final String UP_CASE_ALL = "upCaseALL";
 
     public static String formatString(String str, String type){
@@ -30,6 +31,9 @@ public class CaseFormat {
                 break;
             case UP_CASE_FIRST:
                 str = upCaseFirst(str);
+                break;
+            case LOWER_CASE_FIRST:
+                str = lowerCaseFirst(str);
                 break;
             case UP_CASE_ALL:
                 str = str.toUpperCase();
@@ -97,6 +101,15 @@ public class CaseFormat {
     protected static String upCaseFirst(String param) {
         if (!StringUtils.isEmpty(param)) {
             param = param.substring(0, 1).toUpperCase() + param.substring(1);
+        }
+        return param;
+    }
+    /**
+     * 第一个字符小写
+     */
+    protected static String lowerCaseFirst(String param) {
+        if (!StringUtils.isEmpty(param)) {
+            param = param.substring(0, 1).toLowerCase() + param.substring(1);
         }
         return param;
     }
