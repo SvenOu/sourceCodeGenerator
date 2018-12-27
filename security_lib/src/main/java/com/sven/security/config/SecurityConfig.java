@@ -1,6 +1,10 @@
 package com.sven.security.config;
 
+import com.sven.security.service.authentic.NoOpPasswordEncoder;
+import com.sven.security.service.authentic.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
@@ -11,7 +15,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.sql.DataSource;
 
@@ -26,40 +29,62 @@ import javax.sql.DataSource;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final UserDetailsService userDetailsService;
+
+    @Value("${com.sven.security.loginPageUrl}")
+    private String loginPageUrl;
+
+    @Value("${com.sven.security.loginSuccessPageUrl}")
+    private String loginSuccessPageUrl;
+
+    @Value("${com.sven.security.loginAuthorizedPageUrls}")
+    private String loginAuthorizedPageUrls;
+
     @Autowired
-    private UserDetailsService userDetailsService;
+    public SecurityConfig(@Qualifier("CUserDetailsService") UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/", "/webs/**").permitAll()
-                .antMatchers("/api/**").hasAuthority("ADMIN")
-                .anyRequest().fullyAuthenticated()
+        http.headers().frameOptions().disable()
+                .and()
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers(loginAuthorizedPageUrls.split(",")).hasAnyRole(RoleEnum.getAllValues())
+                .antMatchers("/api/**").hasAnyRole(RoleEnum.getAllValues())
+                .and()
+                .anonymous()
+                .disable()
+                .sessionManagement()
+                .sessionFixation()
+                .none()
+                .invalidSessionUrl(loginPageUrl)
                 .and()
                 .formLogin()
-                .loginPage("/login")
-                .failureUrl("/login?error")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .permitAll()
+                .loginPage(loginPageUrl)
+                .defaultSuccessUrl(loginSuccessPageUrl, true)
+                .loginProcessingUrl("/j_spring_security_check")
+                .usernameParameter("j_username")
+                .passwordParameter("j_password")
+                .failureForwardUrl(loginPageUrl)
                 .and()
                 .logout()
-                .logoutUrl("/logout")
-                .deleteCookies("remember-me")
-                .logoutSuccessUrl("/")
-                .permitAll()
+                .logoutUrl("/j_spring_security_logout")
+                .invalidateHttpSession(true)
+                .logoutSuccessUrl(loginPageUrl)
                 .and()
-                .rememberMe();
+                .exceptionHandling().accessDeniedPage(loginPageUrl);
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
-                .passwordEncoder(new BCryptPasswordEncoder());
+                .passwordEncoder(NoOpPasswordEncoder.getInstance());
     }
 
     @Bean
-    public NamedParameterJdbcTemplate objectMapper(DataSource dataSource) {
+    public NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource dataSource) {
         return new NamedParameterJdbcTemplate(dataSource);
     }
 

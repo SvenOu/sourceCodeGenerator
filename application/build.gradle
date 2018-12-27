@@ -25,6 +25,7 @@ task bootAll(type: GradleBuild) {
 dependencies {
     compile project(":common_lib")
     compile project(":sql_code_generator")
+    compile project(":security_lib")
 
     compile "org.springframework.boot:spring-boot-starter:${springBootVersion}"
     compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"

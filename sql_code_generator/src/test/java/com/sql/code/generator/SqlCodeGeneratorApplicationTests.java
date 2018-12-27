@@ -48,7 +48,7 @@ public class SqlCodeGeneratorApplicationTests {
 
     @Test
     public void downloadCodeFile() throws IOException {
-        String url = "jdbc:jtds:sqlserver://xxxxxxxxxx";
+        String url = "jdbc:jtds:sqlserver://sql30.easternphoenix.com:1433/ChurchsYMTC";
         String username = "xx";
         String password = "xxxxxx";
         SourceFileInfo info1 = commonService.getCodeFileInfo(SqlType.SQL_SERVER_2005.getName(), url, username, password);

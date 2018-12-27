@@ -6,7 +6,6 @@ $(function(){
 		}
 	});
 
-    $('#password').hide();
 	$('#password').keydown(function(event){
 		if (event.keyCode == 13){
 			login();
@@ -25,13 +24,13 @@ $(function(){
 });
 
 function login(){
-	var userName = $('#username').val(),
-		password = $('#password').val();
+    $("form#login").submit();
 
-    $.cookie("m_userName", userName);
-    $.cookie("m_password", password);
-	// $("form").submit();
-	window.location.href = "web/master.html";
+    // var userName = $('#username').val(),
+    //     password = $('#password').val();
+    // $.cookie("m_userName", userName);
+    // $.cookie("m_password", password);
+	// window.location.href = "web/master.html";
 //	$.ajax({
 //		type : "POST",
 //		dataType : 'json',

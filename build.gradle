@@ -40,7 +40,9 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'eclipse'
     apply plugin: 'io.spring.dependency-management'
-
+    // 支持中文
+    compileJava.options.encoding = 'UTF-8'
+    compileTestJava.options.encoding = 'UTF-8'
     sourceCompatibility = 1.8
 
     repositories {

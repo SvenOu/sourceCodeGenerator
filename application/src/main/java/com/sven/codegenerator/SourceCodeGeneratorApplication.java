@@ -11,6 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = {
         "com.sven.codegenerator",
         "com.sql.code.generator",
+        "com.sven.security",
         "com.sven.common.lib"
 })
 public class SourceCodeGeneratorApplication extends SpringBootServletInitializer {

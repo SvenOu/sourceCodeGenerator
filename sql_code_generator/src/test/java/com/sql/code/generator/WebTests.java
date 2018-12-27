@@ -28,6 +28,8 @@ public class WebTests {
 
     @Test
     public void greetingShouldReturnDefaultMessage() throws Exception {
+//        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/sqlCode/greeting",
+//                String.class)).contains("Hello World");
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/sqlCode/greeting",
                 String.class)).contains("Hello World");
     }

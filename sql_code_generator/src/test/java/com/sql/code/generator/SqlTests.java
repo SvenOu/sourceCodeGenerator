@@ -42,7 +42,7 @@ public class SqlTests {
     @Test
     public void testServer() {
         String driverClassName = "net.sourceforge.jtds.jdbc.Driver";
-        String url = "jdbc:jtds:sqlserver://xxxxxxxxxx";
+        String url = "jdbc:jtds:sqlserver://sql30.easternphoenix.com:1433/ChurchsYMTC";
         String username = "xx";
         String password = "xxxxxx";
 

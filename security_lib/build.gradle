@@ -6,6 +6,8 @@ jar {
 
 dependencies {
     compile fileTree(dir: "src/main/libs", include: '*.jar')
+    compile project(":common_lib")
+
     compile "org.xerial:sqlite-jdbc:${orgXerialVersion}"
     compile "net.sourceforge.jtds:jtds:${netSourceforgeJtdsVersion}"
 
