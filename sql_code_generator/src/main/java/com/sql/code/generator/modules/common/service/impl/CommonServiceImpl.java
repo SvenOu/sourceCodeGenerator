@@ -21,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -103,9 +104,6 @@ public class CommonServiceImpl implements CommonService {
         }else {
             return null;
         }
-        Calendar calendar = Calendar.getInstance();
-        Date time = calendar.getTime();
-        long milliseconds = time.getTime();
 
         // Initiate ZipFile object with the path/name of the zip file.
         String dirPath = userGenerateCodePath + tempFilesDir;
@@ -113,7 +111,8 @@ public class CommonServiceImpl implements CommonService {
         if(!dir.exists()){
             dir.mkdirs();
         }
-        ZipFile zipFile = new ZipFile(dirPath + "_" + type + "_" + milliseconds + ".zip");
+        ZipFile zipFile = new ZipFile(dirPath + "_" + type + "_"
+                + RequestContextHolder.currentRequestAttributes().getSessionId() + ".zip");
 
         // Folder to add
         String folderToAdd = path;

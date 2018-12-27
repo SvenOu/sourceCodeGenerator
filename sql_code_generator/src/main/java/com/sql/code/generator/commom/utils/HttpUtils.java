@@ -16,14 +16,14 @@ import java.io.File;
 public class HttpUtils {
 
     public static String appentCurrentSession(String path){
-        String userName = "anonymous";
+        String prefix = "anonymous";
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
         if (authentication != null) {
             Object principal = authentication.getPrincipal();
             UserDetails userDetails = (UserDetails) (principal instanceof UserDetails ? principal : null);
-            userName = userDetails.getUsername();
+            prefix = userDetails.getUsername() + RequestContextHolder.currentRequestAttributes().getSessionId();
         }
-        return path + File.separatorChar + userName;
+        return path + File.separatorChar + prefix;
     }
 }

@@ -152,11 +152,11 @@ public class SecurityApplicationTests {
         Assert.assertEquals(user.getUserAlias(), userOri.getUserAlias());
         Assert.assertEquals(user.getRoles(), userOri.getRoles());
         Assert.assertEquals(user.getActive(), userOri.getActive());
-
     }
 
     @Test
     public void genrateTestUsers(){
 //       String[] users = new String[];
+
     }
 }
