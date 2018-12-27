@@ -16,23 +16,6 @@ Ext.define('CGT.view.common.HeaderPanel', {
 	initComponent : function() {
 		var me = this;
 		Ext.apply(me,{
-			// bbar :{
-			// 	defaults: {
-			// 		margin: '0 0 0 10'
-			// 	},
-			// 	items:[
-			//     	'->',
-			//     	{
-			//     		xtype: 'button',
-			//     		icon: '../web/images/icon_logoff.png',
-			//     		name: 'logOffButton',
-			//     		margin: '0 5 0 10',
-			//     		text: 'Log Off',
-			//     		scope: me,
-			//     		handler: me.logOffBtnClick
-			//     	}
-			//     ]
-			// },
 			items:[ 
 				{
 					cls: 'title-text',
@@ -58,6 +41,6 @@ Ext.define('CGT.view.common.HeaderPanel', {
 		this.callParent(arguments);
 	},
 	logOffBtnClick: function(button,e){
-		window.location.href = '../j_spring_security_logout';
+		window.location.href = '/j_spring_security_logout';
 	}
 });

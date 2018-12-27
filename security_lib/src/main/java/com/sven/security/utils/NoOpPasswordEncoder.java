@@ -1,4 +1,4 @@
-package com.sven.security.service.authentic;
+package com.sven.security.utils;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 

@@ -1,7 +1,7 @@
 package com.sven.security.config;
 
-import com.sven.security.service.authentic.NoOpPasswordEncoder;
-import com.sven.security.service.authentic.RoleEnum;
+import com.sven.security.utils.NoOpPasswordEncoder;
+import com.sven.security.bean.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

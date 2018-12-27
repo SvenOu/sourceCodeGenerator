@@ -1,5 +1,6 @@
 package com.sven.security.service.authentic;
 
+import com.sven.security.bean.CUserDetail;
 import com.sven.security.dao.UserDao;
 import com.sven.security.dao.UserRoleDao;
 import com.sven.security.vo.User;

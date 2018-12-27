@@ -1,7 +1,6 @@
 package com.sql.code.generator.configs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sql.code.generator.commom.HttpRequestInterceptor;
 import com.sven.common.lib.codetemplate.engine.TPEngine;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -21,12 +20,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
         "classpath:sqlCodeGenerator/sql-code-generator.properties"
 })
 public class SqlCodeGeneratorConfig implements WebMvcConfigurer {
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        HttpRequestInterceptor httpRequestInterceptor = new HttpRequestInterceptor();
-        registry.addInterceptor(httpRequestInterceptor)
-                .addPathPatterns("/**/controller/**/");
-    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

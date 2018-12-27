@@ -45,7 +45,7 @@ Ext.define('CGT.controller.HomeController', {
     downloadAllFileBtnClick: function(btn, e, eOpts){
 	    var me = this, type = me.getCodeType().getValue();
 	    if(!Ext.isEmpty(type)){
-            var url = '../..'+ app.API_PREFIX +'/downloadAllFile?' + Ext.urlEncode({
+            var url = app.API_PREFIX +'/downloadAllFile?' + Ext.urlEncode({
                 userId: app.user.userId,
                 type: type
             });
@@ -55,7 +55,7 @@ Ext.define('CGT.controller.HomeController', {
     downloadCurrentFileBtnClick: function(btn, e, eOpts){
 	    var me = this, codePath = this.getCodeSourcePanel().m_codePath;
 	    if(!Ext.isEmpty(codePath) && "#" !== codePath){
-            var url = '../..'+ app.API_PREFIX +'/downloadSourcesFile?' + Ext.urlEncode({
+            var url = app.API_PREFIX +'/downloadSourcesFile?' + Ext.urlEncode({
                 userId: app.user.userId,
                 path: codePath
             });
@@ -63,7 +63,7 @@ Ext.define('CGT.controller.HomeController', {
         }
     },
     codeTreePanelItemSelect: function (treePanel, record, index, eOpts){
-        var me = this, url = '../..'+ app.API_PREFIX +'/getSourceFileCode';
+        var me = this, url = app.API_PREFIX +'/getSourceFileCode';
         if(record.get('leaf')){
             var params = {path: record.get('path')};
             me.getCodeSourcePanel().update("loading...");
@@ -106,7 +106,7 @@ Ext.define('CGT.controller.HomeController', {
         // var me = this, codeTreeStore = this.getCodeTreePanel().store,
         //     type = 'sqlServer2005', downloadAllFileBtn = this.getDownloadAllFileBtn();
         // me.getCodeType().setValue(type);
-        // codeTreeStore.getProxy().url = "../..'+ app.API_PREFIX +'/getCodeFileInfo";
+        // codeTreeStore.getProxy().url = app.API_PREFIX +'/getCodeFileInfo";
         // codeTreeStore.load({
         //     params: {type: type},
         //     callback: function (records, operation, success) {
@@ -146,7 +146,7 @@ Ext.define('CGT.controller.HomeController', {
         contentValus.m_username = me.getWinUsername().getValue();
         contentValus.m_password = me.getWinPassword().getValue();
         me.getCodeType().setValue(contentValus.m_type);
-        codeTreeStore.getProxy().url = '../..'+ app.API_PREFIX +'/getCodeFileInfo';
+        codeTreeStore.getProxy().url =  app.API_PREFIX +'/getCodeFileInfo';
 
         if(!me.dbConfigWinFormValid()){
             return;

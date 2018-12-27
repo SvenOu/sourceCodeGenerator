@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,6 +24,13 @@ public class SecurityApplicationTests {
 
     @Autowired
     private UserRoleDao userRoleDao;
+
+    @Test
+    @Transactional
+    public void testDaos(){
+        testUserRoleDao();
+        testUserDao();
+    }
 
     @Test
     public void testUserRoleDao(){
@@ -147,4 +155,8 @@ public class SecurityApplicationTests {
 
     }
 
+    @Test
+    public void genrateTestUsers(){
+//       String[] users = new String[];
+    }
 }

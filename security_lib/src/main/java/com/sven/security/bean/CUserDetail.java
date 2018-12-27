@@ -1,4 +1,4 @@
-package com.sven.security.service.authentic;
+package com.sven.security.bean;
 
 import com.sven.security.vo.User;
 import org.springframework.security.core.authority.AuthorityUtils;

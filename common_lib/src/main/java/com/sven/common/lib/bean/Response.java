@@ -1,4 +1,4 @@
-package com.sql.code.generator.commom.bean;
+package com.sven.common.lib.bean;
 
 import java.io.Serializable;
 

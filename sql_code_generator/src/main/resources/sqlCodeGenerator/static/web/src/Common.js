@@ -10,7 +10,8 @@ app = {
 		,DATETIME_FORMAT: 'M d, Y H:i:s'
 	},
 	user: '',
-    API_PREFIX: '/api/controller/sqlCode'
+    API_PREFIX: '/api/controller/sqlCode',
+    SECURITY_API_PREFIX: '/api/controller/security'
 };
 
 Ext.apply(app, {

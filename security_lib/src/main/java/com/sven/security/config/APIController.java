@@ -1,4 +1,4 @@
-package com.sql.code.generator.configs;
+package com.sven.security.config;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Component
-@RequestMapping("${API_sqlCodeGenerator_PREFIX}")
+@RequestMapping("${API_security_PREFIX}")
 public @interface APIController {
     @AliasFor(annotation = Component.class)
     String value() default "";

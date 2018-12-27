@@ -4,7 +4,7 @@ Ext.define('CGT.store.sql.CodeView',{
     autoLoad: false,
     proxy: {
         type: 'ajax',
-        // url: '../..'+ app.API_PREFIX +'/getCodeFileInfo',
+        // url: app.API_PREFIX +'/getCodeFileInfo',
         url: '#',
         reader: {
             type: 'json',

@@ -1,4 +1,4 @@
-package com.sven.security.service.authentic;
+package com.sven.security.bean;
 
 import java.util.Arrays;
 import java.util.List;

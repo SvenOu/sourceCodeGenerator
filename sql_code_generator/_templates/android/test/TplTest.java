@@ -9,6 +9,7 @@ public class ${{testClassName}} {
     private ${{daoClassName}} ${{daoClassName-lowerCaseFirst}};
 
     @Test
+    @Transactional
     public void test${{daoClassName}}(){
         int tag = 0;
         ${{voClassName}} ${{voSqlName-underlineToCame}}Ori = new ${{voClassName}}();

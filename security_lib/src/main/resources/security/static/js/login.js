@@ -1,13 +1,13 @@
 $(function(){
 	
 	$('#username').keydown(function(event){
-		if (event.keyCode == 13){
+		if (event.which === 13){
 			$('#password').focus();
 		}
 	});
 
 	$('#password').keydown(function(event){
-		if (event.keyCode == 13){
+		if (event.which === 13){
 			login();
 		}
 	});
