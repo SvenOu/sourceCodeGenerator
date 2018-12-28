@@ -8,30 +8,26 @@ Ext.define('CGT.view.common.Viewport',{
 	cls: 'common-viewport',
     initComponent : function() {
     	var me=this;
-    	switch(userRoleLocation){
-			case 'client': me.gotoClient(me);break;
-			case 'admin': me.gotoMaster(me);break;
-			default: me.gotoDefaultLocation(me);
-    	}
+        me.gotoMaster(me);
         this.callParent(arguments);
     },
     gotoDefaultLocation: function(me){
-    	app.method.toastMsg('Warning', 'Not found!');
+        app.method.toastMsg('Warning', 'Not found!');
     },
     gotoMaster: function(me){
-    	me.sidebar = Ext.create('Ext.panel.Panel',{
-			region: 'west',
-			title: 'Menu',
-			cls: 'left-slide-data-menu',
-		    border: false, 
-		    animCollapse: true,
-		    collapsible: true,
-		    split: true,
-		    width: 110,
-		    items:[ 
-				Ext.create('CGT.view.common.SidebarDataView',{name: 'commonSidebarDataView'})
-			]  
-		});
+        me.sidebar = Ext.create('Ext.panel.Panel',{
+            region: 'west',
+            title: 'Menu',
+            cls: 'left-slide-data-menu',
+            border: false,
+            animCollapse: true,
+            collapsible: true,
+            split: true,
+            width: 110,
+            items:[
+                Ext.create('CGT.view.common.SidebarDataView',{name: 'commonSidebarDataView'})
+            ]
+        });
         Ext.apply(me,{
 			items:[ 
 				Ext.create('CGT.view.common.HeaderPanel',{name: 'headerPanel'}),

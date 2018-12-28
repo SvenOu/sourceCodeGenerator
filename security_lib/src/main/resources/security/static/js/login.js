@@ -1,51 +1,67 @@
 $(function(){
-	
-	$('#username').keydown(function(event){
-		if (event.which === 13){
-			$('#password').focus();
-		}
-	});
-
-	$('#password').keydown(function(event){
-		if (event.which === 13){
-			login();
-		}
-	});
-
-	$('#btn-login').click(function(event){
-		login();
-	});
-	
-	$('#btn-reset').click(function(event){
-		$('#username').val('').focus();
-		$('#password').val('');
-	});
-	
+    new LoginApplication().start();
 });
 
-function login(){
-    $("form#login").submit();
-
-    // var userName = $('#username').val(),
-    //     password = $('#password').val();
-    // $.cookie("m_userName", userName);
-    // $.cookie("m_password", password);
-	// window.location.href = "web/master.html";
-//	$.ajax({
-//		type : "POST",
-//		dataType : 'json',
-//		data : {
-//			userId: userName,
-//			password: password
-//		},
-//		url : "controller/security/login",
-//		success : function(result){
-//			if(result.success=='true'||result.success==true){
-//				window.location.href = "web/master.html";
-//			}else {
-//				$().toastmessage('showWarningToast', 'Invalid user name or password!');
-//				$('#username').focus();
-//			}
-//		}
-//	});
+function LoginApplication() {
+    this.initialize.apply(this, arguments);
+}
+LoginApplication.prototype.initialize = function () {
+    this.cookieDb = new CookieDb();
+    $('#username').val(this.cookieDb._userId);
+    $('#password').val(this.cookieDb._password);
 };
+LoginApplication.prototype.login = function(){
+    $("form#login").submit();
+    this.cookieDb.save(CookieDb.KEY_USER_ID, $('#username').val());
+    this.cookieDb.save(CookieDb.KEY_PASSWORD, $('#password').val());
+};
+LoginApplication.prototype.register = function(){
+    $("form#login").submit();
+    this.cookieDb.save(CookieDb.KEY_USER_ID, $('#username').val());
+    this.cookieDb.save(CookieDb.KEY_PASSWORD, $('#password').val());
+};
+LoginApplication.prototype.start = function(){
+    var me = this;
+    $('#username').keydown(function(event){
+        if (event.which === 13){
+            $('#password').focus();
+        }
+    });
+
+    $('#password').keydown(function(event){
+        if (event.which === 13){
+            me.login();
+        }
+    });
+
+    $('#btn-login').click(function(event){
+        me.login();
+    });
+
+    $('#btn-register').click(function(event){
+        me.register();
+    });
+};
+
+function CookieDb() {
+    this.initialize.apply(this, arguments);
+}
+CookieDb.KEY_USER_ID = "userId";
+CookieDb.KEY_PASSWORD = "password";
+CookieDb.DEFAULT_PASSWORD = "123456";
+CookieDb.prototype.initialize = function () {
+    this._password = this.constructor.DEFAULT_PASSWORD;
+
+    var cacheUserId = this.find(this.constructor.KEY_USER_ID);
+    this._userId = cacheUserId? cacheUserId: "";
+
+    var cachePassword = this.find(this.constructor.KEY_PASSWORD);
+    this._password = cachePassword? cachePassword: this.constructor.DEFAULT_PASSWORD;
+};
+CookieDb.prototype.find = function (key) {
+    return $.cookie(key);
+};
+CookieDb.prototype.save = function (key, val) {
+    return $.cookie(key, val);
+};
+

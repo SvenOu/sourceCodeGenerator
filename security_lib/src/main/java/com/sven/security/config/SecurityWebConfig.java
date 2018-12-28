@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 * 移除默认数据源配置
 */
 @Configuration
-public class WebConfig implements WebMvcConfigurer {
+public class SecurityWebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

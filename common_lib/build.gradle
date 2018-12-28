@@ -9,8 +9,8 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter:${springBootVersion}"
     compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     compile "org.springframework.boot:spring-boot-starter-mobile:${springBootMobileVersion}"
-//    compile "org.springframework.boot:spring-boot-starter-thymeleaf:${springBootVersion}"
     compile "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
+    
     compile "net.lingala.zip4j:zip4j:${zip4jVersion}"
 
     // 不会打包到部署的 jar 或者 war 里面，只用于开发

@@ -34,6 +34,9 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${com.sven.security.loginPageUrl}")
     private String loginPageUrl;
 
+    @Value("${API_security_PREFIX}")
+    private String apiSecurityPrefix;
+
     @Value("${com.sven.security.loginSuccessPageUrl}")
     private String loginSuccessPageUrl;
 
@@ -67,7 +70,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/j_spring_security_check")
                 .usernameParameter("j_username")
                 .passwordParameter("j_password")
-                .failureForwardUrl(loginPageUrl)
+                .failureForwardUrl(apiSecurityPrefix + "/loginFail")
                 .and()
                 .logout()
                 .logoutUrl("/j_spring_security_logout")

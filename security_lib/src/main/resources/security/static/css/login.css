@@ -48,27 +48,33 @@ body
 }
 .action {
 	position: absolute;
-	left: 607px;
-	width: 314px;
+	left: 642px;
+	width: 272px;
 	top: 469px;
 }
-#btn-login, #btn-reset {
+#btn-login, #btn-register {
+	font-weight: bold;
+	line-height: 48px;
+	font-size: 24px;
+	color: white;
+	vertical-align: middle;
+	text-align: center;
 	float: left;
-	width: 129px;
+	width: 130px;
 	height: 48px;
 	cursor: pointer;
 }
 #btn-login {
-	margin-left: 35px;
+	margin-left: 10px;
 }
-#btn-reset {
-	margin-left: 3px;
+#btn-register {
+	/*margin-left: 3px;*/
 }
 /*#btn-login:hover {
 	background: url(../images/button_login_over.png) no-repeat;
 }*/
 
-/*#btn-reset:hover {
+/*#btn-register:hover {
 	background: url(../images/button_reset_over.png) no-repeat;
 }*/
 
