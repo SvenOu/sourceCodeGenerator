@@ -68,6 +68,10 @@
 	font-size: 30px;
 	font-family: fantas;
 }
+.user-text{
+	color: white;
+	font-family: fantas;
+}
 /* sidebar-dataview */
 .sidebar-dataview {
 	padding-top: 20px;

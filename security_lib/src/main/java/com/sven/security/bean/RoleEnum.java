@@ -14,7 +14,7 @@ public enum RoleEnum {
     USER("USER"),
     ADMIN("ADMIN");
     private String value;
-
+    public static final String ROLE_PREFIX = "ROLE_";
     RoleEnum(String value) {
         this.value = value;
     }

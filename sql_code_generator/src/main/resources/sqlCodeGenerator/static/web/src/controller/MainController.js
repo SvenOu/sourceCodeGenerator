@@ -6,7 +6,7 @@ Ext.define('CGT.controller.MainController', {
 	    {ref: 'homePanel', selector: 'homePanel'},
 	    {ref: 'javaPanel', selector: 'javaPanel'},
 	    {ref: 'javaScriptPanel', selector: 'javaScriptPanel'},
-	    {ref: 'sqlPanel', selector: 'sqlPanel'},
+	    {ref: 'sqlPanel', selector: 'sqlPanel'}
     ],
     init: function(application) {
    	this.control({

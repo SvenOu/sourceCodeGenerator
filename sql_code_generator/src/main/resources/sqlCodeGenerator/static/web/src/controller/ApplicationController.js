@@ -1,21 +1,16 @@
 Ext.define('CGT.controller.ApplicationController', {
 	extend : 'Ext.app.Controller',
-	// refs: [{
-    //     ref: 'pSGrid',
-    //     selector: 'publishScenariosGrid'
-    // }],
+	refs: [
+        {ref: 'userNameLabel', selector: 'headerPanel label[name=userName]'}
+	],
     init: function(application) {
- 
-//    	this.control({
-//            'viewport > userlist': {
-//                itemdblclick: this.editUser
-//            },
-//            'useredit button[action=save]': {
-//                click: this.updateUser
-//            }
-//        });
+   	this.control({
+           'headerPanel': {
+               afterrender: this.headerPanelAfterRender
+           }
+       });
     },
-    onLaunch: function(application){
-    
+    headerPanelAfterRender: function (panel) {
+	    this.getUserNameLabel().setText(app.user.username);
     }
 });

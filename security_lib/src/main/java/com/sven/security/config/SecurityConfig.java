@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -79,7 +80,11 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().accessDeniedPage(loginPageUrl);
     }
-
+    @Override
+    public void configure(WebSecurity web) {
+        // 排除特殊url
+        web.ignoring().mvcMatchers("/api/controller/security/register");
+    }
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)

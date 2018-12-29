@@ -1,6 +1,6 @@
 package com.sql.code.generator.web.controller;
 
-import com.sql.code.generator.configs.APIController;
+import com.sql.code.generator.configs.anotation.APIController;
 import com.sql.code.generator.modules.common.dataBean.SourceFileInfo;
 import com.sql.code.generator.modules.common.service.CommonService;
 import net.lingala.zip4j.exception.ZipException;
@@ -9,13 +9,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**

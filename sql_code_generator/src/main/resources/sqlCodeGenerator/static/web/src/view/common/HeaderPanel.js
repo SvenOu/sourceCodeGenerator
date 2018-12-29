@@ -28,6 +28,12 @@ Ext.define('CGT.view.common.HeaderPanel', {
 					flex: 1
 				},
 				{
+                    cls: 'user-text',
+					name: 'userName',
+                    xtype: 'label',
+                    margin: '0 10 0 10'
+                },
+				{
 					xtype: 'button',
 					icon: '../web/images/icon_logoff.png',
 					name: 'logOffButton',

@@ -26,7 +26,14 @@ public class CUserDetailsService implements UserDetailsService {
         log.debug("Authenticating user with username: " + username);
         User user = userDao.findByKey(username);
         if(null == user){
-            throw new UsernameNotFoundException("cannot find "+ username+ " in db");
+            String error = "cannot find "+ username+ " in db";
+            log.error(error);
+            throw new UsernameNotFoundException(error);
+        }
+        if(user.getActive() != 1){
+            String error = "username: " + username+ " is not active user";
+            log.error(error);
+            throw new UsernameNotFoundException(error);
         }
         String roles = user.getRoles();
         if(null == roles){

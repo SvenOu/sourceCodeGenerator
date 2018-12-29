@@ -1,4 +1,4 @@
-package com.sql.code.generator.configs;
+package com.sql.code.generator.configs.anotation;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
