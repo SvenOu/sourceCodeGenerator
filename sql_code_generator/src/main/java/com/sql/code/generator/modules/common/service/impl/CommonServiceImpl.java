@@ -1,12 +1,12 @@
 package com.sql.code.generator.modules.common.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sql.code.generator.commom.utils.HttpUtils;
-import com.sql.code.generator.modules.android.service.CodeGenerator;
+import com.sql.code.generator.commom.utils.SecurityUtils;
+import com.sql.code.generator.modules.common.service.CodeGenerator;
 import com.sql.code.generator.modules.common.composite.SqlType;
-import com.sql.code.generator.modules.common.dataBean.SourceFileInfo;
+import com.sven.common.lib.codetemplate.dataBean.SourceFileInfo;
 import com.sql.code.generator.modules.common.service.CommonService;
-import com.sql.code.generator.modules.server.service.SCodeGenerator;
+import com.sven.common.lib.codetemplate.utils.FileUtils;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
@@ -14,6 +14,7 @@ import net.lingala.zip4j.util.Zip4jConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -40,38 +41,35 @@ public class CommonServiceImpl implements CommonService {
     private static Log log = LogFactory.getLog(CommonServiceImpl.class);
 
     @Autowired
+    @Qualifier("sqlite")
     private CodeGenerator codeGenerator;
 
     @Autowired
-    private SCodeGenerator sCodeGenerator;
+    @Qualifier("mssql")
+    private CodeGenerator sCodeGenerator;
 
-    @Value("${sql-code.server.dirName}")
-    private String codeServerDirName;
+    @Value("${sql-code-templates.dir}")
+    private String templatesDirPath;
 
-    @Value("${sql-code.android.dirName}")
-    private String codeAndroidDirName;
-
-    @Value("${sql-code.tempFilesDir}")
-    private String tempFilesDir;
+    @Value("${sql-code-templates.default.name}")
+    private String defaultTemplatesDirName;
 
     @Value("${sql-code-generator.dir}")
-    private String generateCodePath;
+    private String generatorDirPath;
 
     @Autowired
     private ObjectMapper mapper;
 
     @Override
-    public SourceFileInfo getCodeFileInfo(String type, String url, String username, String password) throws IOException {
-        String userGenerateCodePath = HttpUtils.appentCurrentSession(generateCodePath);
+    public SourceFileInfo getCodeFileInfo(String type, String packageName, String url, String username, String password) throws IOException {
+        String userGenerateCodePath = generatorDirPath;
         String path = null;
         if (SqlType.SQL_SERVER_2005.getName().equalsIgnoreCase(type)) {
-            sCodeGenerator.generateServerCode("net.sourceforge.jtds.jdbc.Driver", url, username, password);
-            path = userGenerateCodePath + codeServerDirName;
-            return findSourceFileInfo(path);
+            path = sCodeGenerator.generateCodeFiles(packageName, "net.sourceforge.jtds.jdbc.Driver", url, username, password);;
+            return FileUtils.getSourceFileInfo(path);
         } else if (SqlType.SQLLITE.getName().equalsIgnoreCase(type)) {
-            codeGenerator.generateAndroidCode("org.sqlite.JDBC", url, username, password);
-            path = userGenerateCodePath + codeAndroidDirName;
-            return findSourceFileInfo(path);
+            path = codeGenerator.generateCodeFiles(packageName, "org.sqlite.JDBC", url, username, password);;
+            return FileUtils.getSourceFileInfo(path);
         }
         return null;
     }
@@ -95,18 +93,18 @@ public class CommonServiceImpl implements CommonService {
 
     @Override
     public String generateDirZip(String type) throws ZipException, IOException {
-        String userGenerateCodePath = HttpUtils.appentCurrentSession(generateCodePath);
+        String userGenerateCodePath = generatorDirPath;
         String path = null;
         if (SqlType.SQL_SERVER_2005.getName().equalsIgnoreCase(type)) {
-            path = userGenerateCodePath + codeServerDirName;
+            path = userGenerateCodePath;
         } else if (SqlType.SQLLITE.getName().equalsIgnoreCase(type)) {
-            path = userGenerateCodePath + codeAndroidDirName;
+            path = userGenerateCodePath;
         }else {
             return null;
         }
 
         // Initiate ZipFile object with the path/name of the zip file.
-        String dirPath = userGenerateCodePath + tempFilesDir;
+        String dirPath = userGenerateCodePath + "temFiles/";
         File dir = new File(dirPath);
         if(!dir.exists()){
             dir.mkdirs();
@@ -160,61 +158,5 @@ public class CommonServiceImpl implements CommonService {
         }
         reader.close();
         return builder.toString();
-    }
-
-    private SourceFileInfo findSourceFileInfo(String path) {
-        File parent = new File(path);
-        if (!parent.exists()) {
-            return null;
-        }
-
-        // for parent
-        SourceFileInfo fileInfo = new SourceFileInfo();
-        fileInfo.setName(parent.getName());
-        fileInfo.setPath(parent.getAbsolutePath());
-
-        // for children
-        File[] childs = parent.listFiles();
-        if (null == childs || childs.length <= 0) {
-            fileInfo.setLeaf(true);
-            return fileInfo;
-        }
-        sortFileChilds(childs);
-
-        List<SourceFileInfo> cfiList = new ArrayList<>(childs.length);
-        for (File c : childs) {
-            if (!c.exists()) {
-                continue;
-            }
-            SourceFileInfo cfi = findSourceFileInfo(c.getAbsolutePath());
-            cfiList.add(cfi);
-            fileInfo.setChildren(cfiList);
-        }
-        return fileInfo;
-    }
-
-    /**
-     *
-     * 根据文件夹类型排列数组
-     */
-    private void sortFileChilds(File[] childs) {
-        Comparator comp = new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                File f1 = (File) o1;
-                File f2 = (File) o2;
-                if (f1.isDirectory() && !f2.isDirectory()) {
-                    // Directory before non-directory
-                    return -1;
-                } else if (!f1.isDirectory() && f2.isDirectory()) {
-                    // Non-directory after directory
-                    return 1;
-                } else {
-                    // Alphabetic order otherwise
-                    return f1.compareTo(f2);
-                }
-            }
-        };
-        Arrays.sort(childs, comp);
     }
 }

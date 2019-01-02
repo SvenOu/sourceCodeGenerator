@@ -1,7 +1,7 @@
 package com.sql.code.generator.web.controller;
 
 import com.sql.code.generator.configs.anotation.APIController;
-import com.sql.code.generator.modules.common.dataBean.SourceFileInfo;
+import com.sven.common.lib.codetemplate.dataBean.SourceFileInfo;
 import com.sql.code.generator.modules.common.service.CommonService;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.logging.Log;
@@ -28,10 +28,11 @@ public class SqlCodeController {
 	@RequestMapping(value = "/getCodeFileInfo", method = RequestMethod.GET)
 	public @ResponseBody SourceFileInfo getCodeFileInfo(
 			String type,
+			String packageName,
 			String url,
 			String username,
 			String password) throws IOException {
-		return commonService.getCodeFileInfo(type, url, username, password);
+		return commonService.getCodeFileInfo(type, packageName, url, username, password);
 	}
 
 	@RequestMapping(value = "/getSourceFileCode", method = RequestMethod.GET)

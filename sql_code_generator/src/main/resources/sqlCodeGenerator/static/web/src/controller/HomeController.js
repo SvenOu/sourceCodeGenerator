@@ -155,6 +155,7 @@ Ext.define('CGT.controller.HomeController', {
             params:{
                 type: contentValus.m_type,
                 url: contentValus.m_url,
+                packageName: "com.sv.test",
                 username: contentValus.m_username,
                 password: contentValus.m_password
             },

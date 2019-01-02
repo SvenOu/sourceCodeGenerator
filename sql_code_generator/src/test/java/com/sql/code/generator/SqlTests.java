@@ -1,29 +1,20 @@
 package com.sql.code.generator;
 
-import com.sql.code.generator.modules.android.dao.SqliteDao;
-import com.sql.code.generator.modules.android.dao.impl.SqliteDaoImpl;
-import com.sql.code.generator.modules.android.vo.ColumnInfo;
-import com.sql.code.generator.modules.android.vo.SqlliteMaster;
+import com.sql.code.generator.modules.sqlite.dao.SqliteDao;
+import com.sql.code.generator.modules.sqlite.vo.ColumnInfo;
+import com.sql.code.generator.modules.sqlite.vo.SqlliteMaster;
 import com.sql.code.generator.modules.common.dao.DyDao;
-import com.sql.code.generator.modules.server.dao.STableInfoDAO;
-import com.sql.code.generator.modules.server.dao.impl.MSSqlDaoImpl;
-import com.sql.code.generator.modules.server.vo.SColumnInfo;
-import com.sql.code.generator.modules.server.vo.STableInfo;
+import com.sql.code.generator.modules.mssql.dao.STableInfoDAO;
+import com.sql.code.generator.modules.mssql.vo.SColumnInfo;
+import com.sql.code.generator.modules.mssql.vo.STableInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
