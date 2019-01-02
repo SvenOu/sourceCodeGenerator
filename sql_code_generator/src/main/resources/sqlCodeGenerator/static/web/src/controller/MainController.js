@@ -27,19 +27,19 @@ Ext.define('CGT.controller.MainController', {
         var functionCode = record.get('functionCode'),
             mainConrainer = this.getCommonMainContainer();
 
-        if (functionCode === 'home') {
+        if (functionCode === 'generator') {
             mainConrainer.getLayout().setActiveItem(this.getHomePanel());
         }
 
-        if (functionCode === 'sql') {
+        if (functionCode === 'templates') {
             mainConrainer.getLayout().setActiveItem(this.getJavaPanel());
         }
 
-        if (functionCode === 'java') {
+        if (functionCode === 'dataSources') {
             mainConrainer.getLayout().setActiveItem(this.getJavaScriptPanel());
         }
 
-        if (functionCode === 'javascript') {
+        if (functionCode === 'test') {
             mainConrainer.getLayout().setActiveItem(this.getSqlPanel());
         }
     }

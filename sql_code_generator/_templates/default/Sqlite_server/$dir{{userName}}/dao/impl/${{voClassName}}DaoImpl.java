@@ -18,6 +18,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.util.StringUtils;
 import ${{voPackageName}}.${{voClassName}};
 
+@Repository
 public class ${{daoImplClassName}} extends NamedParameterJdbcDaoSupport implements ${{daoClassName}} {
   private static final Log log = LogFactory.getLog(${{daoImplClassName}}.class);
 
@@ -26,6 +27,15 @@ public class ${{daoImplClassName}} extends NamedParameterJdbcDaoSupport implemen
   private static final RowMapper<${{voClassName}}> ${{voSqlName-upCaseALL}}_ROW_MAPPER = BeanPropertyRowMapper.newInstance(${{voClassName}}.class);
 
   private final Map<String, String> sqlCache = new ConcurrentHashMap<>();
+
+  @Autowired
+  @Qualifier("sqliteDataSource")
+  private javax.sql.DataSource dataSource;
+
+  @PostConstruct
+  private void initialize() {
+    setDataSource(dataSource);
+  }
 
   private static final String SQL_INSERT = "INSERT INTO ${{voSqlName}} ($tp-repeat(sqlFields-suffixNotIncludeEnd~, ){{$(name)}}) " +
           " VALUES ($tp-repeat(sqlFields-suffixNotIncludeEnd~, ){{:$(name-underlineToCame)}})";
@@ -94,8 +104,8 @@ public class ${{daoImplClassName}} extends NamedParameterJdbcDaoSupport implemen
         if(i >= 1) {
           sqlBlock.append(", ");
         }
-        String columnName = TextUtil.underscoreName(fields[i]);
-        String propertyName = TextUtil.camelCaseName(fields[i]);
+        String columnName = TextUtils.underscoreName(fields[i]);
+        String propertyName = TextUtils.camelCaseName(fields[i]);
         sqlBlock.append(columnName).append(" = ").append(":").append(propertyName);
       }
       sql = String.format(SQL_UPDATE_FIELDS_TEMPLE, sqlBlock);

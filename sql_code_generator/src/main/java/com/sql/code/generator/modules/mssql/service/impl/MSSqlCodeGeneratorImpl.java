@@ -1,13 +1,13 @@
-package com.sql.code.generator.modules.sqlite.service.impl;
+package com.sql.code.generator.modules.mssql.service.impl;
 
 import com.sql.code.generator.commom.utils.SecurityUtils;
-import com.sql.code.generator.modules.common.service.CodeGenerator;
-import com.sql.code.generator.modules.sqlite.dao.SqliteDao;
-import com.sql.code.generator.modules.sqlite.dataBean.SQLiteWithJavaClassType;
-import com.sql.code.generator.modules.sqlite.vo.ColumnInfo;
-import com.sql.code.generator.modules.sqlite.vo.SqlliteMaster;
 import com.sql.code.generator.modules.common.composite.ClassTypeUtils;
 import com.sql.code.generator.modules.common.dao.DyDao;
+import com.sql.code.generator.modules.common.service.CodeGenerator;
+import com.sql.code.generator.modules.mssql.dao.STableInfoDAO;
+import com.sql.code.generator.modules.mssql.dataBean.SSQLServerWithJavaClassType;
+import com.sql.code.generator.modules.mssql.vo.SColumnInfo;
+import com.sql.code.generator.modules.mssql.vo.STableInfo;
 import com.sven.common.lib.codetemplate.config.TPConfig;
 import com.sven.common.lib.codetemplate.engine.CaseFormat;
 import com.sven.common.lib.codetemplate.engine.TPEngine;
@@ -18,16 +18,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileSystemUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.*;
 
-/**
- * Created by sven-ou on 2017/2/16.
- */
-@Component("sqlite")
-public class CodeGeneratorImpl implements CodeGenerator {
-    private static Log log = LogFactory.getLog(CodeGeneratorImpl.class);
+@Component("mssql")
+public class MSSqlCodeGeneratorImpl implements CodeGenerator {
+    private static Log log = LogFactory.getLog(MSSqlCodeGeneratorImpl.class);
 
     @Value("${sql-code-templates.dir}")
     private String templatesDirPath;
@@ -38,53 +36,58 @@ public class CodeGeneratorImpl implements CodeGenerator {
     @Value("${sql-code-generator.dir}")
     private String generatorDirPath;
 
-    @Value("${sql-code-templates.sqlite.name}")
-    private String sqlite;
-
-    @Autowired
-    private SqliteDao sqliteDao;
+    @Value("${sql-code-templates.mssql.type.name}")
+    private String mssql;
 
     @Autowired
     private TPEngine tpEngine;
+
+    private final STableInfoDAO sTableInfoDAO;
+
+    @Autowired
+    public MSSqlCodeGeneratorImpl(STableInfoDAO sTableInfoDAO) {
+        this.sTableInfoDAO = sTableInfoDAO;
+    }
 
     @Override
     public Map generateCodeModel(String packageName, String driverClassName, String url, String username, String password) {
         Map rootContext = new HashMap();
         List<Map> data = new ArrayList<>();
-        ((DyDao) sqliteDao).configDyDao(driverClassName, url, username, password);
+        ((DyDao) sTableInfoDAO).configDyDao(driverClassName, url, username, password);
         Set<String> globleTypesSet = new HashSet<>();
-        List<SqlliteMaster> masters = sqliteDao.findAllTable();
-        for (SqlliteMaster table : masters) {
+        List<STableInfo> masters = sTableInfoDAO.findAllTable();
+        for (STableInfo table : masters) {
             Set<String> typesSet = new HashSet<>();
-            List<ColumnInfo> infos = sqliteDao.findColumnsByName(table.getName());
+            List<SColumnInfo> infos = sTableInfoDAO.findColumnsByName(table.getName());
             ArrayList<Map> sqlFields = new ArrayList<Map>(infos.size());
             ArrayList<Map> fields = new ArrayList<Map>(infos.size());
             ArrayList<Map> fielsImport = new ArrayList<Map>(infos.size());
 
             for (int i = 0; i < infos.size(); i++) {
-                ColumnInfo info = infos.get(i);
-                Class cls = SQLiteWithJavaClassType.getJavaTypeClass(info.getType());
+                SColumnInfo info = infos.get(i);
+                Class cls = SSQLServerWithJavaClassType.getJavaTypeClass(info.getType());
                 if (null == cls) {
                     log.error("sql type: " + info.getType() + " cannot find java type !");
                 }
-                String fieldName = CaseFormat.formatString(info.getName(), CaseFormat.UNDERLINE_TO_CAME);
+                String fieldName = CaseFormat.formatString(info.getColumnName(), CaseFormat.UNDERLINE_TO_CAME);
 
                 typesSet.add(cls.getName());
                 globleTypesSet.add(info.getType());
 
                 Map sqlfielContext = new HashMap();
-                sqlfielContext.put("name", info.getName());
+                sqlfielContext.put("name", info.getColumnName());
                 sqlFields.add(sqlfielContext);
 
                 Map fieldContext = new HashMap();
                 fieldContext.put("type", cls.getSimpleName());
-                fieldContext.put("name", info.getName());
+                fieldContext.put("name", info.getColumnName());
                 fields.add(fieldContext);
 
             }
             /* ------------ vo ---------------------*/
-            String voClassName = CaseFormat.formatString(table.getName(), CaseFormat.UNDERLINE_TO_CAMEUPCASE_FIRST);
+            String voClassName = CaseFormat.formatString(table.getName(), CaseFormat.UNDERLINE_TO_CAMEUPCASE_FIRST);;
             Map context = new HashMap();
+
             context.put("voPackageName", packageName + ".vo");
             context.put("voSqlName", table.getName());
             context.put("voClassName", voClassName);
@@ -110,7 +113,6 @@ public class CodeGeneratorImpl implements CodeGenerator {
 
             //impl
             String daoImplClassName = CaseFormat.formatString(table.getName(), CaseFormat.UNDERLINE_TO_CAMEUPCASE_FIRST)+"DaoImpl";
-
             context.put("daoImplPackageName", packageName + ".impl");
             context.put("daoImplClassName", daoImplClassName);
             /*------------ end dao ---------------*/
@@ -121,13 +123,12 @@ public class CodeGeneratorImpl implements CodeGenerator {
             context.put("testPackageName", packageName + ".test");
             context.put("testClassName", testClassName);
             /*------------ end test ---------------*/
-
             data.add(context);
         }
         rootContext.put("data", data);
         for (String c : globleTypesSet) {
             //根据此 LOG 调整 SQLiteWithJavaClassType
-            log.info(String.format("typesSets.sqlType: %s -> javaType: %s", c, SQLiteWithJavaClassType.getJavaTypeClass(c)));
+            log.info(String.format("typesSets.sqlType: %s -> javaType: %s", c, SSQLServerWithJavaClassType.getJavaTypeClass(c)));
         }
         return rootContext;
     }
@@ -135,6 +136,13 @@ public class CodeGeneratorImpl implements CodeGenerator {
     @Override
     public String generateCodeFiles(String packageName, String driverClassName, String url, String username, String password) throws IOException {
         Map rootContext = generateCodeModel(packageName, driverClassName, url, username, password);
+        String tplPath = templatesDirPath + defaultTemplatesDirName + '/' + mssql + "_server/";
+        String disPath = generatorDirPath  + mssql + "_server/";
+        return generateCodeFiles(rootContext, tplPath, disPath);
+    }
+
+    @Override
+    public String generateCodeFiles(Map rootContext, String tplDirPath, String disPath) throws IOException {
         String sessionId = "empty_sessionId";
         String userName = "empty_userName";
 
@@ -147,12 +155,11 @@ public class CodeGeneratorImpl implements CodeGenerator {
         rootContext.put("userName", userName);
         rootContext.put("sessionId", sessionId);
 
-        String tplPath = templatesDirPath + defaultTemplatesDirName + sqlite;
-        String disPath = generatorDirPath + sqlite;
-        FileSystemUtils.deleteRecursively(Paths.get(disPath));
-        tpEngine.progressAll(tplPath,
+        String generatePath = generatorDirPath + TPConfig.KEY_USER_FILES + '/' + new File(tplDirPath).getName()  + '/';
+//        FileSystemUtils.deleteRecursively(Paths.get(generatePath));
+        tpEngine.progressAll(tplDirPath,
                 disPath,
                 rootContext);
-        return generatorDirPath + TPConfig.KEY_USER_FILES + '/' + sqlite;
+        return generatePath;
     }
 }
