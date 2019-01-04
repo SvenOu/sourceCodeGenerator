@@ -1,5 +1,7 @@
 package com.sql.code.generator;
 
+import com.sql.code.generator.modules.common.dao.CodeTemplateDao;
+import com.sql.code.generator.modules.common.vo.CodeTemplate;
 import com.sql.code.generator.modules.sqlite.dao.SqliteDao;
 import com.sql.code.generator.modules.sqlite.vo.ColumnInfo;
 import com.sql.code.generator.modules.sqlite.vo.SqlliteMaster;
@@ -7,6 +9,7 @@ import com.sql.code.generator.modules.common.dao.DyDao;
 import com.sql.code.generator.modules.mssql.dao.STableInfoDAO;
 import com.sql.code.generator.modules.mssql.vo.SColumnInfo;
 import com.sql.code.generator.modules.mssql.vo.STableInfo;
+import com.sven.common.lib.codetemplate.utils.IdUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
@@ -14,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,6 +33,15 @@ public class SqlTests {
 
     @Autowired
     private SqliteDao sqliteDao;
+
+    @Autowired
+    private CodeTemplateDao codeTemplateDao;
+
+    @Test
+    @Transactional
+    public void initData() {
+
+    }
 
     @Test
     public void testServer() {

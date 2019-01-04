@@ -84,6 +84,7 @@ public class CodeServiceImpl implements CodeService {
         dataSource.setType(type);
         dataSource.setUrl(DatasourceEnum.SQLITE.getUrlPrefix() + savePath);
         dataSource.setLock(false);
+        dataSource.setOwner(SecurityUtils.getCurrentUserDetails().getUsername());
         dataSourceDao.save(dataSource);
         return CommonResponse.SIMPLE_SUCCESS;
     }
@@ -109,6 +110,7 @@ public class CodeServiceImpl implements CodeService {
             dataSource.setUrl(DatasourceEnum.MSSQL.getUrlPrefix() + originUrl);
         }
         dataSource.setLock(false);
+        dataSource.setOwner(SecurityUtils.getCurrentUserDetails().getUsername());
         return CommonResponse.success(dataSourceDao.save(dataSource));
     }
 

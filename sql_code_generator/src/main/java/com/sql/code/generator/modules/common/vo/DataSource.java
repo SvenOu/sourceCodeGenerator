@@ -13,6 +13,7 @@ public class DataSource implements Serializable {
     private String password;
     private String driveClass;
     private boolean lock;
+    private String owner;
 
     public void setDataSourceId(String dataSourceId) {
         this.dataSourceId = dataSourceId;
@@ -70,6 +71,14 @@ public class DataSource implements Serializable {
         this.driveClass = driveClass;
     }
 
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
     @Override
     public String toString() {
         return "DataSource{" +
@@ -80,6 +89,7 @@ public class DataSource implements Serializable {
                 ", password='" + password + '\'' +
                 ", driveClass='" + driveClass + '\'' +
                 ", lock=" + lock +
+                ", owner='" + owner + '\'' +
                 '}';
     }
 }
