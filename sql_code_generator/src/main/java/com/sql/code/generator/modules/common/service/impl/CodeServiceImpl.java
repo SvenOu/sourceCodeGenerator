@@ -32,6 +32,12 @@ public class CodeServiceImpl implements CodeService {
     @Value("${sql-code-generator.db.file.dir}")
     private String dbFileDirPath;
 
+    @Value("${sql-code-generator.templates.file.dir}")
+    private String templateFileDirPath;
+
+    @Value("${sql-code-generator.templates.default.file.dir}")
+    private String defaultTemplateFileDirPath;
+
     @Autowired
     private DataSourceDao dataSourceDao;
 
@@ -83,12 +89,6 @@ public class CodeServiceImpl implements CodeService {
     }
 
     @Override
-    public String getUserDbFileDir() {
-        String userId = SecurityUtils.getCurrentUserDetails().getUsername();
-        return dbFileDirPath + userId + '/';
-    }
-
-    @Override
     public CommonResponse deleteDataSource(String dataSourceId) {
         DataSource dbSource = dataSourceDao.findByKey(dataSourceId);
         if(dbSource != null && dbSource.getLock()){
@@ -116,5 +116,28 @@ public class CodeServiceImpl implements CodeService {
     public SourceFileInfo getUserDbFilesInfo() {
         String userDbFileDir = getUserDbFileDir();
         return FileUtils.getSourceFileInfo(userDbFileDir);
+    }
+
+    @Override
+    public SourceFileInfo getTemplateFilesInfo() throws IOException {
+        String userDbFileDir = getUserTemplateFileDir();
+        File userDbFileDirFile = new File(userDbFileDir);
+        if(!userDbFileDirFile.exists()){
+            userDbFileDirFile.mkdirs();
+            FileSystemUtils.copyRecursively(new File(defaultTemplateFileDirPath), userDbFileDirFile);
+        }
+        return FileUtils.getSourceFileInfo(userDbFileDir);
+    }
+
+    @Override
+    public String getUserDbFileDir() {
+        String userId = SecurityUtils.getCurrentUserDetails().getUsername();
+        return dbFileDirPath + userId + '/';
+    }
+
+    @Override
+    public String getUserTemplateFileDir() {
+        String userId = SecurityUtils.getCurrentUserDetails().getUsername();
+        return templateFileDirPath + userId + '/';
     }
 }

@@ -10,6 +10,7 @@ Ext.application({
     	'ApplicationController',
     	'DataSourceController',
     	'MainController',
+    	'TemplatesDetailController',
     	'GeneratorController'
 	],
     models: [
@@ -39,7 +40,7 @@ Ext.application({
         'main.GeneratorPanel',
         'main.TemplatesPanel',
         'main.DatasourcesPanel',
-        'main.TestPanel'
+        'main.TemplateDetailPanel'
 	],
     //remove the loading-indicator after EXTAPP has been launched
 	launch: function() {

@@ -53,7 +53,7 @@ Ext.define('CGT.view.main.GeneratorPanel', {
                                 store: me.codeViewStore,
                                 root: {
                                     expanded: true,
-                                    text: "Root-Codes"
+                                    text: "Generate Codes"
                                 }
                             },
                             {

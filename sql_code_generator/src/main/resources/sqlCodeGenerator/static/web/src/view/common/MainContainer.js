@@ -12,13 +12,13 @@ Ext.define('CGT.view.common.MainContainer', {
     	me.generatorPanel = Ext.create('CGT.view.main.GeneratorPanel');
     	me.templatesPanel = Ext.create('CGT.view.main.TemplatesPanel');
     	me.datasourcesPanel = Ext.create('CGT.view.main.DatasourcesPanel');
-    	me.testPanel = Ext.create('CGT.view.main.TestPanel');
+    	me.templateDetailPanel = Ext.create('CGT.view.main.TemplateDetailPanel');
         Ext.apply(me,{
         	items: [
 				me.generatorPanel,
 				me.templatesPanel,
 				me.datasourcesPanel,
-				me.testPanel
+				me.templateDetailPanel
         	]
         });
         me.callParent(arguments);

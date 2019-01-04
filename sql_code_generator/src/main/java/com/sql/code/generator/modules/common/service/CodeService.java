@@ -12,10 +12,16 @@ public interface CodeService {
 	CommonResponse finAllDataSources(boolean excludeUserData);
 	CommonResponse getAllDataSourceTypes();
 	CommonResponse saveDbFile(MultipartFile dbFile, String type) throws IOException;
-	String getUserDbFileDir();
 
 	CommonResponse deleteDataSource(String dataSourceId);
+
 	CommonResponse addRemoteDbConfig(DataSource dataSource);
 
 	SourceFileInfo getUserDbFilesInfo();
+
+	SourceFileInfo getTemplateFilesInfo() throws IOException;
+
+	String getUserDbFileDir();
+	String getUserTemplateFileDir();
+
 }

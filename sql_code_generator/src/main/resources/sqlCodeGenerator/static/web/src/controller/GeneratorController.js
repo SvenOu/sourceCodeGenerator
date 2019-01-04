@@ -18,7 +18,7 @@ Ext.define('CGT.controller.GeneratorController', {
 	    // {ref: 'generatorPanel', selector: 'generatorPanel'},
 	    // {ref: 'templatesPanel', selector: 'templatesPanel'},
 	    // {ref: 'datasourcesPanel', selector: 'datasourcesPanel'},
-	    // {ref: 'testPanel', selector: 'testPanel'},
+	    // {ref: 'TemplateDetailPanel', selector: 'templatedetailpanel'},
     ],
     init: function(application) {
    	this.control({

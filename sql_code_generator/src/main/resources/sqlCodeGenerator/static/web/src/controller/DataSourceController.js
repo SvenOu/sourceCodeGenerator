@@ -46,7 +46,6 @@ Ext.define('CGT.controller.DataSourceController', {
     refreshDbFilesTreePanelContainer: function () {
         var me = this, dbFilesTreePanel = this.getDbFilesTreePanel();
         var dbFilesTreePanelStore = dbFilesTreePanel.store;
-        dbFilesTreePanel.getRootNode().removeAll();
         dbFilesTreePanelStore.getProxy().url =  app.API_PREFIX +'/getUserDbFilesInfo';
         dbFilesTreePanelStore.load({
             params:{},

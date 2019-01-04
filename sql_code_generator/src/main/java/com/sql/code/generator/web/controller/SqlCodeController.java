@@ -92,6 +92,11 @@ public class SqlCodeController {
 		return codeService.getUserDbFilesInfo();
 	}
 
+	@RequestMapping(value = "/getTemplateFilesInfo", method = RequestMethod.GET)
+	public @ResponseBody SourceFileInfo getTemplateFilesInfo() throws IOException {
+		return codeService.getTemplateFilesInfo();
+	}
+
 	// FIXME: 不同 controller 交互
 //	@RequestMapping(value="/testa", method=RequestMethod.GET)
 //	public String testa(HttpServletRequest request){

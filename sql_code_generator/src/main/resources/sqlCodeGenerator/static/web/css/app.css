@@ -127,6 +127,9 @@
 .code-panel .x-panel-body{
 	background: #cce6cf;
 }
+.code-panel .token.operator{
+	background: transparent;
+}
 /* main */
 .main-data-sources-grid .x-grid-cell-inner{
 	min-height: 52px;

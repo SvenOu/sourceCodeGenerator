@@ -7,7 +7,7 @@ Ext.define('CGT.controller.MainController', {
 	    {ref: 'datasourcesPanel', selector: 'datasourcesPanel'},
 	    {ref: 'dataSourceGrid', selector: 'datasourcesPanel grid[name=dataSourceGrid]'},
 	    {ref: 'templatesPanel', selector: 'templatesPanel'},
-	    {ref: 'testPanel', selector: 'testPanel'}
+	    {ref: 'templateDetailPanel', selector: 'templatedetailpanel'}
     ],
     init: function(application) {
    	this.control({
@@ -43,8 +43,8 @@ Ext.define('CGT.controller.MainController', {
             mainConrainer.getLayout().setActiveItem(this.getDatasourcesPanel());
         }
 
-        if (functionCode === 'test') {
-            mainConrainer.getLayout().setActiveItem(this.getTestPanel());
+        if (functionCode === 'templateDetail') {
+            mainConrainer.getLayout().setActiveItem(this.getTemplateDetailPanel());
         }
     }
 });
