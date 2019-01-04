@@ -3,10 +3,11 @@ Ext.define('CGT.controller.MainController', {
 	refs: [
 	    {ref: 'sidebarDataView', selector: 'sidebarDataView'},
 	    {ref: 'commonMainContainer', selector: 'commonMainContainer'},
-	    {ref: 'homePanel', selector: 'homePanel'},
-	    {ref: 'javaPanel', selector: 'javaPanel'},
-	    {ref: 'javaScriptPanel', selector: 'javaScriptPanel'},
-	    {ref: 'sqlPanel', selector: 'sqlPanel'}
+	    {ref: 'generatorPanel', selector: 'generatorPanel'},
+	    {ref: 'datasourcesPanel', selector: 'datasourcesPanel'},
+	    {ref: 'dataSourceGrid', selector: 'datasourcesPanel grid[name=dataSourceGrid]'},
+	    {ref: 'templatesPanel', selector: 'templatesPanel'},
+	    {ref: 'testPanel', selector: 'testPanel'}
     ],
     init: function(application) {
    	this.control({
@@ -14,10 +15,13 @@ Ext.define('CGT.controller.MainController', {
                afterrender: this.dataViewSelectFirstItem,
                itemclick: this.sidebarDataViewItemClick
            },
-           // 'useredit button[action=save]': {
-           //     click: this.updateUser
-           // }
+           'datasourcesPanel': {
+               activate: this.datasourcesPanelActivate
+           }
        });
+    },
+    datasourcesPanelActivate: function(panel){
+	    this.getDataSourceGrid().getStore().load();
     },
     dataViewSelectFirstItem: function(){
         this.getSidebarDataView().getSelectionModel().selectRange(0, 0);
@@ -28,19 +32,19 @@ Ext.define('CGT.controller.MainController', {
             mainConrainer = this.getCommonMainContainer();
 
         if (functionCode === 'generator') {
-            mainConrainer.getLayout().setActiveItem(this.getHomePanel());
+            mainConrainer.getLayout().setActiveItem(this.getGeneratorPanel());
         }
 
         if (functionCode === 'templates') {
-            mainConrainer.getLayout().setActiveItem(this.getJavaPanel());
+            mainConrainer.getLayout().setActiveItem(this.getTemplatesPanel());
         }
 
         if (functionCode === 'dataSources') {
-            mainConrainer.getLayout().setActiveItem(this.getJavaScriptPanel());
+            mainConrainer.getLayout().setActiveItem(this.getDatasourcesPanel());
         }
 
         if (functionCode === 'test') {
-            mainConrainer.getLayout().setActiveItem(this.getSqlPanel());
+            mainConrainer.getLayout().setActiveItem(this.getTestPanel());
         }
     }
 });

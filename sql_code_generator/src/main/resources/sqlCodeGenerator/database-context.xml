@@ -7,7 +7,7 @@
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <bean id="securitysqliteDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <bean id="sqliteDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" primary="true">
         <property name="driverClassName" value="${jdbc.sqlite.driverClassName}"/>
         <property name="url" value="${jdbc.sqlite.url}"/>
         <property name="username" value="${jdbc.sqlite.username}"/>

@@ -127,11 +127,11 @@
 .code-panel .x-panel-body{
 	background: #cce6cf;
 }
-/* home */
-
-.token.operator,
-.token.entity,
-.token.url,
-.token.variable {
-	background: transparent;
+/* main */
+.main-data-sources-grid .x-grid-cell-inner{
+	min-height: 52px;
+	word-spacing: normal;
+	white-space: normal;
+	word-break: break-word;
 }
+

@@ -78,16 +78,16 @@ public class SqlCodeGeneratorApplicationTests {
         mssqlCodeGenerator.generateCodeFiles(rootContext, tplPath, disPath);
 
 
-        String driveClass2 = "net.sourceforge.jtds.jdbc.Driver";
-        String url2 = "jdbc:jtds:sqlserver://sql30.easternphoenix.com:1433/ChurchsYMTC";
-        String username2 = "xx";
-        String password2 = "xxxxxx";
-
-        String tplPath2 = templatesDirPath + defaultTemplatesDirName  + '/' + mssql + "_server/";
-        String disPath2 = generatorDirPath  + mssql + "_server/";
-
-        Map rootContext2 = mssqlCodeGenerator.generateCodeModel(packageName, driveClass2, url2, username2, password2);
-        mssqlCodeGenerator.generateCodeFiles(rootContext2, tplPath2, disPath2);
+//        String driveClass2 = "net.sourceforge.jtds.jdbc.Driver";
+//        String url2 = "jdbc:jtds:sqlserver://sql30.easternphoenix.com:1433/ChurchsYMTC";
+//        String username2 = "xx";
+//        String password2 = "xxxxxx";
+//
+//        String tplPath2 = templatesDirPath + defaultTemplatesDirName  + '/' + mssql + "_server/";
+//        String disPath2 = generatorDirPath  + mssql + "_server/";
+//
+//        Map rootContext2 = mssqlCodeGenerator.generateCodeModel(packageName, driveClass2, url2, username2, password2);
+//        mssqlCodeGenerator.generateCodeFiles(rootContext2, tplPath2, disPath2);
 
     }
 

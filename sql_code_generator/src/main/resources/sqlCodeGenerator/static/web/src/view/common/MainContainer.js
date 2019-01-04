@@ -9,16 +9,16 @@ Ext.define('CGT.view.common.MainContainer', {
     padding: 5,
     initComponent : function() {
     	var me=this;
-    	me.homePanel = Ext.create('CGT.view.main.HomePanel');
-    	me.sqlPanel = Ext.create('CGT.view.main.SqlPanel');
-    	me.javaPanel = Ext.create('CGT.view.main.JavaPanel');
-    	me.javaScriptPanel = Ext.create('CGT.view.main.JavaScriptPanel');
+    	me.generatorPanel = Ext.create('CGT.view.main.GeneratorPanel');
+    	me.templatesPanel = Ext.create('CGT.view.main.TemplatesPanel');
+    	me.datasourcesPanel = Ext.create('CGT.view.main.DatasourcesPanel');
+    	me.testPanel = Ext.create('CGT.view.main.TestPanel');
         Ext.apply(me,{
         	items: [
-				me.homePanel,
-				me.sqlPanel,
-				me.javaPanel,
-				me.javaScriptPanel
+				me.generatorPanel,
+				me.templatesPanel,
+				me.datasourcesPanel,
+				me.testPanel
         	]
         });
         me.callParent(arguments);

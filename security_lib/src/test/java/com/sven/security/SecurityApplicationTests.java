@@ -1,9 +1,7 @@
 package com.sven.security;
 
-import com.sven.security.dao.DataSourceDao;
 import com.sven.security.dao.UserDao;
 import com.sven.security.dao.UserRoleDao;
-import com.sven.security.vo.DataSource;
 import com.sven.security.vo.User;
 import com.sven.security.vo.UserRole;
 import org.apache.commons.logging.Log;
@@ -29,77 +27,6 @@ public class SecurityApplicationTests {
     public void testDaos(){
         testUserRoleDao();
         testUserDao();
-        testDataSourceDao();
-    }
-
-
-    @Autowired
-    private DataSourceDao dataSourceDao;
-
-    @Test
-    @Transactional
-    public void testDataSourceDao(){
-        int tag = 0;
-        DataSource dataSourceOri = new DataSource();
-        dataSourceOri.setDataSourceId("dataSourceId");
-        dataSourceOri.setType("type");
-        dataSourceOri.setUrl("url");
-        dataSourceOri.setUserName("userName");
-        dataSourceOri.setPassword("password");
-
-        DataSource dataSource = dataSourceDao.findByKey(dataSourceOri.getDataSourceId());
-        if(dataSource == null){
-            dataSource = new DataSource();
-            dataSource.setDataSourceId(dataSourceOri.getDataSourceId());
-            tag ++;
-            swapDataSources(dataSource, dataSourceOri, tag);
-            dataSourceDao.insert(dataSource);
-        }
-        List<DataSource> dataSourceList = dataSourceDao.findListByKey(dataSourceOri.getDataSourceId());
-        Assert.assertEquals(dataSourceList.size(), 1);
-        assertDataSourceEqual(dataSourceDao.findByKey(dataSourceOri.getDataSourceId()), dataSourceOri);
-
-        tag ++;
-        swapDataSources(dataSource, dataSourceOri, tag);
-        dataSourceDao.update(dataSource);
-        assertDataSourceEqual(dataSourceDao.findByKey(dataSourceOri.getDataSourceId()), dataSourceOri);
-
-        tag++;
-        swapDataSources(dataSource, dataSourceOri, tag);
-        dataSourceDao.updateFields(dataSource, new String[]{ "type", "url", "user_name", "password"});
-        assertDataSourceEqual(dataSourceDao.findByKey(dataSourceOri.getDataSourceId()), dataSourceOri);
-
-        tag++;
-        swapDataSources(dataSource, dataSourceOri, tag);
-        dataSourceDao.save(dataSource);
-        assertDataSourceEqual(dataSourceDao.findByKey(dataSourceOri.getDataSourceId()), dataSourceOri);
-
-        dataSourceDao.deleteByKey(dataSourceOri.getDataSourceId());
-        Assert.assertSame(null, dataSourceDao.findByKey(dataSourceOri.getDataSourceId()));
-        dataSourceList = dataSourceDao.findListByKey(dataSourceOri.getDataSourceId());
-        Assert.assertEquals(dataSourceList.size(), 0);
-    }
-
-    private void swapDataSources(DataSource dataSource, DataSource dataSourceOri, int tag) {
-        dataSourceOri.setType(dataSourceOri.getType() + tag);
-        dataSourceOri.setUrl(dataSourceOri.getUrl() + tag);
-        dataSourceOri.setUserName(dataSourceOri.getUserName() + tag);
-        dataSourceOri.setPassword(dataSourceOri.getPassword() + tag);
-
-        dataSource.setType(dataSourceOri.getType());
-        dataSource.setUrl(dataSourceOri.getUrl());
-        dataSource.setUserName(dataSourceOri.getUserName());
-        dataSource.setPassword(dataSourceOri.getPassword());
-
-    }
-
-    private void assertDataSourceEqual(DataSource dataSource, DataSource dataSourceOri) {
-        Assert.assertEquals(dataSource.getDataSourceId(), dataSourceOri.getDataSourceId());
-        Assert.assertEquals(dataSource.getType(), dataSourceOri.getType());
-        Assert.assertEquals(dataSource.getUrl(), dataSourceOri.getUrl());
-        Assert.assertEquals(dataSource.getUserName(), dataSourceOri.getUserName());
-        Assert.assertEquals(dataSource.getPassword(), dataSourceOri.getPassword());
-
     }
 
     @Autowired
@@ -227,11 +154,5 @@ public class SecurityApplicationTests {
         Assert.assertEquals(user.getUserAlias(), userOri.getUserAlias());
         Assert.assertEquals(user.getRoles(), userOri.getRoles());
         Assert.assertEquals(user.getActive(), userOri.getActive());
-    }
-
-    @Test
-    public void genrateTestUsers(){
-//       String[] users = new String[];
-
     }
 }

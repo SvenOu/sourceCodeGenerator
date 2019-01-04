@@ -1,4 +1,4 @@
-Ext.define('CGT.model.sql.CodeView',{
+Ext.define('CGT.model.generator.CodeView',{
     extend:'Ext.data.Model',
     fields: [
         { name: 'text', type: 'string', mapping: 'name'},

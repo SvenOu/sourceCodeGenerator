@@ -1,6 +1,6 @@
-Ext.define('CGT.store.sql.CodeView',{
+Ext.define('CGT.store.generator.CodeView',{
     extend:'Ext.data.TreeStore',
-    model:'CGT.model.sql.CodeView',
+    model:'CGT.model.generator.CodeView',
     autoLoad: false,
     proxy: {
         type: 'ajax',

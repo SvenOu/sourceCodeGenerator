@@ -8,16 +8,21 @@ Ext.application({
     appFolder: 'src',
     controllers: [
     	'ApplicationController',
+    	'DataSourceController',
     	'MainController',
-    	'HomeController'
+    	'GeneratorController'
 	],
     models: [
 		'main.SideDataView',
-		'sql.CodeView',
+		'generator.CodeView',
+		'generator.Datasource',
+		'generator.DatasourceType',
 	],
     stores: [
         'main.SideDataView',
-        'sql.CodeView',
+        'generator.CodeView',
+        'generator.Datasource',
+        'generator.DatasourceType',
     ],
     views: [
     	// comman
@@ -26,12 +31,15 @@ Ext.application({
 		'common.SidebarDataView',
 		'common.Viewport',
 		'common.SqlDataBaseConfigWindow',
+		'common.SqlRemoteConfigWindow',
+		'common.SqlFileConfigWindow',
+		'common.DataSourceGrid',
 
 		//  main
-        'main.HomePanel',
-        'main.JavaPanel',
-        'main.JavaScriptPanel',
-        'main.SqlPanel'
+        'main.GeneratorPanel',
+        'main.TemplatesPanel',
+        'main.DatasourcesPanel',
+        'main.TestPanel'
 	],
     //remove the loading-indicator after EXTAPP has been launched
 	launch: function() {

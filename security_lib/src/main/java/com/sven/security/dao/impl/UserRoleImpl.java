@@ -34,7 +34,7 @@ public class UserRoleImpl extends NamedParameterJdbcDaoSupport implements UserRo
   private final Map<String, String> sqlCache = new ConcurrentHashMap<>();
 
   @Autowired
-  @Qualifier("sqliteDataSource")
+  @Qualifier("securitysqliteDataSource")
   private DataSource dataSource;
 
   @PostConstruct

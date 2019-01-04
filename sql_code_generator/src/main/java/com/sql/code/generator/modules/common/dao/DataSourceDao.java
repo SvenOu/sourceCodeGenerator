@@ -1,16 +1,16 @@
-package com.sven.security.dao;
+package com.sql.code.generator.modules.common.dao;
 
-import com.sven.security.vo.DataSource;
 
-import java.lang.Object;
-import java.lang.String;
+import com.sql.code.generator.modules.common.vo.DataSource;
+
 import java.util.List;
-import java.util.Map;
 
 public interface DataSourceDao {
   int insert(DataSource dataSource);
 
-  DataSource findByKey(String key);
+  DataSource findByKey(String dataSourceId);
+
+  List<DataSource> findAll();
 
   List<DataSource> findListByKey(String dataSourceId);
 

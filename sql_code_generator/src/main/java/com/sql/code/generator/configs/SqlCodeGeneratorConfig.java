@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -17,8 +18,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @PropertySource(value = {
         "classpath:sqlCodeGenerator/application.properties",
-        "classpath:sqlCodeGenerator/sql-code-generator.properties"
+        "classpath:sqlCodeGenerator/sql-code-generator.properties",
+        "classpath:sqlCodeGenerator/database-jdbc.properties"
 })
+@ImportResource(value = {
+        "classpath:sqlCodeGenerator/database-context.xml"
+})
+
 public class SqlCodeGeneratorConfig implements WebMvcConfigurer {
 
     @Override

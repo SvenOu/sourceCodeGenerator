@@ -131,7 +131,6 @@ public class CommonServiceImpl implements CommonService {
         return zipFile.getFile().getAbsolutePath();
     }
 
-
     private void getFileNamesByDirPath(List<String> fileNames,  String path) {
         File folder = new File(path);
         if(!folder.exists()){

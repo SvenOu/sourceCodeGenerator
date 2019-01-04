@@ -37,7 +37,7 @@ public class UserDaoImpl extends NamedParameterJdbcDaoSupport implements UserDao
           " VALUES (:userId, :password, :userAlias, :roles, :active)";
 
   @Autowired
-  @Qualifier("sqliteDataSource")
+  @Qualifier("securitysqliteDataSource")
   private DataSource dataSource;
 
   @PostConstruct

@@ -1,17 +1,8 @@
-package com.sven.security.dao.impl;
+package com.sql.code.generator.modules.common.dao.impl;
 
-import java.lang.Exception;
-import java.lang.Override;
-import java.lang.String;
-import java.lang.StringBuilder;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import com.sven.security.dao.DataSourceDao;
-import com.sven.security.utils.TextUtils;
-import com.sven.security.vo.DataSource;
+import com.sql.code.generator.modules.common.dao.DataSourceDao;
+import com.sql.code.generator.modules.common.vo.DataSource;
+import com.sven.common.lib.codetemplate.utils.TextUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +15,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 
 @Repository
 public class DataSourceDaoImpl extends NamedParameterJdbcDaoSupport implements DataSourceDao {
@@ -44,8 +40,8 @@ public class DataSourceDaoImpl extends NamedParameterJdbcDaoSupport implements D
     setDataSource(dataSource);
   }
 
-  private static final String SQL_INSERT = "INSERT INTO data_source (data_source_id, type, url, user_name, password) " +
-          " VALUES (:dataSourceId, :type, :url, :userName, :password)";
+  private static final String SQL_INSERT = "INSERT INTO data_source (data_source_id, type, url, user_name, password, lock, drive_class) " +
+          " VALUES (:dataSourceId, :type, :url, :userName, :password, :lock, :driveClass)";
   @Override
   public int insert(DataSource dataSource) {
     try {
@@ -57,12 +53,24 @@ public class DataSourceDaoImpl extends NamedParameterJdbcDaoSupport implements D
     }
   }
 
-  private static final String SQL_FIND_BY_KEY = "SELECT data_source_id, type, url, user_name, password FROM data_source " +
+  private static final String SQL_FIND_BY_KEY = "SELECT data_source_id, type, url, user_name, password, lock, drive_class FROM data_source " +
           " WHERE data_source_id = :dataSourceId";
   @Override
-  public DataSource findByKey(String key) {
+  public DataSource findByKey(String dataSourceId) {
     try {
-      return this.getJdbcTemplate().queryForObject(SQL_FIND_BY_KEY, DATA_SOURCE_ROW_MAPPER, key);
+      return this.getJdbcTemplate().queryForObject(SQL_FIND_BY_KEY, DATA_SOURCE_ROW_MAPPER, dataSourceId);
+    }
+    catch(Exception e) {
+      log.error("Error : " + e.getMessage());
+      return null;
+    }
+  }
+
+  private static final String SQL_FIND_ALL= "SELECT data_source_id, type, url, user_name, password, lock, drive_class FROM data_source ";
+  @Override
+  public List<DataSource> findAll() {
+    try {
+      return this.getJdbcTemplate().query(SQL_FIND_ALL, DATA_SOURCE_ROW_MAPPER);
     }
     catch(Exception e) {
       log.error("Error : " + e.getMessage());
@@ -81,7 +89,7 @@ public class DataSourceDaoImpl extends NamedParameterJdbcDaoSupport implements D
     }
   }
 
-  private static final String SQL_UPDATE = "UPDATE data_source SET data_source_id = :dataSourceId, type = :type, url = :url, user_name = :userName, password = :password " +
+  private static final String SQL_UPDATE = "UPDATE data_source SET data_source_id = :dataSourceId, type = :type, url = :url, user_name = :userName, password = :password, lock = :lock, drive_class = :driveClass " +
           " WHERE data_source_id = :dataSourceId";
   @Override
   public int update(DataSource dataSource) {

@@ -1,13 +1,13 @@
-Ext.define('CGT.controller.HomeController', {
+Ext.define('CGT.controller.GeneratorController', {
 	extend : 'Ext.app.Controller',
 	refs: [
-	    {ref: 'sqliteExampleBtn', selector: 'homePanel button[name=sqliteExampleBtn]'},
-	    {ref: 'sqlServerExampleBtn', selector: 'homePanel button[name=sqlServerExampleBtn]'},
-	    {ref: 'codeTreePanel', selector: 'homePanel treepanel[name=codeTreePanel]'},
-	    {ref: 'codeSourcePanel', selector: 'homePanel panel[name=codeSourcePanel]'},
-	    {ref: 'downloadCurrentFileBtn', selector: 'homePanel button[name=downloadCurrentFileBtn]'},
-	    {ref: 'downloadAllFileBtn', selector: 'homePanel button[name=downloadAllFileBtn]'},
-	    {ref: 'codeType', selector: 'homePanel displayfield[name=codeType]'},
+	    {ref: 'sqliteExampleBtn', selector: 'generatorPanel button[name=sqliteExampleBtn]'},
+	    {ref: 'sqlServerExampleBtn', selector: 'generatorPanel button[name=sqlServerExampleBtn]'},
+	    {ref: 'codeTreePanel', selector: 'generatorPanel treepanel[name=codeTreePanel]'},
+	    {ref: 'codeSourcePanel', selector: 'generatorPanel panel[name=codeSourcePanel]'},
+	    {ref: 'downloadCurrentFileBtn', selector: 'generatorPanel button[name=downloadCurrentFileBtn]'},
+	    {ref: 'downloadAllFileBtn', selector: 'generatorPanel button[name=downloadAllFileBtn]'},
+	    {ref: 'codeType', selector: 'generatorPanel displayfield[name=codeType]'},
 	    {ref: 'sqlDataBaseConfigWindow', selector: 'sqldatabaseconfigwindow'},
 	    {ref: 'winSqlType', selector: 'sqldatabaseconfigwindow displayfield[name=type]'},
 	    {ref: 'winExampleUrl', selector: 'sqldatabaseconfigwindow displayfield[name=exampleUrl]'},
@@ -15,26 +15,26 @@ Ext.define('CGT.controller.HomeController', {
 	    {ref: 'winUsername', selector: 'sqldatabaseconfigwindow textfield[name=username]'},
 	    {ref: 'winPassword', selector: 'sqldatabaseconfigwindow textfield[name=password]'},
 	    {ref: 'winGenerateSourceBtn', selector: 'sqldatabaseconfigwindow button[name=generateSourceBtn]'},
-	    // {ref: 'homePanel', selector: 'homePanel'},
-	    // {ref: 'javaPanel', selector: 'javaPanel'},
-	    // {ref: 'javaScriptPanel', selector: 'javaScriptPanel'},
-	    // {ref: 'sqlPanel', selector: 'sqlPanel'},
+	    // {ref: 'generatorPanel', selector: 'generatorPanel'},
+	    // {ref: 'templatesPanel', selector: 'templatesPanel'},
+	    // {ref: 'datasourcesPanel', selector: 'datasourcesPanel'},
+	    // {ref: 'testPanel', selector: 'testPanel'},
     ],
     init: function(application) {
    	this.control({
-           'homePanel button[name=sqliteExampleBtn]': {
+           'generatorPanel button[name=sqliteExampleBtn]': {
                click: this.sqliteExampleBtnClick
            },
-           'homePanel button[name=sqlServerExampleBtn]': {
+           'generatorPanel button[name=sqlServerExampleBtn]': {
                click: this.sqlServerExampleBtnClick
            },
-           'homePanel treepanel[name=codeTreePanel]': {
+           'generatorPanel treepanel[name=codeTreePanel]': {
                select: this.codeTreePanelItemSelect
            },
-           'homePanel button[name=downloadCurrentFileBtn]': {
+           'generatorPanel button[name=downloadCurrentFileBtn]': {
                click: this.downloadCurrentFileBtnClick
            },
-           'homePanel button[name=downloadAllFileBtn]': {
+           'generatorPanel button[name=downloadAllFileBtn]': {
                click: this.downloadAllFileBtnClick
            },
            'sqldatabaseconfigwindow button[name=generateSourceBtn]': {
@@ -102,21 +102,6 @@ Ext.define('CGT.controller.HomeController', {
         me.getWinSqlType().setValue(sqlWindow.contentValus.m_type);
         me.getWinExampleUrl().setValue(sqlWindow.contentValus.m_exampleUrl);
         me.getWinUrl().emptyText = [sqlWindow.contentValus.m_urlEmptyText];
-
-        // var me = this, codeTreeStore = this.getCodeTreePanel().store,
-        //     type = 'sqlServer2005', downloadAllFileBtn = this.getDownloadAllFileBtn();
-        // me.getCodeType().setValue(type);
-        // codeTreeStore.getProxy().url = app.API_PREFIX +'/getCodeFileInfo";
-        // codeTreeStore.load({
-        //     params: {type: type},
-        //     callback: function (records, operation, success) {
-        //         if(Ext.isEmpty(records)){
-        //             downloadAllFileBtn.disable();
-        //         }else {
-        //             downloadAllFileBtn.enable();
-        //         }
-        //     }
-        // });
     },
     sqliteExampleBtnClick: function (btn, e, eOpts) {
         var me = this, codeTreeStore = this.getCodeTreePanel().store,
@@ -148,7 +133,7 @@ Ext.define('CGT.controller.HomeController', {
         me.getCodeType().setValue(contentValus.m_type);
         codeTreeStore.getProxy().url =  app.API_PREFIX +'/getCodeFileInfo';
 
-        if(!me.dbConfigWinFormValid()){
+        if(!me.remoteConfigWinFormValid()){
             return;
         }
         codeTreeStore.load({
@@ -169,27 +154,18 @@ Ext.define('CGT.controller.HomeController', {
         });
         win.close();
     },
-    dbConfigWinFormValid: function () {
+    remoteConfigWinFormValid: function () {
         var me = this;
         if(me.getWinUrl().isVisible() &&!me.getWinUrl().isValid()){
-            Ext.Msg.show({
-                title: 'Message',
-                msg: 'url require not empty'
-            });
+            app.method.toastMsg("Message","url require not empty");
             return false;
         }
         if(me.getWinUsername().isVisible() &&!me.getWinUsername().isValid()){
-            Ext.Msg.show({
-                title: 'Message',
-                msg: 'user name require not empty'
-            });
+            app.method.toastMsg("Message","user name require not empty");
             return false;
         }
         if(me.getWinPassword().isVisible() &&!me.getWinPassword().isValid()){
-            Ext.Msg.show({
-                title: 'Message',
-                msg: 'password require not empty'
-            });
+            app.method.toastMsg("Message","password require not empty");
             return false;
         }
         return true;

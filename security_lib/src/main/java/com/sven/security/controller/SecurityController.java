@@ -1,6 +1,7 @@
 package com.sven.security.controller;
 
 import com.sven.common.lib.bean.CommonResponse;
+import com.sven.common.lib.bean.InteractionContro;
 import com.sven.security.bean.CUserDetail;
 import com.sven.security.config.anotation.APIController;
 import com.sven.security.service.CsService;
@@ -45,4 +46,11 @@ public class SecurityController {
 	public @ResponseBody CommonResponse register(User user){
 		return csService.registerUser(user);
 	}
+
+	// FIXME: 不同 controller 交互
+//	@RequestMapping(value="/testb", method=RequestMethod.GET)
+//	public String testb(HttpServletRequest request){
+//		InteractionContro contro = InteractionContro.finishInteraction(request,"呵呵");
+//		return contro.getToUrl();
+//	}
 }

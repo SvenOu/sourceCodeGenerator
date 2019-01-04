@@ -1,12 +1,12 @@
-Ext.define('CGT.view.main.HomePanel', {
+Ext.define('CGT.view.main.GeneratorPanel', {
 	extend: 'Ext.panel.Panel',
-	alias: ['widget.homePanel'],
+	alias: ['widget.generatorPanel'],
     layout: {
         type: 'fit'
     },
     initComponent:function(){
         var me = this;
-        me.codeViewStore = Ext.create('CGT.store.sql.CodeView');
+        me.codeViewStore = Ext.create('CGT.store.generator.CodeView');
         me.items = [
             {
                 xtype: 'container',
