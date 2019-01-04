@@ -134,4 +134,7 @@
 	white-space: normal;
 	word-break: break-word;
 }
+.db-files-code-tree-panel-container{
+	border-left: 1px silver solid;
+}
 

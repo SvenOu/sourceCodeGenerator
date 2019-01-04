@@ -87,6 +87,11 @@ public class SqlCodeController {
 		return codeService.deleteDataSource(dataSourceId);
 	}
 
+	@RequestMapping(value = "/getUserDbFilesInfo", method = RequestMethod.GET)
+	public @ResponseBody SourceFileInfo getUserDbFilesInfo(){
+		return codeService.getUserDbFilesInfo();
+	}
+
 	// FIXME: 不同 controller 交互
 //	@RequestMapping(value="/testa", method=RequestMethod.GET)
 //	public String testa(HttpServletRequest request){

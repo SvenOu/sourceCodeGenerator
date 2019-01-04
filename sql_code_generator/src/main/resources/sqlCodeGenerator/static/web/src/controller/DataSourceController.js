@@ -4,6 +4,8 @@ Ext.define('CGT.controller.DataSourceController', {
         {ref: 'dataSourceGrid', selector: 'datasourcegrid[name=dataSourceGrid]'},
         {ref: 'dataSourceType', selector: 'datasourcegrid combobox[name=dataSourceType]'},
         {ref: 'addDatasourceBtn', selector: 'datasourcegrid button[name=addDatasourceBtn]'},
+        {ref: 'dbFilesTreePanelContainer', selector: 'container[name=dbFilesTreePanelContainer]'},
+        {ref: 'dbFilesTreePanel', selector: 'treepanel[name=dbFilesTreePanel]'},
         {ref: 'sqlfileConfigWindow', selector: 'sqlfileconfigwindow'},
         {ref: 'sqlFileConfigForm', selector: 'sqlfileconfigwindow form[name=sqlFileConfigForm]'},
         {ref: 'dbFile', selector: 'sqlfileconfigwindow filefield[name=dbFile]'},
@@ -18,11 +20,17 @@ Ext.define('CGT.controller.DataSourceController', {
 	],
     init: function(application) {
         this.control({
+               'container[name=dbFilesTreePanelContainer]': {
+                   afterrender: this.dbFilesTreePanelContainerAfterRender
+               },
                'datasourcegrid[name=dataSourceGrid] actioncolumn': {
                    deleteBtnClick: this.dataSourceDeleteBtnClick
                },
                'datasourcegrid button[name=addDatasourceBtn]': {
                    click: this.addDatasourceBtnClick
+               },
+               'datasourcegrid button[name=refreshDbFiles]': {
+                   click: this.refreshDbFiles
                },
                'sqlremoteconfigwindow button[name=addBtn]': {
                    click: this.sqlRemoteConfigWindowAddBtnClick
@@ -34,6 +42,21 @@ Ext.define('CGT.controller.DataSourceController', {
                    render: this.dataSourceTypeRender
                }
         });
+    },
+    refreshDbFilesTreePanelContainer: function () {
+        var me = this, dbFilesTreePanel = this.getDbFilesTreePanel();
+        var dbFilesTreePanelStore = dbFilesTreePanel.store;
+        dbFilesTreePanel.getRootNode().removeAll();
+        dbFilesTreePanelStore.getProxy().url =  app.API_PREFIX +'/getUserDbFilesInfo';
+        dbFilesTreePanelStore.load({
+            params:{},
+            callback: function (records, operation, success) {
+                // console.log(records);
+            }
+        });
+    },
+    dbFilesTreePanelContainerAfterRender: function(win){
+        this.refreshDbFilesTreePanelContainer();
     },
     preformDeleteDataSource: function (view, rowIndex, colIndex, item, e, record, row) {
         var me = this;
@@ -161,6 +184,9 @@ Ext.define('CGT.controller.DataSourceController', {
             }
         });
 
+    },
+    refreshDbFiles: function(btn, e, eOpts){
+        this.refreshDbFilesTreePanelContainer();
     },
     addDatasourceBtnClick: function (btn, e, eOpts) {
 	    var me = this, dataSourceType = this.getDataSourceType();

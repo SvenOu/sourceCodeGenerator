@@ -6,6 +6,8 @@ import com.sql.code.generator.modules.common.dao.DataSourceDao;
 import com.sql.code.generator.modules.common.service.CodeService;
 import com.sql.code.generator.modules.common.vo.DataSource;
 import com.sven.common.lib.bean.CommonResponse;
+import com.sven.common.lib.codetemplate.dataBean.SourceFileInfo;
+import com.sven.common.lib.codetemplate.utils.FileUtils;
 import com.sven.common.lib.codetemplate.utils.IdUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -102,7 +104,17 @@ public class CodeServiceImpl implements CodeService {
         }
         dataSource.setDataSourceId(IdUtils.getId(DatasourceEnum.MSSQL.getValue()));
         dataSource.setDriveClass(DatasourceEnum.MSSQL.getDriveClass());
+        String originUrl = dataSource.getUrl();
+        if(!originUrl.contains(DatasourceEnum.MSSQL.getUrlPrefix())){
+            dataSource.setUrl(DatasourceEnum.MSSQL.getUrlPrefix() + originUrl);
+        }
         dataSource.setLock(false);
         return CommonResponse.success(dataSourceDao.save(dataSource));
+    }
+
+    @Override
+    public SourceFileInfo getUserDbFilesInfo() {
+        String userDbFileDir = getUserDbFileDir();
+        return FileUtils.getSourceFileInfo(userDbFileDir);
     }
 }

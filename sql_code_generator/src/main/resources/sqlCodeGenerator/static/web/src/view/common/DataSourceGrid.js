@@ -61,6 +61,12 @@ Ext.define('CGT.view.common.DataSourceGrid', {
                         xtype: 'button',
                         margin: 10,
                         text: 'add datasource'
+                    },
+                    {
+                        name: 'refreshDbFiles',
+                        xtype: 'button',
+                        margin: 10,
+                        text: 'refresh dataSource files'
                     }
                 ]
             }

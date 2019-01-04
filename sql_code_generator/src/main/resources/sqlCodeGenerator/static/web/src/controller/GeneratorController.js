@@ -133,7 +133,7 @@ Ext.define('CGT.controller.GeneratorController', {
         me.getCodeType().setValue(contentValus.m_type);
         codeTreeStore.getProxy().url =  app.API_PREFIX +'/getCodeFileInfo';
 
-        if(!me.remoteConfigWinFormValid()){
+        if(!me.configWinFormValid()){
             return;
         }
         codeTreeStore.load({
@@ -154,7 +154,7 @@ Ext.define('CGT.controller.GeneratorController', {
         });
         win.close();
     },
-    remoteConfigWinFormValid: function () {
+    configWinFormValid: function () {
         var me = this;
         if(me.getWinUrl().isVisible() &&!me.getWinUrl().isValid()){
             app.method.toastMsg("Message","url require not empty");
