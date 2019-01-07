@@ -159,11 +159,12 @@ public class CodeTemplateDaoImpl extends NamedParameterJdbcDaoSupport implements
     }
   }
 
-  private static final String SQL_FIND_ALL = "SELECT template_id, path, lock, owner FROM code_template ";
+  private static final String SQL_FIND_ALL = "SELECT template_id, path, lock, owner FROM code_template " +
+          " WHERE owner = :owner";
   @Override
-  public List<CodeTemplate> findAll() {
+  public List<CodeTemplate> findAll(String owner) {
     try {
-      return this.getJdbcTemplate().query(SQL_FIND_ALL, CODE_TEMPLATE_ROW_MAPPER);
+      return this.getJdbcTemplate().query(SQL_FIND_ALL, CODE_TEMPLATE_ROW_MAPPER, owner);
     }
     catch(Exception e) {
       log.error("Error : " + e.getMessage());

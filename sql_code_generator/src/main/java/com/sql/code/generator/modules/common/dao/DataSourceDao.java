@@ -10,7 +10,7 @@ public interface DataSourceDao {
 
   DataSource findByKey(String dataSourceId);
 
-  List<DataSource> findAll();
+  List<DataSource> findAll(String owner);
 
   List<DataSource> findListByKey(String dataSourceId);
 

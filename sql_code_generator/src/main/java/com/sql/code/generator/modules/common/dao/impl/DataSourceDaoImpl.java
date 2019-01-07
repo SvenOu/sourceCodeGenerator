@@ -66,11 +66,12 @@ public class DataSourceDaoImpl extends NamedParameterJdbcDaoSupport implements D
     }
   }
 
-  private static final String SQL_FIND_ALL= "SELECT data_source_id, type, url, user_name, password, lock, drive_class, owner FROM data_source ";
+  private static final String SQL_FIND_ALL= "SELECT data_source_id, type, url, user_name, password, lock, drive_class, owner FROM data_source " +
+          " WHERE owner = :owner";
   @Override
-  public List<DataSource> findAll() {
+  public List<DataSource> findAll(String owner) {
     try {
-      return this.getJdbcTemplate().query(SQL_FIND_ALL, DATA_SOURCE_ROW_MAPPER);
+      return this.getJdbcTemplate().query(SQL_FIND_ALL, DATA_SOURCE_ROW_MAPPER, owner);
     }
     catch(Exception e) {
       log.error("Error : " + e.getMessage());

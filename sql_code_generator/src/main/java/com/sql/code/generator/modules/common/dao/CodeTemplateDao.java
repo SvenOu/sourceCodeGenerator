@@ -19,5 +19,5 @@ public interface CodeTemplateDao {
 
   int deleteByKey(String templateId);
 
-  List<CodeTemplate> findAll();
+  List<CodeTemplate> findAll(String owner);
 }

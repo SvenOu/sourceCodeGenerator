@@ -50,7 +50,8 @@ public class CodeServiceImpl implements CodeService {
 
     @Override
     public CommonResponse finAllDataSources(boolean excludeUserData) {
-        List<DataSource> dataSources = dataSourceDao.findAll();
+        String userId = SecurityUtils.getCurrentUserDetails().getUsername();
+        List<DataSource> dataSources = dataSourceDao.findAll(userId);
         if (excludeUserData) {
             for (DataSource ds : dataSources) {
                 ds.setUserName("");
@@ -148,7 +149,7 @@ public class CodeServiceImpl implements CodeService {
             for(int i =0 ; i<defTpls.length; i++){
                 File f= defTpls[i];
                 CodeTemplate codeTemplate = new CodeTemplate();
-                codeTemplate.setTemplateId(i+ "_"+defaultTemplateDefaultFileName + "_" + f.getName());
+                codeTemplate.setTemplateId(i + userId + "_"+defaultTemplateDefaultFileName + "_" + f.getName());
                 codeTemplate.setPath(f.getAbsolutePath().replaceAll("\\\\","/") + '/');
                 codeTemplate.setLock(false);
                 codeTemplate.setOwner(userId);
@@ -164,7 +165,8 @@ public class CodeServiceImpl implements CodeService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return CommonResponse.success(codeTemplateDao.findAll());
+        String userId = SecurityUtils.getCurrentUserDetails().getUsername();
+        return CommonResponse.success(codeTemplateDao.findAll(userId));
     }
 
     @Override
