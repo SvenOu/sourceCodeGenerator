@@ -1,7 +1,7 @@
-Ext.define('CGT.view.common.DataSourceGrid', {
+Ext.define('CGT.view.common.TemplateGrid', {
 	extend: 'Ext.grid.Panel',
-	alias: ['widget.datasourcegrid'],
-    bodyCls: 'main-data-sources-grid',
+	alias: ['widget.templategrid'],
+    bodyCls: 'main-common-template-grid',
     viewConfig: {
         enableTextSelection: true
     },
@@ -11,9 +11,8 @@ Ext.define('CGT.view.common.DataSourceGrid', {
             sortable: true
         },
         items: [
-            { text: 'data_source_id',  dataIndex: 'dataSourceId', width: 190},
-            { text: 'type',  dataIndex: 'type'},
-            { text: 'url',  dataIndex: 'url', flex: 1},
+            { text: 'data_source_id',  dataIndex: 'templateId', width: 190},
+            { text: 'url',  dataIndex: 'path', flex: 1},
             { xtype : 'checkcolumn', text: 'lock',  dataIndex: 'lock',
                 listeners: {
                     beforecheckchange: function (column, rowIndex, checked, eOpts) {

@@ -2,8 +2,10 @@ package com.sql.code.generator.modules.common.service.impl;
 
 import com.sql.code.generator.commom.utils.SecurityUtils;
 import com.sql.code.generator.modules.common.bean.DatasourceEnum;
+import com.sql.code.generator.modules.common.dao.CodeTemplateDao;
 import com.sql.code.generator.modules.common.dao.DataSourceDao;
 import com.sql.code.generator.modules.common.service.CodeService;
+import com.sql.code.generator.modules.common.vo.CodeTemplate;
 import com.sql.code.generator.modules.common.vo.DataSource;
 import com.sven.common.lib.bean.CommonResponse;
 import com.sven.common.lib.codetemplate.dataBean.SourceFileInfo;
@@ -37,9 +39,14 @@ public class CodeServiceImpl implements CodeService {
 
     @Value("${sql-code-generator.templates.default.file.dir}")
     private String defaultTemplateFileDirPath;
+    @Value("${sql-code-generator.templates.default.file.name}")
+    private String defaultTemplateDefaultFileName;
 
     @Autowired
     private DataSourceDao dataSourceDao;
+
+    @Autowired
+    private CodeTemplateDao codeTemplateDao;
 
     @Override
     public CommonResponse finAllDataSources(boolean excludeUserData) {
@@ -123,12 +130,41 @@ public class CodeServiceImpl implements CodeService {
     @Override
     public SourceFileInfo getTemplateFilesInfo() throws IOException {
         String userDbFileDir = getUserTemplateFileDir();
-        File userDbFileDirFile = new File(userDbFileDir);
-        if(!userDbFileDirFile.exists()){
-            userDbFileDirFile.mkdirs();
-            FileSystemUtils.copyRecursively(new File(defaultTemplateFileDirPath), userDbFileDirFile);
-        }
+        initDefaultTemplates();
         return FileUtils.getSourceFileInfo(userDbFileDir);
+    }
+
+    @Override
+    public void initDefaultTemplates() throws IOException {
+        String userDbFileDir = getUserTemplateFileDir();
+        File userDbFileDirFile = new File(userDbFileDir);
+        if(!userDbFileDirFile.exists()
+                || null == userDbFileDirFile.listFiles()
+                || userDbFileDirFile.listFiles().length <= 0){
+            userDbFileDirFile.mkdirs();
+            String userId = SecurityUtils.getCurrentUserDetails().getUsername();
+            FileSystemUtils.copyRecursively(new File(defaultTemplateFileDirPath), userDbFileDirFile);
+            File[] defTpls = new File(userDbFileDir + "/" + defaultTemplateDefaultFileName).listFiles();
+            for(int i =0 ; i<defTpls.length; i++){
+                File f= defTpls[i];
+                CodeTemplate codeTemplate = new CodeTemplate();
+                codeTemplate.setTemplateId(i+ "_"+defaultTemplateDefaultFileName + "_" + f.getName());
+                codeTemplate.setPath(f.getAbsolutePath().replaceAll("\\\\","/") + '/');
+                codeTemplate.setLock(false);
+                codeTemplate.setOwner(userId);
+                codeTemplateDao.save(codeTemplate);
+            }
+        }
+    }
+
+    @Override
+    public CommonResponse getAllTemplate() {
+        try {
+            initDefaultTemplates();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return CommonResponse.success(codeTemplateDao.findAll());
     }
 
     @Override

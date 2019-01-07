@@ -10,7 +10,7 @@ Ext.define('CGT.view.common.SqlRemoteConfigWindow',{
 	padding: 15,
 	liveDrag : true,
 	// custom attr
-	contentValus: {
+	contentValues: {
         m_type: '',
         m_url: '',
         m_username: '',

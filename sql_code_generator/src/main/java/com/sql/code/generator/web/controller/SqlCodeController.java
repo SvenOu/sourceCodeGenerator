@@ -2,6 +2,7 @@ package com.sql.code.generator.web.controller;
 
 import com.sql.code.generator.configs.anotation.APIController;
 import com.sql.code.generator.modules.common.service.CodeService;
+import com.sql.code.generator.modules.common.vo.CodeTemplate;
 import com.sql.code.generator.modules.common.vo.DataSource;
 import com.sven.common.lib.bean.CommonResponse;
 import com.sven.common.lib.bean.InteractionContro;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author sven-ou
@@ -37,12 +39,10 @@ public class SqlCodeController {
 
 	@RequestMapping(value = "/getCodeFileInfo", method = RequestMethod.GET)
 	public @ResponseBody SourceFileInfo getCodeFileInfo(
-			String type,
 			String packageName,
-			String url,
-			String username,
-			String password) throws IOException {
-		return commonService.getCodeFileInfo(type, packageName, url, username, password);
+			String dataSourceId,
+			String templateId) throws IOException {
+		return commonService.getCodeFileInfo(packageName, dataSourceId, templateId);
 	}
 
 	@RequestMapping(value = "/getSourceFileCode", method = RequestMethod.GET)
@@ -91,6 +91,11 @@ public class SqlCodeController {
 	public @ResponseBody SourceFileInfo getUserDbFilesInfo(){
 		return codeService.getUserDbFilesInfo();
 	}
+
+    @RequestMapping(value = "/getAllTemplate", method = RequestMethod.GET)
+    public @ResponseBody CommonResponse getAllTemplate() throws IOException {
+        return codeService.getAllTemplate();
+    }
 
 	@RequestMapping(value = "/getTemplateFilesInfo", method = RequestMethod.GET)
 	public @ResponseBody SourceFileInfo getTemplateFilesInfo() throws IOException {

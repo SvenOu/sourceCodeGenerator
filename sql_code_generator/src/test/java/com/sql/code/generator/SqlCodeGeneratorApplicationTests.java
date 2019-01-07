@@ -92,24 +92,6 @@ public class SqlCodeGeneratorApplicationTests {
     }
 
     @Test
-    public void downloadCodeFile() throws IOException {
-        String packageName = "com.test.sven1";
-
-        String url = "jdbc:jtds:sqlserver://sql30.easternphoenix.com:1433/ChurchsYMTC";
-        String username = "xx";
-        String password = "xxxxxx";
-        SourceFileInfo info1 = commonService.getCodeFileInfo(packageName, SqlType.SQL_SERVER_2005.getName(), url, username, password);
-        log.debug("");
-
-
-        String url2 = "jdbc:sqlite:E:/IntenlliJ_IDEA_workspace/sourceCodeGenerator/sql_code_generator/db/SourceGenerator.sqlite3";
-        String username2 = "";
-        String password2 = "";
-        SourceFileInfo info2 = commonService.getCodeFileInfo(packageName, SqlType.SQLLITE.getName(), url2, username2, password2);
-        log.debug("");
-    }
-
-    @Test
     public void generateDirZip() throws IOException, ZipException {
         commonService.generateDirZip(SqlType.SQL_SERVER_2005.getName());
         commonService.generateDirZip(SqlType.SQLLITE.getName());

@@ -1,13 +1,21 @@
 Ext.define('CGT.controller.GeneratorController', {
 	extend : 'Ext.app.Controller',
 	refs: [
-	    {ref: 'sqliteExampleBtn', selector: 'generatorPanel button[name=sqliteExampleBtn]'},
-	    {ref: 'sqlServerExampleBtn', selector: 'generatorPanel button[name=sqlServerExampleBtn]'},
+        {ref: 'commonMainContainer', selector: 'commonMainContainer'},
+	    {ref: 'generatorPanel', selector: 'generatorPanel'},
+	    {ref: 'dataSourcesPanel', selector: 'datasourcespanel'},
+	    {ref: 'templatesPanel', selector: 'templatesPanel'},
+	    {ref: 'packageName', selector: 'generatorPanel textfield[name=packageName]'},
+	    {ref: 'selectDataSourceBtn', selector: 'generatorPanel button[name=selectDataSourceBtn]'},
+	    {ref: 'selectedTemplate', selector: 'generatorPanel label[name=selectedTemplate]'},
+	    {ref: 'selectedDataSource', selector: 'generatorPanel label[name=selectedDataSource]'},
+	    {ref: 'selectTemplateBtn', selector: 'generatorPanel button[name=selectTemplateBtn]'},
+	    {ref: 'generateCodeBtn', selector: 'generatorPanel button[name=generateCodeBtn]'},
 	    {ref: 'codeTreePanel', selector: 'generatorPanel treepanel[name=codeTreePanel]'},
 	    {ref: 'codeSourcePanel', selector: 'generatorPanel panel[name=codeSourcePanel]'},
 	    {ref: 'downloadCurrentFileBtn', selector: 'generatorPanel button[name=downloadCurrentFileBtn]'},
 	    {ref: 'downloadAllFileBtn', selector: 'generatorPanel button[name=downloadAllFileBtn]'},
-	    {ref: 'codeType', selector: 'generatorPanel displayfield[name=codeType]'},
+	    {ref: 'dataSourceId', selector: 'generatorPanel displayfield[name=dataSourceId]'},
 	    {ref: 'sqlDataBaseConfigWindow', selector: 'sqldatabaseconfigwindow'},
 	    {ref: 'winSqlType', selector: 'sqldatabaseconfigwindow displayfield[name=type]'},
 	    {ref: 'winExampleUrl', selector: 'sqldatabaseconfigwindow displayfield[name=exampleUrl]'},
@@ -15,18 +23,17 @@ Ext.define('CGT.controller.GeneratorController', {
 	    {ref: 'winUsername', selector: 'sqldatabaseconfigwindow textfield[name=username]'},
 	    {ref: 'winPassword', selector: 'sqldatabaseconfigwindow textfield[name=password]'},
 	    {ref: 'winGenerateSourceBtn', selector: 'sqldatabaseconfigwindow button[name=generateSourceBtn]'},
-	    // {ref: 'generatorPanel', selector: 'generatorPanel'},
-	    // {ref: 'templatesPanel', selector: 'templatesPanel'},
-	    // {ref: 'datasourcesPanel', selector: 'datasourcesPanel'},
-	    // {ref: 'TemplateDetailPanel', selector: 'templatedetailpanel'},
     ],
     init: function(application) {
    	this.control({
-           'generatorPanel button[name=sqliteExampleBtn]': {
-               click: this.sqliteExampleBtnClick
+           'generatorPanel button[name=selectDataSourceBtn]': {
+               click: this.selectDataSourceBtnClick
            },
-           'generatorPanel button[name=sqlServerExampleBtn]': {
-               click: this.sqlServerExampleBtnClick
+           'generatorPanel button[name=selectTemplateBtn]': {
+               click: this.selectTemplateBtnClick
+           },
+           'generatorPanel button[name=generateCodeBtn]': {
+               click: this.generateCodeBtnClick
            },
            'generatorPanel treepanel[name=codeTreePanel]': {
                select: this.codeTreePanelItemSelect
@@ -43,11 +50,11 @@ Ext.define('CGT.controller.GeneratorController', {
        });
     },
     downloadAllFileBtnClick: function(btn, e, eOpts){
-	    var me = this, type = me.getCodeType().getValue();
-	    if(!Ext.isEmpty(type)){
+	    var me = this, dataSourceId = me.getDataSourceId.getValue();
+	    if(!Ext.isEmpty(dataSourceId)){
             var url = app.API_PREFIX +'/downloadAllFile?' + Ext.urlEncode({
                 userId: app.user.userId,
-                type: type
+                type: dataSourceId
             });
             window.open(url, '_blank');
         }
@@ -85,64 +92,23 @@ Ext.define('CGT.controller.GeneratorController', {
             });
         }
     },
-    sqlServerExampleBtnClick: function (btn, e, eOpts) {
+    generateCodeBtnClick: function (btn, e, eOpts) {
         var me = this, codeTreeStore = this.getCodeTreePanel().store,
-            type = 'sqlServer2005', downloadAllFileBtn = this.getDownloadAllFileBtn();
-
-        var sqlWindow = Ext.create('CGT.view.common.SqlDataBaseConfigWindow');
-        sqlWindow.contentValus = {
-            m_type: type,
-            m_url: '',
-            m_username: '',
-            m_password: '',
-            m_exampleUrl:'jdbc:jtds:sqlserver://sql30.easternphoenix.com:1433/ChurchsYMTC',
-            m_urlEmptyText:'jdbc:jtds:sqlserver:{sqlite file path}',
-        };
-        sqlWindow.show();
-        me.getWinSqlType().setValue(sqlWindow.contentValus.m_type);
-        me.getWinExampleUrl().setValue(sqlWindow.contentValus.m_exampleUrl);
-        me.getWinUrl().emptyText = [sqlWindow.contentValus.m_urlEmptyText];
-    },
-    sqliteExampleBtnClick: function (btn, e, eOpts) {
-        var me = this, codeTreeStore = this.getCodeTreePanel().store,
-            type = 'sqlite', downloadAllFileBtn = this.getDownloadAllFileBtn();
-        var sqlWindow = Ext.create('CGT.view.common.SqlDataBaseConfigWindow');
-        sqlWindow.contentValus = {
-            m_type: type,
-            m_url: '',
-            m_username: '',
-            m_password: '',
-            m_exampleUrl:'jdbc:sqlite:E:/IntenlliJ_IDEA_workspace/sourceCodeGenerator/sql_code_generator/db/dev_test1.sqlite',
-            m_urlEmptyText:'jdbc:sqlite:{sqlite file path}',
-        };
-        sqlWindow.show();
-        me.getWinSqlType().setValue(sqlWindow.contentValus.m_type);
-        me.getWinExampleUrl().setValue(sqlWindow.contentValus.m_exampleUrl);
-        me.getWinUrl().emptyText = [sqlWindow.contentValus.m_urlEmptyText];
-        me.getWinUsername().setVisible(false);
-        me.getWinPassword().setVisible(false);
-    },
-    generateSourceBtnClick: function(btn, e, eOpts){
-	    var me = this, codeTreeStore = this.getCodeTreePanel().store,
             downloadAllFileBtn = this.getDownloadAllFileBtn(),
-            win = btn.up('sqldatabaseconfigwindow');
-        var contentValus = win.contentValus;
-        contentValus.m_url = me.getWinUrl().getValue();
-        contentValus.m_username = me.getWinUsername().getValue();
-        contentValus.m_password = me.getWinPassword().getValue();
-        me.getCodeType().setValue(contentValus.m_type);
+            tplContentValues = this.getTemplatesPanel().contentValues,
+            dataSourcesContentValues = this.getDataSourcesPanel().contentValues;
+
+        me.getDataSourceId().setValue(dataSourcesContentValues.m_lastChooseVal.get('dataSourceId'));
         codeTreeStore.getProxy().url =  app.API_PREFIX +'/getCodeFileInfo';
 
-        if(!me.configWinFormValid()){
+        if(!me.generateConfigValid()){
             return;
         }
         codeTreeStore.load({
             params:{
-                type: contentValus.m_type,
-                url: contentValus.m_url,
-                packageName: "com.sv.test",
-                username: contentValus.m_username,
-                password: contentValus.m_password
+                packageName: me.getPackageName().getValue(),
+                dataSourceId: dataSourcesContentValues.m_lastChooseVal.get('dataSourceId'),
+                templateId: tplContentValues.m_lastChooseVal.get('templateId')
             },
             callback: function (records, operation, success) {
                 if(Ext.isEmpty(records)){
@@ -152,22 +118,46 @@ Ext.define('CGT.controller.GeneratorController', {
                 }
             }
         });
-        win.close();
     },
-    configWinFormValid: function () {
+    generateConfigValid: function () {
         var me = this;
-        if(me.getWinUrl().isVisible() &&!me.getWinUrl().isValid()){
-            app.method.toastMsg("Message","url require not empty");
+        if(me.getSelectedDataSource().isVisible() && Ext.isEmpty(me.getSelectedDataSource().text)){
+            app.method.toastMsg("Message","must select a dataSource");
             return false;
         }
-        if(me.getWinUsername().isVisible() &&!me.getWinUsername().isValid()){
-            app.method.toastMsg("Message","user name require not empty");
+        if(me.getSelectedTemplate().isVisible() && Ext.isEmpty(me.getSelectedTemplate().text)){
+            app.method.toastMsg("Message","must select a template");
             return false;
         }
-        if(me.getWinPassword().isVisible() &&!me.getWinPassword().isValid()){
-            app.method.toastMsg("Message","password require not empty");
+        if(me.getPackageName().isVisible() &&!me.getPackageName().isValid()){
+            app.method.toastMsg("Message","package require not empty");
             return false;
         }
         return true;
+    },
+    selectTemplateBtnClick: function (btn, e, eOpts) {
+        var me = this, templatePanel = this.getTemplatesPanel(),
+            mainContainer = this.getCommonMainContainer();
+        templatePanel.contentValues.m_mode = 'choose';
+        templatePanel.contentValues.m_chooseFrom = this.getGeneratorPanel();
+        templatePanel.contentValues.m_callBack = function (contentValues) {
+            var record =  contentValues.m_lastChooseVal;
+            me.getSelectedTemplate().setText(record.get('templateId') + ': ' + record.get('path'));
+        };
+        mainContainer.getLayout().setActiveItem(templatePanel);
+    },
+    selectDataSourceBtnClick: function (btn, e, eOpts) {
+        var me = this, dataSourcesPanel = this.getDataSourcesPanel(),
+            mainContainer = this.getCommonMainContainer();
+        dataSourcesPanel.contentValues.m_mode = 'choose';
+        dataSourcesPanel.contentValues.m_chooseFrom = this.getGeneratorPanel();
+        dataSourcesPanel.contentValues.m_callBack = function (contentValues) {
+            var record =  contentValues.m_lastChooseVal;
+            me.getSelectedDataSource().setText(record.get('dataSourceId') + ': ' + record.get('url'));
+        };
+        mainContainer.getLayout().setActiveItem(dataSourcesPanel);
+    },
+    generateSourceBtnClick: function(btn, e, eOpts){
+
     }
 });

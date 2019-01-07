@@ -11,6 +11,7 @@ Ext.application({
     	'DataSourceController',
     	'MainController',
     	'TemplatesDetailController',
+    	'TemplateController',
     	'GeneratorController'
 	],
     models: [
@@ -18,12 +19,14 @@ Ext.application({
 		'generator.CodeView',
 		'generator.Datasource',
 		'generator.DatasourceType',
+		'generator.Template',
 	],
     stores: [
         'main.SideDataView',
         'generator.CodeView',
         'generator.Datasource',
         'generator.DatasourceType',
+        'generator.Template',
     ],
     views: [
     	// comman
@@ -35,6 +38,7 @@ Ext.application({
 		'common.SqlRemoteConfigWindow',
 		'common.SqlFileConfigWindow',
 		'common.DataSourceGrid',
+		'common.TemplateGrid',
 
 		//  main
         'main.GeneratorPanel',

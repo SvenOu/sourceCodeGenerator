@@ -18,4 +18,6 @@ public interface CodeTemplateDao {
   int save(CodeTemplate codeTemplate);
 
   int deleteByKey(String templateId);
+
+  List<CodeTemplate> findAll();
 }

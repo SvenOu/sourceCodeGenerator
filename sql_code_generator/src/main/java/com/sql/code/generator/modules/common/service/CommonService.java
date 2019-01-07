@@ -13,7 +13,9 @@ import java.io.IOException;
 public interface CommonService {
     String getSourceFileCode(String path) throws IOException;
 
-    SourceFileInfo getCodeFileInfo(String type, String packageName, String url, String username, String password) throws IOException;
+    SourceFileInfo getCodeFileInfo(String packageName,
+                                   String dataSourceId,
+                                   String templateId) throws IOException;
 
     ResponseEntity<Resource> downloadSourcesFile(String path) throws IOException;
 

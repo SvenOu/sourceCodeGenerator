@@ -18,20 +18,65 @@ Ext.define('CGT.view.main.GeneratorPanel', {
                     {
                         xtype: 'container',
                         layout: {
-                            type: 'hbox'
+                            type: 'hbox',
+                            align: 'middle'
                         },
                         items: [
                             {
-                                name: 'sqliteExampleBtn',
+                                name: 'selectDataSourceBtn',
                                 xtype: 'button',
                                 margin: 10,
-                                text: 'get example sqlite android code'
+                                text: 'select a data source'
                             },
                             {
-                                name: 'sqlServerExampleBtn',
+                                xtype: 'label',
+                                padding: 5,
+                                name: 'selectedDataSource',
+                                flex: 1
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'container',
+                        layout: {
+                            type: 'hbox',
+                            align: 'middle'
+                        },
+                        items: [
+                            {
+                                name: 'selectTemplateBtn',
                                 xtype: 'button',
                                 margin: 10,
-                                text: 'get example sql server 2005 server code'
+                                text: 'select a code template'
+                            },
+                            {
+                                xtype: 'label',
+                                padding: 5,
+                                name: 'selectedTemplate',
+                                flex: 1
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'container',
+                        layout: {
+                            type: 'hbox',
+                            align: 'middle'
+                        },
+                        items: [
+                            {
+                                xtype: 'textfield',
+                                name: 'packageName',
+                                allowBlank: false,
+                                fieldLabel: 'package name',
+                                emptyText: 'input package name',
+                                value: 'com.' + app.user.username
+                            },
+                            {
+                                name: 'generateCodeBtn',
+                                xtype: 'button',
+                                margin: 10,
+                                text: 'generate code'
                             }
                         ]
                     },
@@ -61,9 +106,10 @@ Ext.define('CGT.view.main.GeneratorPanel', {
                                 tbar: [
                                     {
                                         xtype: 'displayfield',
-                                        labelWidth: 35,
-                                        name: 'codeType',
-                                        fieldLabel: 'type'
+                                        labelWidth: 110,
+                                        margin: '0 0 0 10',
+                                        name: 'dataSourceId',
+                                        fieldLabel: 'dataSource Id'
                                     },
                                     '->',
                                     {

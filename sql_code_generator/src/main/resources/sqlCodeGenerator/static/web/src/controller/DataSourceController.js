@@ -1,6 +1,8 @@
 Ext.define('CGT.controller.DataSourceController', {
 	extend : 'Ext.app.Controller',
 	refs: [
+        {ref: 'commonMainContainer', selector: 'commonMainContainer'},
+        {ref: 'datasourcesPanel', selector: 'datasourcespanel'},
         {ref: 'dataSourceGrid', selector: 'datasourcegrid[name=dataSourceGrid]'},
         {ref: 'dataSourceType', selector: 'datasourcegrid combobox[name=dataSourceType]'},
         {ref: 'addDatasourceBtn', selector: 'datasourcegrid button[name=addDatasourceBtn]'},
@@ -23,6 +25,9 @@ Ext.define('CGT.controller.DataSourceController', {
                'container[name=dbFilesTreePanelContainer]': {
                    afterrender: this.dbFilesTreePanelContainerAfterRender
                },
+               'datasourcegrid[name=dataSourceGrid]': {
+                   itemclick: this.dataSourceGridItemClick
+               },
                'datasourcegrid[name=dataSourceGrid] actioncolumn': {
                    deleteBtnClick: this.dataSourceDeleteBtnClick
                },
@@ -43,10 +48,20 @@ Ext.define('CGT.controller.DataSourceController', {
                }
         });
     },
+    dataSourceGridItemClick: function(table, record, item, index, e, eOpts){
+        var me = this, datasourcesPanel = this.getDatasourcesPanel(), mainContainer = this.getCommonMainContainer();
+        var contentValues = datasourcesPanel.contentValues;
+        if(contentValues.m_mode === 'choose'){
+            contentValues.m_lastChooseVal = record;
+            contentValues.m_callBack(contentValues);
+            mainContainer.getLayout().setActiveItem(contentValues.m_chooseFrom);
+            contentValues.m_mode = 'default';
+        }
+    },
     refreshDbFilesTreePanelContainer: function () {
         var me = this, dbFilesTreePanel = this.getDbFilesTreePanel();
         var dbFilesTreePanelStore = dbFilesTreePanel.store;
-        dbFilesTreePanelStore.getProxy().url =  app.API_PREFIX +'/getUserDbFilesInfo';
+        dbFilesTreePanelStore.getProxy().url = app.API_PREFIX +'/getUserDbFilesInfo';
         dbFilesTreePanelStore.load({
             params:{},
             callback: function (records, operation, success) {
@@ -106,7 +121,7 @@ Ext.define('CGT.controller.DataSourceController', {
             return;
         }
         var params = {
-            type: sqlRemoteConfigWindow.contentValus.m_type,
+            type: sqlRemoteConfigWindow.contentValues.m_type,
             url: me.getWinUrl().getValue(),
             userName: me.getWinUsername().getValue(),
             password: me.getWinPassword().getValue(),
@@ -161,7 +176,7 @@ Ext.define('CGT.controller.DataSourceController', {
 	        return;
         }
 	    var params = {
-	        type: sqlfileConfigWindow.contentValus.m_type
+	        type: sqlfileConfigWindow.contentValues.m_type
 	    };
         sqlFileConfigForm.setLoading(true);
         sqlFileConfigForm.getForm().submit({
@@ -196,14 +211,14 @@ Ext.define('CGT.controller.DataSourceController', {
         }
         if(dbType == 'sqlite'){
             var sqlWindow = Ext.create('CGT.view.common.SqlFileConfigWindow');
-            sqlWindow.contentValus = {
+            sqlWindow.contentValues = {
                 m_type: dbType,
                 m_fileName: ''
             };
             sqlWindow.show();
         }else if(dbType == 'mssql'){
             var sqlWindow = Ext.create('CGT.view.common.SqlRemoteConfigWindow');
-            sqlWindow.contentValus = {
+            sqlWindow.contentValues = {
                 m_type: dbType,
                 m_url: '',
                 m_username: '',
@@ -212,9 +227,9 @@ Ext.define('CGT.controller.DataSourceController', {
                 m_urlEmptyText:'a db url',
             };
             sqlWindow.show();
-            me.getWinSqlType().setValue(sqlWindow.contentValus.m_type);
-            me.getWinExampleUrl().setValue(sqlWindow.contentValus.m_exampleUrl);
-            me.getWinUrl().emptyText = [sqlWindow.contentValus.m_urlEmptyText];
+            me.getWinSqlType().setValue(sqlWindow.contentValues.m_type);
+            me.getWinExampleUrl().setValue(sqlWindow.contentValues.m_exampleUrl);
+            me.getWinUrl().emptyText = [sqlWindow.contentValues.m_urlEmptyText];
         }
     },
     headerPanelAfterRender: function (panel) {

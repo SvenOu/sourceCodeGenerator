@@ -158,4 +158,16 @@ public class CodeTemplateDaoImpl extends NamedParameterJdbcDaoSupport implements
       return -1;
     }
   }
+
+  private static final String SQL_FIND_ALL = "SELECT template_id, path, lock, owner FROM code_template ";
+  @Override
+  public List<CodeTemplate> findAll() {
+    try {
+      return this.getJdbcTemplate().query(SQL_FIND_ALL, CODE_TEMPLATE_ROW_MAPPER);
+    }
+    catch(Exception e) {
+      log.error("Error : " + e.getMessage());
+      return null;
+    }
+  }
 }

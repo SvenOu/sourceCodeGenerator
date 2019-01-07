@@ -4,8 +4,8 @@ Ext.define('CGT.controller.MainController', {
 	    {ref: 'sidebarDataView', selector: 'sidebarDataView'},
 	    {ref: 'commonMainContainer', selector: 'commonMainContainer'},
 	    {ref: 'generatorPanel', selector: 'generatorPanel'},
-	    {ref: 'datasourcesPanel', selector: 'datasourcesPanel'},
-	    {ref: 'dataSourceGrid', selector: 'datasourcesPanel grid[name=dataSourceGrid]'},
+	    {ref: 'datasourcesPanel', selector: 'datasourcespanel'},
+	    {ref: 'dataSourceGrid', selector: 'datasourcespanel datasourcegrid[name=dataSourceGrid]'},
 	    {ref: 'templatesPanel', selector: 'templatesPanel'},
 	    {ref: 'templateDetailPanel', selector: 'templatedetailpanel'}
     ],
@@ -15,7 +15,7 @@ Ext.define('CGT.controller.MainController', {
                afterrender: this.dataViewSelectFirstItem,
                itemclick: this.sidebarDataViewItemClick
            },
-           'datasourcesPanel': {
+           'datasourcespanel': {
                activate: this.datasourcesPanelActivate
            }
        });
@@ -28,23 +28,22 @@ Ext.define('CGT.controller.MainController', {
     },
     sidebarDataViewItemClick: function (dataView, record, item, index, e, eOpts) {
 
-        var functionCode = record.get('functionCode'),
-            mainConrainer = this.getCommonMainContainer();
+        var functionCode = record.get('functionCode'), mainContainer = this.getCommonMainContainer();
 
         if (functionCode === 'generator') {
-            mainConrainer.getLayout().setActiveItem(this.getGeneratorPanel());
+            mainContainer.getLayout().setActiveItem(this.getGeneratorPanel());
         }
 
         if (functionCode === 'templates') {
-            mainConrainer.getLayout().setActiveItem(this.getTemplatesPanel());
+            mainContainer.getLayout().setActiveItem(this.getTemplatesPanel());
         }
 
         if (functionCode === 'dataSources') {
-            mainConrainer.getLayout().setActiveItem(this.getDatasourcesPanel());
+            mainContainer.getLayout().setActiveItem(this.getDatasourcesPanel());
         }
 
         if (functionCode === 'templateDetail') {
-            mainConrainer.getLayout().setActiveItem(this.getTemplateDetailPanel());
+            mainContainer.getLayout().setActiveItem(this.getTemplateDetailPanel());
         }
     }
 });

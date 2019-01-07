@@ -2,8 +2,13 @@ package com.sql.code.generator.modules.common.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sql.code.generator.commom.utils.SecurityUtils;
+import com.sql.code.generator.modules.common.bean.DatasourceEnum;
+import com.sql.code.generator.modules.common.dao.CodeTemplateDao;
+import com.sql.code.generator.modules.common.dao.DataSourceDao;
 import com.sql.code.generator.modules.common.service.CodeGenerator;
 import com.sql.code.generator.modules.common.composite.SqlType;
+import com.sql.code.generator.modules.common.vo.CodeTemplate;
+import com.sql.code.generator.modules.common.vo.DataSource;
 import com.sven.common.lib.codetemplate.dataBean.SourceFileInfo;
 import com.sql.code.generator.modules.common.service.CommonService;
 import com.sven.common.lib.codetemplate.utils.FileUtils;
@@ -41,6 +46,11 @@ public class CommonServiceImpl implements CommonService {
     private static Log log = LogFactory.getLog(CommonServiceImpl.class);
 
     @Autowired
+    private DataSourceDao dataSourceDao;
+    @Autowired
+    private CodeTemplateDao codeTemplateDao;
+
+    @Autowired
     @Qualifier("sqlite")
     private CodeGenerator codeGenerator;
 
@@ -61,17 +71,32 @@ public class CommonServiceImpl implements CommonService {
     private ObjectMapper mapper;
 
     @Override
-    public SourceFileInfo getCodeFileInfo(String type, String packageName, String url, String username, String password) throws IOException {
-        String userGenerateCodePath = generatorDirPath;
+    public SourceFileInfo getCodeFileInfo(String packageName,
+                                          String dataSourceId,
+                                          String templateId) throws IOException {
+
+        DataSource dataSource = dataSourceDao.findByKey(dataSourceId);
+        CodeTemplate codeTpl = codeTemplateDao.findByKey(templateId);
+
+        String driverClassName = dataSource.getDriveClass();
+        String url = dataSource.getUrl();
+        String username = dataSource.getUserName();
+        String password = dataSource.getPassword();
+        Map rootContext = null;
         String path = null;
-        if (SqlType.SQL_SERVER_2005.getName().equalsIgnoreCase(type)) {
-            path = sCodeGenerator.generateCodeFiles(packageName, "net.sourceforge.jtds.jdbc.Driver", url, username, password);;
+        if (DatasourceEnum.MSSQL.getValue().equalsIgnoreCase(dataSource.getType())) {
+            rootContext = sCodeGenerator.generateCodeModel(packageName, driverClassName, url, username, password);
+            path = sCodeGenerator.generateCodeFiles(rootContext, codeTpl.getPath(),
+                    generatorDirPath + new File(codeTpl.getPath()).getName() + '/');
             return FileUtils.getSourceFileInfo(path);
-        } else if (SqlType.SQLLITE.getName().equalsIgnoreCase(type)) {
-            path = codeGenerator.generateCodeFiles(packageName, "org.sqlite.JDBC", url, username, password);;
+        } else if (DatasourceEnum.SQLITE.getValue().equalsIgnoreCase(dataSource.getType())) {
+            rootContext = codeGenerator.generateCodeModel(packageName, driverClassName, url, username, password);
+            path = codeGenerator.generateCodeFiles(rootContext, codeTpl.getPath(),
+                    generatorDirPath + new File(codeTpl.getPath()).getName() + '/');
             return FileUtils.getSourceFileInfo(path);
+        }else {
+            throw new RuntimeException("not support this dataSource: " + dataSource);
         }
-        return null;
     }
 
     @Override
