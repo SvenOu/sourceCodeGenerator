@@ -93,8 +93,8 @@ public class SqlCodeGeneratorApplicationTests {
 
     @Test
     public void generateDirZip() throws IOException, ZipException {
-        commonService.generateDirZip(SqlType.SQL_SERVER_2005.getName());
-        commonService.generateDirZip(SqlType.SQLLITE.getName());
-        log.debug("");
+//        commonService.generateDirZip(SqlType.SQL_SERVER_2005.getName());
+//        commonService.generateDirZip(SqlType.SQLLITE.getName());
+//        log.debug("");
     }
 }

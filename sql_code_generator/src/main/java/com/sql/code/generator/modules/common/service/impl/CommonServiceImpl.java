@@ -9,6 +9,7 @@ import com.sql.code.generator.modules.common.service.CodeGenerator;
 import com.sql.code.generator.modules.common.composite.SqlType;
 import com.sql.code.generator.modules.common.vo.CodeTemplate;
 import com.sql.code.generator.modules.common.vo.DataSource;
+import com.sven.common.lib.codetemplate.config.TPConfig;
 import com.sven.common.lib.codetemplate.dataBean.SourceFileInfo;
 import com.sql.code.generator.modules.common.service.CommonService;
 import com.sven.common.lib.codetemplate.utils.FileUtils;
@@ -27,6 +28,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import java.io.BufferedReader;
@@ -117,28 +119,22 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String generateDirZip(String type) throws ZipException, IOException {
-        String userGenerateCodePath = generatorDirPath;
-        String path = null;
-        if (SqlType.SQL_SERVER_2005.getName().equalsIgnoreCase(type)) {
-            path = userGenerateCodePath;
-        } else if (SqlType.SQLLITE.getName().equalsIgnoreCase(type)) {
-            path = userGenerateCodePath;
-        }else {
-            return null;
-        }
-
+    public String generateDirZip(String dataSourceId, String templateId) throws ZipException, IOException {
+        CodeTemplate tpl = codeTemplateDao.findByKey(templateId);
+        String tplName = new File(tpl.getPath()).getName();
+        String generatePath = generatorDirPath + TPConfig.KEY_USER_FILES + '/' + tplName + '/';
+        String userName = SecurityUtils.getCurrentUserDetails().getUsername();
         // Initiate ZipFile object with the path/name of the zip file.
-        String dirPath = userGenerateCodePath + "temFiles/";
+        String dirPath = generatePath + "tempFiles/";
         File dir = new File(dirPath);
+        FileSystemUtils.deleteRecursively(dir);
         if(!dir.exists()){
             dir.mkdirs();
         }
-        ZipFile zipFile = new ZipFile(dirPath + "_" + type + "_"
-                + RequestContextHolder.currentRequestAttributes().getSessionId() + ".zip");
+        ZipFile zipFile = new ZipFile(dirPath + "_" + tplName + "_" + userName +".zip");
 
         // Folder to add
-        String folderToAdd = path;
+        String folderToAdd = generatePath + userName +  '/';
 
         // Initiate Zip Parameters which define various properties such
         // as compression method, etc.
@@ -172,6 +168,10 @@ public class CommonServiceImpl implements CommonService {
 
     @Override
     public String getSourceFileCode(String path) throws IOException {
+        String ext = FileUtils.getFileExtension(new File(path));
+        if(ext.equalsIgnoreCase("zip")){
+            return "";
+        }
         BufferedReader reader = new BufferedReader(new FileReader(path));
         StringBuilder builder = new StringBuilder();
         String currentLine = reader.readLine();

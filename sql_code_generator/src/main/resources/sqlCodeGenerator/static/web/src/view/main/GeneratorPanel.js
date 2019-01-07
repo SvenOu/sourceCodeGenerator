@@ -69,6 +69,7 @@ Ext.define('CGT.view.main.GeneratorPanel', {
                                 name: 'packageName',
                                 allowBlank: false,
                                 fieldLabel: 'package name',
+                                margin: '0 0 0 10',
                                 emptyText: 'input package name',
                                 value: 'com.' + app.user.username
                             },
@@ -107,7 +108,6 @@ Ext.define('CGT.view.main.GeneratorPanel', {
                                     {
                                         xtype: 'displayfield',
                                         labelWidth: 110,
-                                        margin: '0 0 0 10',
                                         name: 'dataSourceId',
                                         fieldLabel: 'dataSource Id'
                                     },

@@ -19,5 +19,5 @@ public interface CommonService {
 
     ResponseEntity<Resource> downloadSourcesFile(String path) throws IOException;
 
-    String generateDirZip(String type) throws IOException, ZipException;
+    String generateDirZip(String dataSourceId, String templateId) throws IOException, ZipException;
 }
