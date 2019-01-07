@@ -1,8 +1,11 @@
 Ext.define('CGT.controller.MainController', {
 	extend : 'Ext.app.Controller',
 	refs: [
+	    {ref: 'headerPanel', selector: 'headerPanel'},
 	    {ref: 'sidebarDataView', selector: 'sidebarDataView'},
 	    {ref: 'commonMainContainer', selector: 'commonMainContainer'},
+	    {ref: 'toggleSpaceBtn', selector: 'generatorPanel button[name=toggleSpaceBtn]'},
+	    {ref: 'generatorPanelTbar', selector: 'generatorPanel container[name=generatorPanelTbar]'},
 	    {ref: 'generatorPanel', selector: 'generatorPanel'},
 	    {ref: 'datasourcesPanel', selector: 'datasourcespanel'},
 	    {ref: 'dataSourceGrid', selector: 'datasourcespanel datasourcegrid[name=dataSourceGrid]'},
@@ -17,8 +20,21 @@ Ext.define('CGT.controller.MainController', {
            },
            'datasourcespanel': {
                activate: this.datasourcesPanelActivate
+           },
+           'generatorPanel button[name=toggleSpaceBtn]': {
+               click: this.toggleSpaceBtnClick
            }
        });
+    },
+    toggleSpaceBtnClick: function(btn, e, eOpts){
+        var headerPanel = this.getHeaderPanel(), generatorPanelTbar = this.getGeneratorPanelTbar();
+        if(headerPanel.isVisible()|| generatorPanelTbar.isVisible()){
+            headerPanel.setVisible(false);
+            generatorPanelTbar.setVisible(false);
+        }else {
+            headerPanel.setVisible(true);
+            generatorPanelTbar.setVisible(true);
+        }
     },
     datasourcesPanelActivate: function(panel){
 	    this.getDataSourceGrid().getStore().load();

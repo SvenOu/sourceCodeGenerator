@@ -7,56 +7,66 @@ Ext.define('CGT.view.main.GeneratorPanel', {
     initComponent:function(){
         var me = this;
         me.codeViewStore = Ext.create('CGT.store.generator.CodeView');
+        me.tbar = {
+            xtype: 'container',
+            name: 'generatorPanelTbar',
+            cls: 'generator-panel-tbar',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
+            items: [
+                {
+                    xtype: 'container',
+                    layout: {
+                        type: 'hbox',
+                        align: 'middle'
+                    },
+                    items: [
+                        {
+                            name: 'selectDataSourceBtn',
+                            xtype: 'button',
+                            margin: 10,
+                            text: 'select a data source'
+                        },
+                        {
+                            xtype: 'label',
+                            padding: 5,
+                            name: 'selectedDataSource',
+                            flex: 1
+                        }
+                    ]
+                },
+                {
+                    xtype: 'container',
+                    layout: {
+                        type: 'hbox',
+                        align: 'middle'
+                    },
+                    items: [
+                        {
+                            name: 'selectTemplateBtn',
+                            xtype: 'button',
+                            margin: 10,
+                            text: 'select a code template'
+                        },
+                        {
+                            xtype: 'label',
+                            padding: 5,
+                            name: 'selectedTemplate',
+                            flex: 1
+                        }
+                    ]
+                }
+            ]
+        };
         me.items = [
             {
-                xtype: 'container',
                 layout: {
                     type: 'vbox',
                     align: 'stretch'
                 },
                 items: [
-                    {
-                        xtype: 'container',
-                        layout: {
-                            type: 'hbox',
-                            align: 'middle'
-                        },
-                        items: [
-                            {
-                                name: 'selectDataSourceBtn',
-                                xtype: 'button',
-                                margin: 10,
-                                text: 'select a data source'
-                            },
-                            {
-                                xtype: 'label',
-                                padding: 5,
-                                name: 'selectedDataSource',
-                                flex: 1
-                            }
-                        ]
-                    },
-                    {
-                        xtype: 'container',
-                        layout: {
-                            type: 'hbox',
-                            align: 'middle'
-                        },
-                        items: [
-                            {
-                                name: 'selectTemplateBtn',
-                                xtype: 'button',
-                                margin: 10,
-                                text: 'select a code template'
-                            },
-                            {
-                                xtype: 'label',
-                                padding: 5,
-                                name: 'selectedTemplate',
-                                flex: 1
-                            }
-                        ]
-                    },
                     {
                         xtype: 'container',
                         layout: {
@@ -78,6 +88,12 @@ Ext.define('CGT.view.main.GeneratorPanel', {
                                 xtype: 'button',
                                 margin: 10,
                                 text: 'generate code'
+                            },
+                            {
+                                name: 'toggleSpaceBtn',
+                                xtype: 'button',
+                                margin: 10,
+                                text: 'toggle space'
                             }
                         ]
                     },

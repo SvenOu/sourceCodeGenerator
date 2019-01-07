@@ -140,4 +140,7 @@
 .db-files-code-tree-panel-container{
 	border-left: 1px silver solid;
 }
+.generator-panel-tbar{
+	background: white !important;
+}
 
