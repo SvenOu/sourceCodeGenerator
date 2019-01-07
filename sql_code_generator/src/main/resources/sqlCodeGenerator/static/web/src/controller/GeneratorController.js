@@ -15,14 +15,7 @@ Ext.define('CGT.controller.GeneratorController', {
 	    {ref: 'codeSourcePanel', selector: 'generatorPanel panel[name=codeSourcePanel]'},
 	    {ref: 'downloadCurrentFileBtn', selector: 'generatorPanel button[name=downloadCurrentFileBtn]'},
 	    {ref: 'downloadAllFileBtn', selector: 'generatorPanel button[name=downloadAllFileBtn]'},
-	    {ref: 'dataSourceId', selector: 'generatorPanel displayfield[name=dataSourceId]'},
-	    {ref: 'sqlDataBaseConfigWindow', selector: 'sqldatabaseconfigwindow'},
-	    {ref: 'winSqlType', selector: 'sqldatabaseconfigwindow displayfield[name=type]'},
-	    {ref: 'winExampleUrl', selector: 'sqldatabaseconfigwindow displayfield[name=exampleUrl]'},
-	    {ref: 'winUrl', selector: 'sqldatabaseconfigwindow textfield[name=url]'},
-	    {ref: 'winUsername', selector: 'sqldatabaseconfigwindow textfield[name=username]'},
-	    {ref: 'winPassword', selector: 'sqldatabaseconfigwindow textfield[name=password]'},
-	    {ref: 'winGenerateSourceBtn', selector: 'sqldatabaseconfigwindow button[name=generateSourceBtn]'},
+	    {ref: 'dataSourceId', selector: 'generatorPanel displayfield[name=dataSourceId]'}
     ],
     init: function(application) {
    	this.control({
@@ -43,9 +36,6 @@ Ext.define('CGT.controller.GeneratorController', {
            },
            'generatorPanel button[name=downloadAllFileBtn]': {
                click: this.downloadAllFileBtnClick
-           },
-           'sqldatabaseconfigwindow button[name=generateSourceBtn]': {
-               click: this.generateSourceBtnClick
            }
        });
     },
@@ -162,8 +152,5 @@ Ext.define('CGT.controller.GeneratorController', {
             me.getSelectedDataSource().setText(record.get('dataSourceId') + ': ' + record.get('url'));
         };
         mainContainer.getLayout().setActiveItem(dataSourcesPanel);
-    },
-    generateSourceBtnClick: function(btn, e, eOpts){
-
     }
 });

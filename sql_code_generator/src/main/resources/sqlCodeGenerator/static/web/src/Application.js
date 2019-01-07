@@ -34,7 +34,6 @@ Ext.application({
 		'common.MainContainer',
 		'common.SidebarDataView',
 		'common.Viewport',
-		'common.SqlDataBaseConfigWindow',
 		'common.SqlRemoteConfigWindow',
 		'common.SqlFileConfigWindow',
 		'common.DataSourceGrid',
