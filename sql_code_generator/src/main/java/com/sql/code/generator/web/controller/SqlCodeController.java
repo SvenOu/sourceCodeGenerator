@@ -87,6 +87,16 @@ public class SqlCodeController {
 		return codeService.deleteDataSource(dataSourceId);
 	}
 
+	@RequestMapping(value = "/deleteCodeTemplate",method = RequestMethod.POST)
+	public @ResponseBody CommonResponse deleteCodeTemplate(String templateId) throws IOException {
+		return codeService.deleteCodeTemplate(templateId);
+	}
+
+	@RequestMapping(value = "/deleteFile",method = RequestMethod.POST)
+	public @ResponseBody CommonResponse deleteFile(String path) throws IOException {
+		return codeService.deleteFile(path);
+	}
+
 	@RequestMapping(value = "/getUserDbFilesInfo", method = RequestMethod.GET)
 	public @ResponseBody SourceFileInfo getUserDbFilesInfo(){
 		return codeService.getUserDbFilesInfo();

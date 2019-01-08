@@ -20,6 +20,10 @@ Ext.define('CGT.view.main.TemplateDetailPanel', {
                     autoScroll: true,
                     name: 'templatesTreePanel',
                     xtype: 'treepanel',
+                    // custom attr
+                    contentValues: {
+                        m_selectRecord: null
+                    },
                     store: Ext.create('CGT.store.generator.CodeView'),
                     root: {
                         expanded: true,

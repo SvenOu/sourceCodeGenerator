@@ -68,6 +68,17 @@ Ext.define('CGT.view.main.DatasourcesPanel', {
                     cls: 'code-tree-panel',
                     autoScroll: true,
                     name: 'dbFilesTreePanel',
+                    tbar: [
+                        {
+                            xtype: 'button',
+                            name: 'deleteFileBtn',
+                            text: 'delete selected files'
+                        }
+                    ],
+                    // custom attr
+                    contentValues: {
+                        m_selectRecord: null
+                    },
                     xtype: 'treepanel',
                     store: Ext.create('CGT.store.generator.CodeView'),
                     root: {

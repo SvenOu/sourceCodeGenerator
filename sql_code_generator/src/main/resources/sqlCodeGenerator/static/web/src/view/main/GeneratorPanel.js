@@ -31,6 +31,7 @@ Ext.define('CGT.view.main.GeneratorPanel', {
                         },
                         {
                             xtype: 'label',
+                            // cls: 'wrap-word-label',
                             padding: 5,
                             name: 'selectedDataSource',
                             flex: 1
@@ -52,6 +53,7 @@ Ext.define('CGT.view.main.GeneratorPanel', {
                         },
                         {
                             xtype: 'label',
+                            // cls: 'wrap-word-label',
                             padding: 5,
                             name: 'selectedTemplate',
                             flex: 1

@@ -131,7 +131,10 @@
 	background: transparent;
 }
 /* main */
-.main-data-sources-grid .x-grid-cell-inner{
+.main-data-sources-grid .x-grid-cell-inner,
+.main-common-template-grid .x-grid-cell-inner,
+.wrap-word-label
+{
 	min-height: 52px;
 	word-spacing: normal;
 	white-space: normal;

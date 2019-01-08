@@ -22,15 +22,30 @@ Ext.define('CGT.view.common.TemplateGrid', {
             }},
             {
                 xtype:'actioncolumn',
+                text: 'Files',
+                align: 'center',
+                width: 70,
+                items: [{
+                    icon: 'images/icon_select.png',
+                    tooltip: 'select files for this row'
+                    // ,
+                    // handler: function (view, rowIndex, colIndex, item, e, record, row) {
+                    //     this.fireEvent('selectBtnClick', view, rowIndex, colIndex, item, e, record, row);
+                    // }
+                }]
+            },
+            {
+                xtype:'actioncolumn',
                 text: 'Delete',
                 align: 'center',
                 width: 70,
                 items: [{
                     icon: 'images/delete.png',
-                    tooltip: 'delete this row',
-                    handler: function (view, rowIndex, colIndex, item, e, record, row) {
-                        this.fireEvent('deleteBtnClick', view, rowIndex, colIndex, item, e, record, row);
-                    }
+                    tooltip: 'delete this row'
+                    // ,
+                    // handler: function (view, rowIndex, colIndex, item, e, record, row) {
+                    //     this.fireEvent('deleteBtnClick', view, rowIndex, colIndex, item, e, record, row);
+                    // }
                 }]
             }
         ]

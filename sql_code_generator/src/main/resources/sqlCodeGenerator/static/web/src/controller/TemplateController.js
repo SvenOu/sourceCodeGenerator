@@ -12,7 +12,7 @@ Ext.define('CGT.controller.TemplateController', {
         this.control({
                'templatesPanel templategrid[name=templateGrid]': {
                    afterrender: this.templateGridAfterRender,
-                   itemclick: this.templateGridItemClick
+                   cellclick: this.templateGridCellClick
                }
         });
     },
@@ -20,7 +20,7 @@ Ext.define('CGT.controller.TemplateController', {
 	    var me = this, templateGrid = this.getTemplateGrid();
         templateGrid.getStore().load();
     },
-    templateGridItemClick: function (table, record, item, index, e, eOpts) {
+    templateGridCellClick: function (table, td, cellIndex, record, tr, rowIndex, e, eOpts) {
         var me = this, templatePanel = this.getTemplatesPanel(),
             codeTreePanel = this.getTemplatesTreePanel(),
             templateDetailPanel = this.getTemplateDetailPanel();
@@ -32,12 +32,46 @@ Ext.define('CGT.controller.TemplateController', {
             mainContainer.getLayout().setActiveItem(contentValues.m_chooseFrom);
             contentValues.m_mode = 'default';
         }else{
-            me.getSidebarDataView().getSelectionModel().select(3);
-            mainContainer.getLayout().setActiveItem(templateDetailPanel);
-            // path 多了反斜杠,需要slice去掉
-            var nodeId = record.get('path').slice(0, -1);
-            var rec = codeTreePanel.getStore().getNodeById(nodeId);
-            codeTreePanel.getSelectionModel().select(rec);
+            if(cellIndex === 4){
+                Ext.Msg.confirm('Message', 'Do you want to delete this template?', function(optional){
+                    if(optional=='yes'){
+                        me.preformDeleteTemplate(table, td, cellIndex, record, tr, rowIndex, e, eOpts);
+                    }
+                });
+            }else if(cellIndex === 3){
+                me.getSidebarDataView().getSelectionModel().select(3);
+                mainContainer.getLayout().setActiveItem(templateDetailPanel);
+                // path 多了反斜杠,需要slice去掉
+                var nodeId = record.get('path').slice(0, -1);
+                var rec = codeTreePanel.getStore().getNodeById(nodeId);
+                codeTreePanel.getSelectionModel().select(rec);
+            }
         }
+    },
+    preformDeleteTemplate: function (table, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+        var me = this;
+        var params = {
+            templateId: record.get('templateId')
+        };
+        Ext.Ajax.request({
+            type : "POST",
+            dataType : 'json',
+            params: params,
+            url : app.API_PREFIX + '/deleteCodeTemplate',
+            success: function(response){
+                var responseText = Ext.JSON.decode(response.responseText);
+                if(responseText){
+                    if(responseText.success){
+                        app.method.toastMsg('Message', 'delete template success.');
+                    }else {
+                        app.method.toastMsg('Message', responseText.errorCode);
+                    }
+                }
+                me.getTemplateGrid().getStore().load();
+            },
+            failure: function() {
+                app.method.toastMsg('Message', 'delete template fail.');
+            }
+        });
     }
 });

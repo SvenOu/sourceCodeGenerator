@@ -17,11 +17,12 @@ Ext.define('CGT.controller.TemplatesDetailController', {
     },
     codeTreePanelItemSelect: function (treePanel, record, index, eOpts){
         var me = this, url = app.API_PREFIX +'/getSourceFileCode';
+        me.getTemplatesTreePanel().contentValues.m_selectRecord = record;
         if(record.get('leaf')){
             var params = {path: record.get('path')};
             me.getCodeSourcePanel().update("loading...");
             Ext.Ajax.request({
-                method: 'GET',
+                method: 'POST',
                 params: params,
                 url: url,
                 success: function(response){

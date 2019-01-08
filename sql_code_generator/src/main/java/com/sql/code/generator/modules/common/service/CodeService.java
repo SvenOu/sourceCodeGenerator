@@ -23,12 +23,14 @@ public interface CodeService {
 
 	SourceFileInfo getTemplateFilesInfo() throws IOException;
 
+	CommonResponse deleteFile(String path) throws IOException;
+
 	void initDefaultTemplates() throws IOException;
 
 	CommonResponse getAllTemplate();
 
+	CommonResponse deleteCodeTemplate(String templateId);
+
 	String getUserDbFileDir();
 	String getUserTemplateFileDir();
-
-
 }

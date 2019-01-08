@@ -84,6 +84,7 @@ public class CommonServiceImpl implements CommonService {
         String url = dataSource.getUrl();
         String username = dataSource.getUserName();
         String password = dataSource.getPassword();
+
         Map rootContext = null;
         String path = null;
         if (DatasourceEnum.MSSQL.getValue().equalsIgnoreCase(dataSource.getType())) {

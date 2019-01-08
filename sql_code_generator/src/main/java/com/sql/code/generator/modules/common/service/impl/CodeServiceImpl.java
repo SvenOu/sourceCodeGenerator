@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -136,6 +137,16 @@ public class CodeServiceImpl implements CodeService {
     }
 
     @Override
+    public CommonResponse deleteFile(String path) throws IOException {
+        File file = new File(path);
+        if(!file.exists()){
+            return CommonResponse.failure("file： " + path + " not exit ");
+        }
+        FileSystemUtils.deleteRecursively(file);
+        return CommonResponse.SIMPLE_SUCCESS;
+    }
+
+    @Override
     public void initDefaultTemplates() throws IOException {
         String userDbFileDir = getUserTemplateFileDir();
         File userDbFileDirFile = new File(userDbFileDir);
@@ -151,7 +162,7 @@ public class CodeServiceImpl implements CodeService {
                 CodeTemplate codeTemplate = new CodeTemplate();
                 codeTemplate.setTemplateId(i + userId + "_"+defaultTemplateDefaultFileName + "_" + f.getName());
                 codeTemplate.setPath(f.getAbsolutePath().replaceAll("\\\\","/") + '/');
-                codeTemplate.setLock(false);
+                codeTemplate.setLock(true);
                 codeTemplate.setOwner(userId);
                 codeTemplateDao.save(codeTemplate);
             }
@@ -167,6 +178,15 @@ public class CodeServiceImpl implements CodeService {
         }
         String userId = SecurityUtils.getCurrentUserDetails().getUsername();
         return CommonResponse.success(codeTemplateDao.findAll(userId));
+    }
+
+    @Override
+    public CommonResponse deleteCodeTemplate(String templateId) {
+        CodeTemplate template = codeTemplateDao.findByKey(templateId);
+        if(template != null && template.getLock()){
+            return CommonResponse.failure("Cannot delete locked record.");
+        }
+        return CommonResponse.success(codeTemplateDao.deleteByKey(templateId));
     }
 
     @Override
