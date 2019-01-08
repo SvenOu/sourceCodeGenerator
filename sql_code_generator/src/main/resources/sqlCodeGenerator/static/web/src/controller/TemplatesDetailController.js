@@ -3,7 +3,10 @@ Ext.define('CGT.controller.TemplatesDetailController', {
 	refs: [
         {ref: 'templateDetailPanel', selector: 'templatedetailpanel'},
         {ref: 'templatesTreePanel', selector: 'templatedetailpanel treepanel[name=templatesTreePanel]'},
-        {ref: 'codeSourcePanel', selector: 'templatedetailpanel panel[name=codeSourcePanel]'},
+        {ref: 'detailCodeEditor', selector: 'templatedetailpanel codeeditor[name=detailCodeEditor]'},
+        {ref: 'saveCodeBtn', selector: 'codeeditor button[name=saveCodeBtn]'},
+        {ref: 'reloadCodeBtn', selector: 'codeeditor button[name=reloadCodeBtn]'},
+        {ref: 'resetDefTplBtn', selector: 'treepanel button[name=resetDefTplBtn]'},
 	],
     init: function(application) {
 	    this.control({
@@ -13,33 +16,119 @@ Ext.define('CGT.controller.TemplatesDetailController', {
             'templatedetailpanel treepanel[name=templatesTreePanel]': {
                 select: this.codeTreePanelItemSelect
             },
+            'codeeditor button[name=saveCodeBtn]': {
+                click: this.saveCodeBtnClick
+            },
+            'codeeditor button[name=reloadCodeBtn]': {
+                click: this.reloadCodeBtnClick
+            },
+            'treepanel button[name=resetDefTplBtn]': {
+                click: this.resetDefTplBtnClick
+            },
 	    });
     },
-    codeTreePanelItemSelect: function (treePanel, record, index, eOpts){
+    resetDefTplBtnClick: function(btn, e, eOpts){
+        var me = this, templateDetailPanel = this.getTemplateDetailPanel(),
+            url = app.API_PREFIX +'/resetDefaultUserTemplate';
+        var params = {};
+        Ext.Msg.confirm('Message', 'Do you want to reset the default templates?', function(optional){
+            if(optional==='yes'){
+                templateDetailPanel.setLoading(true);
+                Ext.Ajax.request({
+                    method: 'POST',
+                    params: params,
+                    url: url,
+                    success: function(response){
+                        templateDetailPanel.setLoading(false);
+                        var responseText = Ext.JSON.decode(response.responseText);
+                        if(responseText){
+                            if(responseText.success){
+                                // me.refreshTreePanel();
+                                me.doReloadFileCode({path: this.getDetailCodeEditor().m_codePath});
+                                app.method.toastMsg('Message', 'reset default templates file success.');
+                            }else {
+                                app.method.toastMsg('Message', responseText.errorCode);
+                            }
+                        }
+                    },
+                    failure: function(response){
+                        app.method.toastMsg('Message', 'reset error!');
+                    },
+                    scope: me
+                });
+            }
+        });
+    },
+    saveCodeBtnClick: function(btn, e, eOpts){
+	    var me = this, detailCodeEditor = this.getDetailCodeEditor(),
+            url = app.API_PREFIX +'/saveSourceFileCode';
+
+        if(Ext.isEmpty(detailCodeEditor.m_codePath)){
+            return;
+        }
+        me.getDetailCodeEditor().setLoading(true);
+        var params = {
+            path: detailCodeEditor.m_codePath,
+            content: detailCodeEditor.editor.getValue()
+        };
+        Ext.Ajax.request({
+            method: 'POST',
+            params: params,
+            url: url,
+            success: function(response){
+                me.getDetailCodeEditor().setLoading(false);
+                var responseText = Ext.JSON.decode(response.responseText);
+                if(responseText){
+                    if(responseText.success){
+                        app.method.toastMsg('Message', 'delete file success.');
+                    }else {
+                        app.method.toastMsg('Message', responseText.errorCode);
+                    }
+                }
+            },
+            failure: function(response){
+                app.method.toastMsg('Message', 'saving content error!');
+            },
+            scope: me
+        });
+    },
+    reloadCodeBtnClick: function(btn, e, eOpts){
+	    var me = this, detailCodeEditor = this.getDetailCodeEditor();
+	    if(Ext.isEmpty(detailCodeEditor.m_codePath)){
+	        return;
+        }
+        var params = {path: detailCodeEditor.m_codePath};
+        me.doReloadFileCode(params);
+    },
+    doReloadFileCode: function (params) {
         var me = this, url = app.API_PREFIX +'/getSourceFileCode';
+        me.getDetailCodeEditor().setLoading(true);
+        Ext.Ajax.request({
+            method: 'GET',
+            params: params,
+            url: url,
+            success: function(response){
+                me.getDetailCodeEditor().setLoading(false);
+                if(response){
+                    me.getDetailCodeEditor().m_codePath = params.path;
+                    me.getDetailCodeEditor().setEditorText(response.responseText);
+                }
+            },
+            failure: function(response){
+                app.method.toastMsg('Message', 'getting data error!');
+            },
+            scope: me
+        });
+    },
+    codeTreePanelItemSelect: function (treePanel, record, index, eOpts){
+        var me = this;
         me.getTemplatesTreePanel().contentValues.m_selectRecord = record;
         if(record.get('leaf')){
             var params = {path: record.get('path')};
-            me.getCodeSourcePanel().update("loading...");
-            Ext.Ajax.request({
-                method: 'GET',
-                params: params,
-                url: url,
-                success: function(response){
-                    if(response){
-                        var html = Prism.highlight(response.responseText, Prism.languages.javascript, 'java');
-                        me.getCodeSourcePanel().m_codePath = params.path;
-                        me.getCodeSourcePanel().update('<pre><code class="language-java">'+html+'</code></pre>');
-                    }
-                },
-                failure: function(response){
-                    app.method.toastMsg('Message', 'getting record error!');
-                },
-                scope: me
-            });
+            me.doReloadFileCode(params);
         }
     },
-    templatesTreePanelAfterRender: function (panel) {
+    refreshTreePanel: function () {
         var me = this, templatesTreePanel = this.getTemplatesTreePanel();
         var templatesTreePanelStore = templatesTreePanel.store;
         templatesTreePanelStore.getProxy().url =  app.API_PREFIX +'/getTemplateFilesInfo';
@@ -50,5 +139,8 @@ Ext.define('CGT.controller.TemplatesDetailController', {
                 // templatesTreePanel.getRootNode().expand(true);
             }
         });
+    },
+    templatesTreePanelAfterRender: function (panel) {
+	    this.refreshTreePanel();
     }
 });

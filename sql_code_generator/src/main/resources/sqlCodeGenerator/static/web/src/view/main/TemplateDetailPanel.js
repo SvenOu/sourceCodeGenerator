@@ -15,6 +15,14 @@ Ext.define('CGT.view.main.TemplateDetailPanel', {
             border: true,
             items: [
                 {
+                    tbar: [
+                        {
+                            xtype: 'button',
+                            name: 'resetDefTplBtn',
+                            text: 'reset default templates'
+                        },
+                        '->'
+                    ],
                     width: 350,
                     cls: 'code-tree-panel',
                     autoScroll: true,
@@ -31,13 +39,27 @@ Ext.define('CGT.view.main.TemplateDetailPanel', {
                     }
                 },
                 {
-                    xtype: 'panel',
-                    cls: 'code-panel',
+                    xtype: 'codeeditor',
+                    name: 'detailCodeEditor',
+                    contentValues: {
+                        m_editorId: 'detailCodeEditor',
+                        m_mode: 'java'
+                    },
                     flex:1,
-                    padding: '0 10 0 10',
-                    autoScroll: true,
-                    m_codePath: '#',// 自定义属性
-                    name: 'codeSourcePanel'
+                    tbar: [
+                        {
+                            xtype: 'button',
+                            name: 'saveCodeBtn',
+                            margin: '0 50 0 30 ',
+                            text: 'save'
+                        },
+                        {
+                            xtype: 'button',
+                            name: 'reloadCodeBtn',
+                            text: 'reload'
+                        },
+                        '->'
+                    ]
                 }
             ]
         }

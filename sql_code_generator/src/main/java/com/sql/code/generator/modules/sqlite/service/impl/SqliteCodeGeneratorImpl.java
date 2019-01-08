@@ -158,7 +158,7 @@ public class SqliteCodeGeneratorImpl implements CodeGenerator {
 
         String generatePath = generatorDirPath + TPConfig.KEY_USER_FILES + '/'
                 + new File(tplDirPath).getName() + '/' + userName + '/';
-//        FileSystemUtils.deleteRecursively(Paths.get(generatePath));
+        FileSystemUtils.deleteRecursively(Paths.get(generatePath));
         tpEngine.progressAll(tplDirPath,
                 disPath,
                 rootContext);

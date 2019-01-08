@@ -124,12 +124,6 @@
 .code-tree-panel .x-tree-view{
 	border-right: 1px silver solid;
 }
-.code-panel .x-panel-body{
-	background: #cce6cf;
-}
-.code-panel .token.operator{
-	background: transparent;
-}
 /* main */
 .main-data-sources-grid .x-grid-cell-inner,
 .main-common-template-grid .x-grid-cell-inner,
@@ -145,5 +139,11 @@
 }
 .generator-panel-tbar{
 	background: white !important;
+}
+.code-editor{
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	background: #cce6cf;
 }
 

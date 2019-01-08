@@ -20,6 +20,7 @@ Ext.define('CGT.controller.DataSourceController', {
         {ref: 'winUsername', selector: 'sqlremoteconfigwindow textfield[name=username]'},
         {ref: 'winPassword', selector: 'sqlremoteconfigwindow textfield[name=password]'},
         {ref: 'sqlRemoteConfigWindowAddBtn', selector: 'sqlremoteconfigwindow button[name=addBtn]'},
+        {ref: 'dataSourcesPanelBackBtn', selector: 'datasourcespanel button[name=backBtn]'}
 	],
     init: function(application) {
         this.control({
@@ -52,8 +53,18 @@ Ext.define('CGT.controller.DataSourceController', {
                },
                'datasourcegrid combobox[name=dataSourceType]': {
                    render: this.dataSourceTypeRender
+               },
+               'datasourcespanel button[name=backBtn]': {
+                   click: this.dataSourcesPanelBackBtnClick
                }
         });
+    },
+    dataSourcesPanelBackBtnClick: function(btn, e, eOpts){
+        var contentValues = this.getDatasourcesPanel().contentValues,
+            mainContainer = this.getCommonMainContainer();;
+        mainContainer.getLayout().setActiveItem(contentValues.m_chooseFrom);
+        contentValues.m_mode = 'default';
+        btn.setVisible(false);
     },
     deleteFileBtnClick: function(btn, e, eOpts){
 	    var me = this, record = this.getDbFilesTreePanel().contentValues.m_selectRecord;

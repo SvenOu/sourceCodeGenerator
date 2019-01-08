@@ -121,7 +121,6 @@ Ext.define('CGT.view.main.GeneratorPanel', {
                                 }
                             },
                             {
-                                xtype: 'panel',
                                 tbar: [
                                     {
                                         xtype: 'displayfield',
@@ -142,12 +141,13 @@ Ext.define('CGT.view.main.GeneratorPanel', {
                                         text: 'download all file as zip'
                                     }
                                 ],
-                                cls: 'code-panel',
-                                flex:1,
-                                padding: '0 10 0 10',
-                                autoScroll: true,
-                                m_codePath: '#',// 自定义属性
-                                name: 'codeSourcePanel'
+                                xtype: 'codeeditor',
+                                name: 'generateCodeEditor',
+                                contentValues: {
+                                    m_editorId: 'generateCodeEditor',
+                                    m_mode: 'java'
+                                },
+                                flex:1
                             }
                         ]
                     }

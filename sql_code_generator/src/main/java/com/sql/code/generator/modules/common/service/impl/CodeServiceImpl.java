@@ -190,6 +190,20 @@ public class CodeServiceImpl implements CodeService {
     }
 
     @Override
+    public CommonResponse saveSourceFileCode(String path, String content) throws IOException {
+        FileCopyUtils.copy(content.getBytes(), new File(path));
+        return CommonResponse.SIMPLE_SUCCESS;
+    }
+
+    @Override
+    public CommonResponse resetDefaultUserTemplate() throws IOException {
+        String userDbFileDir = getUserTemplateFileDir();
+        File userDbFileDirFile = new File(userDbFileDir);
+        FileSystemUtils.copyRecursively(new File(defaultTemplateFileDirPath), userDbFileDirFile);
+        return CommonResponse.SIMPLE_SUCCESS;
+    }
+
+    @Override
     public String getUserDbFileDir() {
         String userId = SecurityUtils.getCurrentUserDetails().getUsername();
         return dbFileDirPath + userId + '/';

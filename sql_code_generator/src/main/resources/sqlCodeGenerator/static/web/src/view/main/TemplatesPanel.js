@@ -8,12 +8,23 @@ Ext.define('CGT.view.main.TemplatesPanel', {
         m_lastChooseVal: null,
         m_callBack: null
     },
-	items: [
-		{
-			xtype: 'templategrid',
-			name : 'templateGrid',
-			flex: 1,
-			store: Ext.create('CGT.store.generator.Template')
-		}
-	]
+    initComponent:function() {
+        var me = this;
+        me.items= [
+            {
+                name: 'backBtn',
+                xtype: 'button',
+                margin: 10,
+                text: 'back',
+                hidden : true
+            },
+            {
+                xtype: 'templategrid',
+                name : 'templateGrid',
+                flex: 1,
+                store: Ext.create('CGT.store.generator.Template')
+            }
+        ];
+        me.callParent();
+    }
 });

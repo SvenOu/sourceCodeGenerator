@@ -6,15 +6,26 @@ Ext.define('CGT.controller.TemplateController', {
         {ref: 'templateDetailPanel', selector: 'templatedetailpanel'},
         {ref: 'commonMainContainer', selector: 'commonMainContainer'},
         {ref: 'templatesTreePanel', selector: 'templatedetailpanel treepanel[name=templatesTreePanel]'},
-        {ref: 'templateGrid', selector: 'templatesPanel templategrid[name=templateGrid]'}
+        {ref: 'templateGrid', selector: 'templatesPanel templategrid[name=templateGrid]'},
+        {ref: 'templatesPanelBackBtn', selector: 'templatesPanel button[name=backBtn]'}
 	],
     init: function(application) {
         this.control({
                'templatesPanel templategrid[name=templateGrid]': {
                    afterrender: this.templateGridAfterRender,
                    cellclick: this.templateGridCellClick
+               },
+               'templatesPanel button[name=backBtn]': {
+                   click: this.templatesPanelBackBtnClick
                }
         });
+    },
+    templatesPanelBackBtnClick: function(btn, e, eOpts){
+        var contentValues = this.getTemplatesPanel().contentValues,
+            mainContainer = this.getCommonMainContainer();
+        mainContainer.getLayout().setActiveItem(contentValues.m_chooseFrom);
+        contentValues.m_mode = 'default';
+        btn.setVisible(false);
     },
     templateGridAfterRender: function (panel) {
 	    var me = this, templateGrid = this.getTemplateGrid();

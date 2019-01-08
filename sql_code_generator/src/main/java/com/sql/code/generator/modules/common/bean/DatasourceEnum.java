@@ -7,8 +7,8 @@ public enum DatasourceEnum {
     /**
      *
      */
-    SQLITE("sqlite", "org.sqlite.JDBC", "jdbc:sqlite:"),
-    MSSQL("mssql", "net.sourceforge.jtds.jdbc.Driver", "jdbc:jtds:sqlserver://");
+    MSSQL("mssql", "net.sourceforge.jtds.jdbc.Driver", "jdbc:jtds:sqlserver://"),
+    SQLITE("sqlite", "org.sqlite.JDBC", "jdbc:sqlite:");
     private String value;
     private String driveClass;
     private String urlPrefix;

@@ -31,6 +31,11 @@ public interface CodeService {
 
 	CommonResponse deleteCodeTemplate(String templateId);
 
+	CommonResponse saveSourceFileCode(String path, String content) throws IOException;
+
+	CommonResponse resetDefaultUserTemplate() throws IOException;
+
 	String getUserDbFileDir();
 	String getUserTemplateFileDir();
+
 }

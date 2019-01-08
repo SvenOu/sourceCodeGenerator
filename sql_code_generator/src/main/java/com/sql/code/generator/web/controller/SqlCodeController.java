@@ -112,6 +112,16 @@ public class SqlCodeController {
 		return codeService.getTemplateFilesInfo();
 	}
 
+	@RequestMapping(value = "/saveSourceFileCode", method = RequestMethod.POST)
+	public @ResponseBody CommonResponse saveSourceFileCode(String path, String content) throws IOException {
+		return codeService.saveSourceFileCode(path, content);
+	}
+
+	@RequestMapping(value = "/resetDefaultUserTemplate", method = RequestMethod.POST)
+	public @ResponseBody CommonResponse resetDefaultUserTemplate() throws IOException {
+		return codeService.resetDefaultUserTemplate();
+	}
+
 	// FIXME: 不同 controller 交互
 //	@RequestMapping(value="/testa", method=RequestMethod.GET)
 //	public String testa(HttpServletRequest request){

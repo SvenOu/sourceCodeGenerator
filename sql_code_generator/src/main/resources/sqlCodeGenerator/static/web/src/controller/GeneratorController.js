@@ -12,10 +12,12 @@ Ext.define('CGT.controller.GeneratorController', {
 	    {ref: 'selectTemplateBtn', selector: 'generatorPanel button[name=selectTemplateBtn]'},
 	    {ref: 'generateCodeBtn', selector: 'generatorPanel button[name=generateCodeBtn]'},
 	    {ref: 'codeTreePanel', selector: 'generatorPanel treepanel[name=codeTreePanel]'},
-	    {ref: 'codeSourcePanel', selector: 'generatorPanel panel[name=codeSourcePanel]'},
+	    {ref: 'generateCodeEditor', selector: 'generatorPanel codeeditor[name=generateCodeEditor]'},
 	    {ref: 'downloadCurrentFileBtn', selector: 'generatorPanel button[name=downloadCurrentFileBtn]'},
 	    {ref: 'downloadAllFileBtn', selector: 'generatorPanel button[name=downloadAllFileBtn]'},
-	    {ref: 'dataSourceId', selector: 'generatorPanel displayfield[name=dataSourceId]'}
+	    {ref: 'dataSourceId', selector: 'generatorPanel displayfield[name=dataSourceId]'},
+        {ref: 'templatesPanelBackBtn', selector: 'templatesPanel button[name=backBtn]'},
+        {ref: 'dataSourcesPanelBackBtn', selector: 'datasourcespanel button[name=backBtn]'}
     ],
     init: function(application) {
    	this.control({
@@ -55,7 +57,7 @@ Ext.define('CGT.controller.GeneratorController', {
         }
     },
     downloadCurrentFileBtnClick: function(btn, e, eOpts){
-	    var me = this, codePath = this.getCodeSourcePanel().m_codePath;
+	    var me = this, codePath = this.getGenerateCodeEditor().m_codePath;
 	    if(!Ext.isEmpty(codePath) && "#" !== codePath){
             var url = app.API_PREFIX +'/downloadSourcesFile?' + Ext.urlEncode({
                 userId: app.user.userId,
@@ -68,16 +70,17 @@ Ext.define('CGT.controller.GeneratorController', {
         var me = this, url = app.API_PREFIX +'/getSourceFileCode';
         if(record.get('leaf')){
             var params = {path: record.get('path')};
-            me.getCodeSourcePanel().update("loading...");
+            me.getGenerateCodeEditor().setLoading(true);
             Ext.Ajax.request({
                 method: 'GET',
                 params: params,
                 url: url,
                 success: function(response){
+                    me.getGenerateCodeEditor().setLoading(false);
                     if(response){
-                        var html = Prism.highlight(response.responseText, Prism.languages.javascript, 'java');
-                        me.getCodeSourcePanel().m_codePath = params.path;
-                        me.getCodeSourcePanel().update('<pre><code class="language-java">'+html+'</code></pre>');
+                        me.getGenerateCodeEditor().m_codePath = params.path;
+                        me.getGenerateCodeEditor().setEditorText(response.responseText);
+                        me.getGenerateCodeEditor().setReadOnly(true);
                     }
                 },
                 failure: function(response){
@@ -96,7 +99,7 @@ Ext.define('CGT.controller.GeneratorController', {
         if(!me.generateConfigValid()){
             return;
         }
-
+        me.getGenerateCodeEditor().clearData();
         me.getDataSourceId().setValue(dataSourcesContentValues.m_lastChooseVal.get('dataSourceId'));
         codeTreeStore.getProxy().url =  app.API_PREFIX +'/getCodeFileInfo';
 
@@ -133,24 +136,30 @@ Ext.define('CGT.controller.GeneratorController', {
     },
     selectTemplateBtnClick: function (btn, e, eOpts) {
         var me = this, templatePanel = this.getTemplatesPanel(),
-            mainContainer = this.getCommonMainContainer();
+            mainContainer = this.getCommonMainContainer(),
+            templatesPanelBackBtn = this.getTemplatesPanelBackBtn();
         templatePanel.contentValues.m_mode = 'choose';
         templatePanel.contentValues.m_chooseFrom = this.getGeneratorPanel();
         templatePanel.contentValues.m_callBack = function (contentValues) {
             var record =  contentValues.m_lastChooseVal;
             me.getSelectedTemplate().setText(record.get('templateId') + ': ' + record.get('path'));
+            templatesPanelBackBtn.setVisible(false);
         };
         mainContainer.getLayout().setActiveItem(templatePanel);
+        templatesPanelBackBtn.setVisible(true);
     },
     selectDataSourceBtnClick: function (btn, e, eOpts) {
         var me = this, dataSourcesPanel = this.getDataSourcesPanel(),
-            mainContainer = this.getCommonMainContainer();
+            mainContainer = this.getCommonMainContainer(),
+            dataSourcesPanelBackBtn = this.getDataSourcesPanelBackBtn();
         dataSourcesPanel.contentValues.m_mode = 'choose';
         dataSourcesPanel.contentValues.m_chooseFrom = this.getGeneratorPanel();
         dataSourcesPanel.contentValues.m_callBack = function (contentValues) {
             var record =  contentValues.m_lastChooseVal;
             me.getSelectedDataSource().setText(record.get('dataSourceId') + ': ' + record.get('url'));
+            dataSourcesPanelBackBtn.setVisible(false);
         };
         mainContainer.getLayout().setActiveItem(dataSourcesPanel);
+        dataSourcesPanelBackBtn.setVisible(true);
     }
 });

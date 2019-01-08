@@ -38,6 +38,7 @@ Ext.application({
 		'common.SqlFileConfigWindow',
 		'common.DataSourceGrid',
 		'common.TemplateGrid',
+		'common.CodeEditor',
 
 		//  main
         'main.GeneratorPanel',
