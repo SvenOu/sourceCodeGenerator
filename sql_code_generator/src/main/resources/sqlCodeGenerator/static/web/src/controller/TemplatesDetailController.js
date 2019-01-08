@@ -22,7 +22,7 @@ Ext.define('CGT.controller.TemplatesDetailController', {
             var params = {path: record.get('path')};
             me.getCodeSourcePanel().update("loading...");
             Ext.Ajax.request({
-                method: 'POST',
+                method: 'GET',
                 params: params,
                 url: url,
                 success: function(response){
