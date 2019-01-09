@@ -96,12 +96,6 @@ Ext.define('CGT.view.main.GeneratorPanel', {
                                 xtype: 'button',
                                 margin: 10,
                                 text: 'toggle space'
-                            },
-                            {
-                                name: 'showDocBtn',
-                                xtype: 'button',
-                                margin: 10,
-                                text: 'show document'
                             }
                         ]
                     },

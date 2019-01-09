@@ -18,7 +18,6 @@ Ext.define('CGT.controller.GeneratorController', {
 	    {ref: 'dataSourceId', selector: 'generatorPanel displayfield[name=dataSourceId]'},
         {ref: 'templatesPanelBackBtn', selector: 'templatesPanel button[name=backBtn]'},
         {ref: 'dataSourcesPanelBackBtn', selector: 'datasourcespanel button[name=backBtn]'},
-        {ref: 'showDocBtn', selector: 'generatorPanel button[name=showDocBtn]'},
         {ref: 'docWindow', selector: 'docwindow'},
         {ref: 'docCodeEditor', selector: 'docwindow codeeditor[name=docCodeEditor]'},
     ],
@@ -41,9 +40,6 @@ Ext.define('CGT.controller.GeneratorController', {
            },
            'generatorPanel button[name=downloadAllFileBtn]': {
                click: this.downloadAllFileBtnClick
-           },
-           'generatorPanel button[name=showDocBtn]': {
-               click: this.showDocBtnClick
            },
            'docwindow': {
                afterrender: this.docWindowAfterRender
@@ -72,12 +68,6 @@ Ext.define('CGT.controller.GeneratorController', {
             },
             scope: me
         });
-    },
-    showDocBtnClick: function(btn, e, eOpts){
-        var docWindow = Ext.create('CGT.view.common.DocWindow',{
-            renderTo: Ext.getBody(),
-        });
-        docWindow.show();
     },
     downloadAllFileBtnClick: function(btn, e, eOpts){
 	    var me = this, tplContentValues = this.getTemplatesPanel().contentValues,

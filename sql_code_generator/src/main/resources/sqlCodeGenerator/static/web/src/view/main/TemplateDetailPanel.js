@@ -58,6 +58,12 @@ Ext.define('CGT.view.main.TemplateDetailPanel', {
                             name: 'reloadCodeBtn',
                             text: 'reload'
                         },
+                        {
+                            name: 'showDocBtn',
+                            xtype: 'button',
+                            margin: '0 0 0 30',
+                            text: 'show document'
+                        },
                         '->'
                     ]
                 }

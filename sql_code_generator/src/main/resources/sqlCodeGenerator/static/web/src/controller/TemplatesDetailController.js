@@ -7,6 +7,7 @@ Ext.define('CGT.controller.TemplatesDetailController', {
         {ref: 'saveCodeBtn', selector: 'codeeditor button[name=saveCodeBtn]'},
         {ref: 'reloadCodeBtn', selector: 'codeeditor button[name=reloadCodeBtn]'},
         {ref: 'resetDefTplBtn', selector: 'treepanel button[name=resetDefTplBtn]'},
+        {ref: 'showDocBtn', selector: 'templatedetailpanel button[name=showDocBtn]'},
 	],
     init: function(application) {
 	    this.control({
@@ -25,7 +26,16 @@ Ext.define('CGT.controller.TemplatesDetailController', {
             'treepanel button[name=resetDefTplBtn]': {
                 click: this.resetDefTplBtnClick
             },
+            'templatedetailpanel button[name=showDocBtn]': {
+                click: this.showDocBtnClick
+            }
 	    });
+    },
+    showDocBtnClick: function(btn, e, eOpts){
+        var docWindow = Ext.create('CGT.view.common.DocWindow',{
+            renderTo: Ext.getBody(),
+        });
+        docWindow.show();
     },
     resetDefTplBtnClick: function(btn, e, eOpts){
         var me = this, templateDetailPanel = this.getTemplateDetailPanel(),
