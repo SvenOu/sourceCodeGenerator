@@ -41,5 +41,8 @@ Ext.define('CGT.view.common.CodeEditor', {
     clearData: function () {
 	    this.m_codePath = null;
 	    this.setEditorText('');
+    },
+    resize: function () {
+        this.editor.resize();
     }
 });

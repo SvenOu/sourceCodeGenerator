@@ -10,7 +10,8 @@ Ext.define('CGT.controller.MainController', {
 	    {ref: 'datasourcesPanel', selector: 'datasourcespanel'},
 	    {ref: 'dataSourceGrid', selector: 'datasourcespanel datasourcegrid[name=dataSourceGrid]'},
 	    {ref: 'templatesPanel', selector: 'templatesPanel'},
-	    {ref: 'templateDetailPanel', selector: 'templatedetailpanel'}
+	    {ref: 'templateDetailPanel', selector: 'templatedetailpanel'},
+        {ref: 'generateCodeEditor', selector: 'generatorPanel codeeditor[name=generateCodeEditor]'}
     ],
     init: function(application) {
    	this.control({
@@ -27,7 +28,9 @@ Ext.define('CGT.controller.MainController', {
        });
     },
     toggleSpaceBtnClick: function(btn, e, eOpts){
-        var headerPanel = this.getHeaderPanel(), generatorPanelTbar = this.getGeneratorPanelTbar();
+        var headerPanel = this.getHeaderPanel(),
+            generatorPanelTbar = this.getGeneratorPanelTbar(),
+            generateCodeEditor = this.getGenerateCodeEditor();
         if(headerPanel.isVisible()|| generatorPanelTbar.isVisible()){
             headerPanel.setVisible(false);
             generatorPanelTbar.setVisible(false);
@@ -35,6 +38,7 @@ Ext.define('CGT.controller.MainController', {
             headerPanel.setVisible(true);
             generatorPanelTbar.setVisible(true);
         }
+        generateCodeEditor.resize()
     },
     datasourcesPanelActivate: function(panel){
 	    this.getDataSourceGrid().getStore().load();

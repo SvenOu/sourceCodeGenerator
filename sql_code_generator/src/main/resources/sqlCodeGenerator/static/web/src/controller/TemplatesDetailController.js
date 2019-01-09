@@ -80,7 +80,7 @@ Ext.define('CGT.controller.TemplatesDetailController', {
                 var responseText = Ext.JSON.decode(response.responseText);
                 if(responseText){
                     if(responseText.success){
-                        app.method.toastMsg('Message', 'delete file success.');
+                        app.method.toastMsg('Message', 'save file success.');
                     }else {
                         app.method.toastMsg('Message', responseText.errorCode);
                     }
