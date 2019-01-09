@@ -56,7 +56,11 @@ Ext.application({
 			dataType : 'json',
 			url : app.SECURITY_API_PREFIX + '/getCurrentUserDetails',
 		    success: function(response){
-		    	var responseText = Ext.JSON.decode(response.responseText);
+                var responseText = {};
+                try {
+                     responseText = Ext.JSON.decode(response.responseText);
+                }catch (e) {}
+
 		    	if(responseText.success == true){
 					app.user = responseText.data;
 					Ext.create('CGT.view.common.Viewport');
@@ -65,11 +69,11 @@ Ext.application({
 					});
 					me.initExtJSConfig();
 		    	}else {
-//		    		window.location.href = '../login.html';
+		    		window.location.href = '/webs/security/login.html';
 		    	}
 		    },
 		    failure: function() {
-//		    	window.location.href = '../login.html';
+		    	window.location.href = '/webs/security/login.html';
 		    }
 		});
 	},
