@@ -38,7 +38,6 @@ Ext.define('CGT.controller.MainController', {
             headerPanel.setVisible(true);
             generatorPanelTbar.setVisible(true);
         }
-        generateCodeEditor.resize()
     },
     datasourcesPanelActivate: function(panel){
 	    this.getDataSourceGrid().getStore().load();

@@ -19,6 +19,7 @@ Ext.define('CGT.view.common.CodeEditor', {
             }
         ];
         me.on('afterrender',me.selfAfterRender, me);
+        me.on('resize',me.onResize, me);
 		me.callParent();
 	},
     selfAfterRender: function (me) {
@@ -42,7 +43,7 @@ Ext.define('CGT.view.common.CodeEditor', {
 	    this.m_codePath = null;
 	    this.setEditorText('');
     },
-    resize: function () {
+    onResize: function (panel, width, height, oldWidth, oldHeight, eOpts) {
         this.editor.resize();
     }
 });
