@@ -46,6 +46,9 @@ Ext.define('CGT.view.main.DatasourcesPanel', {
                                     queryMode: 'remote',
                                     displayField: 'type',
                                     valueField: 'type',
+                                    autoSelect:true,
+                                    editable: false,
+                                    forceSelection:true
                                 },
                                 {
                                     name: 'addDatasourceBtn',

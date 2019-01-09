@@ -12,6 +12,28 @@ Ext.define('CGT.view.common.CodeEditor', {
     m_codePath: null,// code path
     initComponent: function(){
 		var me = this;
+		me.layout = {
+		   type: 'fit'
+        };
+		me.bbar = [
+            {
+                xtype:'combo',
+                fieldLabel:'Editor Mode',
+                labelWidth: 85,
+                name:'editorMode',
+                queryMode:'local',
+                store:['text','java','javascript','objectivec','json','xml'],
+                displayField:'division',
+                value: me.contentValues.m_mode,
+                autoSelect:true,
+                editable: false,
+                forceSelection:true,
+                listeners: {
+                    select: me.onSelectEditorMode,
+                    scope: me
+                }
+            }
+        ];
         this.items = [
             {
                 autoScroll: true,
@@ -22,6 +44,9 @@ Ext.define('CGT.view.common.CodeEditor', {
         me.on('resize',me.onResize, me);
 		me.callParent();
 	},
+    onSelectEditorMode: function(combo, records, eOpts){
+        this.editor.session.setMode("ace/mode/" + records[0].getData().field1);
+    },
     selfAfterRender: function (me) {
         var editorElement = me.getEl().select("#" + me.contentValues.m_editorId).elements[0], mode  = "javascript";
         me.editor = ace.edit(editorElement);
