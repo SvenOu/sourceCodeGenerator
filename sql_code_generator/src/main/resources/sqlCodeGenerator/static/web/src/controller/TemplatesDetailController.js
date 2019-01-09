@@ -98,7 +98,9 @@ Ext.define('CGT.controller.TemplatesDetailController', {
 	        return;
         }
         var params = {path: detailCodeEditor.m_codePath};
-        me.doReloadFileCode(params);
+	    if(!Ext.isEmpty(params.path)){
+            me.doReloadFileCode(params);
+        }
     },
     doReloadFileCode: function (params) {
         var me = this, url = app.API_PREFIX +'/getSourceFileCode';
