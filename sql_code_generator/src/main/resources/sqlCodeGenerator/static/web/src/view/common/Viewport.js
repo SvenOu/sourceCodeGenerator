@@ -11,9 +11,6 @@ Ext.define('CGT.view.common.Viewport',{
         me.gotoMaster(me);
         this.callParent(arguments);
     },
-    gotoDefaultLocation: function(me){
-        app.method.toastMsg('Warning', 'Not found!');
-    },
     gotoMaster: function(me){
         me.sidebar = Ext.create('Ext.panel.Panel',{
             region: 'west',
@@ -42,15 +39,5 @@ Ext.define('CGT.view.common.Viewport',{
             msg : 'Loading...',
             removeMask : true
 		});
-	},
-    gotoClient: function(me){
-    	Ext.apply(me,{
-    		layout:{
-    			type: 'fit'
-    		},
-			items:[ 
-				Ext.create('CGT.view.client.MainContainer',{name: 'clientMainContainer'})
-			]
-        });
-    }
+	}
 });

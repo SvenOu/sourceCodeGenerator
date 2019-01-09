@@ -39,6 +39,7 @@ Ext.application({
 		'common.DataSourceGrid',
 		'common.TemplateGrid',
 		'common.CodeEditor',
+		'common.DocWindow',
 
 		//  main
         'main.GeneratorPanel',

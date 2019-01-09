@@ -63,6 +63,9 @@ public class CommonServiceImpl implements CommonService {
     @Value("${sql-code-templates.dir}")
     private String templatesDirPath;
 
+    @Value("${sql-code-templates.doc.dir}")
+    private String docFilePath;
+
     @Value("${sql-code-templates.default.name}")
     private String defaultTemplatesDirName;
 
@@ -151,6 +154,11 @@ public class CommonServiceImpl implements CommonService {
         zipFile.addFolder(folderToAdd, parameters);
 
         return zipFile.getFile().getAbsolutePath();
+    }
+
+    @Override
+    public String getDoucumentFile() throws IOException {
+        return getSourceFileCode(docFilePath);
     }
 
     private void getFileNamesByDirPath(List<String> fileNames,  String path) {

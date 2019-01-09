@@ -50,6 +50,11 @@ public class SqlCodeController {
 		return commonService.getSourceFileCode(path);
 	}
 
+	@RequestMapping(value = "/getDoucumentFile", method = RequestMethod.GET)
+	public @ResponseBody String getDoucumentFile() throws IOException {
+		return commonService.getDoucumentFile();
+	}
+
 	@RequestMapping(path = "/downloadSourcesFile", method = RequestMethod.GET)
 	public ResponseEntity<Resource> downloadSourcesFile(String path) throws IOException {
 		return commonService.downloadSourcesFile(path);

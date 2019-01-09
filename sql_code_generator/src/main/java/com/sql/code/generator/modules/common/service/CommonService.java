@@ -20,4 +20,7 @@ public interface CommonService {
     ResponseEntity<Resource> downloadSourcesFile(String path) throws IOException;
 
     String generateDirZip(String dataSourceId, String templateId) throws IOException, ZipException;
+
+    String getDoucumentFile() throws IOException;
+
 }

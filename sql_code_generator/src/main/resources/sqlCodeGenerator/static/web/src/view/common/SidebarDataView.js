@@ -14,7 +14,6 @@ Ext.define('CGT.view.common.SidebarDataView', {
 		        '</div>',
 		    '</tpl>'
     	);
-
         this.callParent(arguments);
     }
 });

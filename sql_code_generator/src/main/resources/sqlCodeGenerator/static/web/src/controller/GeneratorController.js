@@ -17,7 +17,10 @@ Ext.define('CGT.controller.GeneratorController', {
 	    {ref: 'downloadAllFileBtn', selector: 'generatorPanel button[name=downloadAllFileBtn]'},
 	    {ref: 'dataSourceId', selector: 'generatorPanel displayfield[name=dataSourceId]'},
         {ref: 'templatesPanelBackBtn', selector: 'templatesPanel button[name=backBtn]'},
-        {ref: 'dataSourcesPanelBackBtn', selector: 'datasourcespanel button[name=backBtn]'}
+        {ref: 'dataSourcesPanelBackBtn', selector: 'datasourcespanel button[name=backBtn]'},
+        {ref: 'showDocBtn', selector: 'generatorPanel button[name=showDocBtn]'},
+        {ref: 'docWindow', selector: 'docwindow'},
+        {ref: 'docCodeEditor', selector: 'docwindow codeeditor[name=docCodeEditor]'},
     ],
     init: function(application) {
    	this.control({
@@ -38,8 +41,43 @@ Ext.define('CGT.controller.GeneratorController', {
            },
            'generatorPanel button[name=downloadAllFileBtn]': {
                click: this.downloadAllFileBtnClick
+           },
+           'generatorPanel button[name=showDocBtn]': {
+               click: this.showDocBtnClick
+           },
+           'docwindow': {
+               afterrender: this.docWindowAfterRender
            }
        });
+    },
+    docWindowAfterRender: function(win){
+        var me = this, docCodeEditor = this.getDocCodeEditor(),
+            url = app.API_PREFIX +'/getDoucumentFile';
+        var params = {};
+        docCodeEditor.setLoading(true);
+        Ext.Ajax.request({
+            method: 'GET',
+            params: params,
+            url: url,
+            success: function(response){
+                docCodeEditor.setLoading(false);
+                if(response){
+                    docCodeEditor.m_codePath = params.path;
+                    docCodeEditor.setEditorText(response.responseText);
+                    docCodeEditor.setReadOnly(true);
+                }
+            },
+            failure: function(response){
+                app.method.toastMsg('Message', 'getting doc error!');
+            },
+            scope: me
+        });
+    },
+    showDocBtnClick: function(btn, e, eOpts){
+        var docWindow = Ext.create('CGT.view.common.DocWindow',{
+            renderTo: Ext.getBody(),
+        });
+        docWindow.show();
     },
     downloadAllFileBtnClick: function(btn, e, eOpts){
 	    var me = this, tplContentValues = this.getTemplatesPanel().contentValues,
