@@ -49,7 +49,7 @@ Ext.define('CGT.controller.TemplateController', {
                         me.preformDeleteTemplate(table, td, cellIndex, record, tr, rowIndex, e, eOpts);
                     }
                 });
-            }else if(cellIndex === 3){
+            }else if(cellIndex === 1){
                 me.getSidebarDataView().getSelectionModel().select(3);
                 mainContainer.getLayout().setActiveItem(templateDetailPanel);
                 // path 多了反斜杠,需要slice去掉
