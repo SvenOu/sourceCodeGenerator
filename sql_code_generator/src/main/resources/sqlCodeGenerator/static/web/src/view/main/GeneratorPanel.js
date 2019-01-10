@@ -30,8 +30,10 @@ Ext.define('CGT.view.main.GeneratorPanel', {
                             text: 'select a data source'
                         },
                         {
-                            xtype: 'label',
-                            // cls: 'wrap-word-label',
+                            xtype: 'textfield',
+                            readOnly: true,
+                            allowBlank: false,
+                            labelWidth: 180,
                             padding: 5,
                             name: 'selectedDataSource',
                             flex: 1
@@ -52,8 +54,10 @@ Ext.define('CGT.view.main.GeneratorPanel', {
                             text: 'select a code template'
                         },
                         {
-                            xtype: 'label',
-                            // cls: 'wrap-word-label',
+                            xtype: 'textfield',
+                            readOnly: true,
+                            allowBlank: false,
+                            labelWidth: 180,
                             padding: 5,
                             name: 'selectedTemplate',
                             flex: 1

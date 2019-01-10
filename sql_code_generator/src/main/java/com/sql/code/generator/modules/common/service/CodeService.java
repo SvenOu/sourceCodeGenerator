@@ -39,4 +39,5 @@ public interface CodeService {
 
 	String getUserDbFileDir();
 	String getUserTemplateFileDir();
+	String getUserTemplatePath();
 }

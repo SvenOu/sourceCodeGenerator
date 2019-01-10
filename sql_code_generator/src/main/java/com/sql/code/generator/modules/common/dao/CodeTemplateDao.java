@@ -9,6 +9,8 @@ public interface CodeTemplateDao {
 
   CodeTemplate findByKey(String templateId);
 
+  List<CodeTemplate> findByPath(String path);
+
   List<CodeTemplate> findListByKey(String templateId);
 
   int update(CodeTemplate codeTemplate);

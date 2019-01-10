@@ -13,7 +13,6 @@ import com.sven.common.lib.codetemplate.utils.FileUtils;
 import com.sven.common.lib.codetemplate.utils.IdUtils;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.model.UnzipParameters;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.zip.ZipEntry;
 
 @Service
 public class CodeServiceImpl implements CodeService {
@@ -104,7 +102,7 @@ public class CodeServiceImpl implements CodeService {
 
     @Override
     public CommonResponse saveTemplateFile(MultipartFile tplFile, String fileName) throws IOException, ZipException {
-        String destination = getUserTmeplatePath() +  fileName + '/';
+        String destination = getUserTemplatePath() +  fileName + '/';
 
         File tempRootDir = new File(destination + "temp");
         File tempFile = new File(tempRootDir.getAbsolutePath() + "/temp.zip");
@@ -131,7 +129,7 @@ public class CodeServiceImpl implements CodeService {
         // insert to db
         CodeTemplate codeTemplate = new CodeTemplate();
         codeTemplate.setTemplateId(IdUtils.getId(CodeTemplate.TEMPLATE_PREFIX));
-        codeTemplate.setPath(destination.replaceAll("\\\\","/") + '/');
+        codeTemplate.setPath(destination.replaceAll("\\\\","/"));
         codeTemplate.setLock(false);
         codeTemplate.setOwner(SecurityUtils.getCurrentUserId());
         codeTemplateDao.save(codeTemplate);
@@ -255,7 +253,8 @@ public class CodeServiceImpl implements CodeService {
         return templateFileDirPath + userId + '/';
     }
 
-    private String getUserTmeplatePath() {
+    @Override
+    public String getUserTemplatePath() {
         String userTplFileDir = getUserTemplateFileDir();
         return userTplFileDir + templatesUserName + "/";
     }

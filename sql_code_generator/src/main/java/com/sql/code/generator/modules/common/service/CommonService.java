@@ -1,5 +1,6 @@
 package com.sql.code.generator.modules.common.service;
 
+import com.sven.common.lib.bean.CommonResponse;
 import com.sven.common.lib.codetemplate.dataBean.SourceFileInfo;
 import net.lingala.zip4j.exception.ZipException;
 import org.springframework.core.io.Resource;
@@ -23,4 +24,9 @@ public interface CommonService {
 
     String getDoucumentFile() throws IOException;
 
+    SourceFileInfo getUserRootDirCodeFileInfo();
+
+    String getUserRootPath();
+
+    CommonResponse deleteUserTemplate(String path) throws IOException;
 }

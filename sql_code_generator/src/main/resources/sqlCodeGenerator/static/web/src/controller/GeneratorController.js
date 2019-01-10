@@ -7,8 +7,8 @@ Ext.define('CGT.controller.GeneratorController', {
 	    {ref: 'templatesPanel', selector: 'templatesPanel'},
 	    {ref: 'packageName', selector: 'generatorPanel textfield[name=packageName]'},
 	    {ref: 'selectDataSourceBtn', selector: 'generatorPanel button[name=selectDataSourceBtn]'},
-	    {ref: 'selectedTemplate', selector: 'generatorPanel label[name=selectedTemplate]'},
-	    {ref: 'selectedDataSource', selector: 'generatorPanel label[name=selectedDataSource]'},
+	    {ref: 'selectedTemplate', selector: 'generatorPanel textfield[name=selectedTemplate]'},
+	    {ref: 'selectedDataSource', selector: 'generatorPanel textfield[name=selectedDataSource]'},
 	    {ref: 'selectTemplateBtn', selector: 'generatorPanel button[name=selectTemplateBtn]'},
 	    {ref: 'generateCodeBtn', selector: 'generatorPanel button[name=generateCodeBtn]'},
 	    {ref: 'codeTreePanel', selector: 'generatorPanel treepanel[name=codeTreePanel]'},
@@ -23,6 +23,9 @@ Ext.define('CGT.controller.GeneratorController', {
     ],
     init: function(application) {
    	this.control({
+           'generatorPanel': {
+               afterrender: this.generatorPanelAfterRender
+           },
            'generatorPanel button[name=selectDataSourceBtn]': {
                click: this.selectDataSourceBtnClick
            },
@@ -45,6 +48,21 @@ Ext.define('CGT.controller.GeneratorController', {
                afterrender: this.docWindowAfterRender
            }
        });
+    },
+    generatorPanelAfterRender: function(panel){
+        var me = this, codeTreeStore = this.getCodeTreePanel().store,
+            downloadAllFileBtn = this.getDownloadAllFileBtn();
+        codeTreeStore.getProxy().url =  app.API_PREFIX +'/getUserRootDirCodeFileInfo';
+        codeTreeStore.load({
+            params:{},
+            callback: function (records, operation, success) {
+                if(Ext.isEmpty(records)){
+                    downloadAllFileBtn.disable();
+                }else {
+                    downloadAllFileBtn.enable();
+                }
+            }
+        });
     },
     docWindowAfterRender: function(win){
         var me = this, docCodeEditor = this.getDocCodeEditor(),
@@ -148,11 +166,11 @@ Ext.define('CGT.controller.GeneratorController', {
     },
     generateConfigValid: function () {
         var me = this;
-        if(me.getSelectedDataSource().isVisible() && Ext.isEmpty(me.getSelectedDataSource().text)){
+        if(me.getSelectedDataSource().isVisible() && Ext.isEmpty(me.getSelectedDataSource().getValue())){
             app.method.toastMsg("Message","must select a dataSource");
             return false;
         }
-        if(me.getSelectedTemplate().isVisible() && Ext.isEmpty(me.getSelectedTemplate().text)){
+        if(me.getSelectedTemplate().isVisible() && Ext.isEmpty(me.getSelectedTemplate().getValue())){
             app.method.toastMsg("Message","must select a template");
             return false;
         }
@@ -165,12 +183,14 @@ Ext.define('CGT.controller.GeneratorController', {
     selectTemplateBtnClick: function (btn, e, eOpts) {
         var me = this, templatePanel = this.getTemplatesPanel(),
             mainContainer = this.getCommonMainContainer(),
-            templatesPanelBackBtn = this.getTemplatesPanelBackBtn();
+            templatesPanelBackBtn = this.getTemplatesPanelBackBtn(),
+            selectedTemplate = this.getSelectedTemplate();
         templatePanel.contentValues.m_mode = 'choose';
         templatePanel.contentValues.m_chooseFrom = this.getGeneratorPanel();
         templatePanel.contentValues.m_callBack = function (contentValues) {
             var record =  contentValues.m_lastChooseVal;
-            me.getSelectedTemplate().setText(record.get('templateId') + ': ' + record.get('path'));
+            selectedTemplate.setFieldLabel(record.get('templateId'));
+            selectedTemplate.setValue(record.get('path'));
             templatesPanelBackBtn.setVisible(false);
         };
         mainContainer.getLayout().setActiveItem(templatePanel);
@@ -179,12 +199,14 @@ Ext.define('CGT.controller.GeneratorController', {
     selectDataSourceBtnClick: function (btn, e, eOpts) {
         var me = this, dataSourcesPanel = this.getDataSourcesPanel(),
             mainContainer = this.getCommonMainContainer(),
-            dataSourcesPanelBackBtn = this.getDataSourcesPanelBackBtn();
+            dataSourcesPanelBackBtn = this.getDataSourcesPanelBackBtn(),
+            selectedDataSource = this.getSelectedDataSource();
         dataSourcesPanel.contentValues.m_mode = 'choose';
         dataSourcesPanel.contentValues.m_chooseFrom = this.getGeneratorPanel();
         dataSourcesPanel.contentValues.m_callBack = function (contentValues) {
             var record =  contentValues.m_lastChooseVal;
-            me.getSelectedDataSource().setText(record.get('dataSourceId') + ': ' + record.get('url'));
+            selectedDataSource.setFieldLabel(record.get('dataSourceId'));
+            selectedDataSource.setValue(record.get('url'));
             dataSourcesPanelBackBtn.setVisible(false);
         };
         mainContainer.getLayout().setActiveItem(dataSourcesPanel);

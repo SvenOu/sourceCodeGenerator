@@ -43,29 +43,30 @@ public class TPEngine {
 
         TplSourceFileInfo rootInfo = FileUtils.getSourceFileInfo(tplPath);
         FileSystemUtils.deleteRecursively(new File(disPath));
-//        String rootPath = rootInfo.getPath().replace(rootInfo.getName(), "");
-        FileGenerator fileGenerator = new FileGenerator();
-        fileGenerator.generateTempTpls(rootContext, rootInfo.getPath(), disPath, rootInfo);
 
-        SourceFileInfo generateTplInfo = FileUtils.getSourceFileInfo(disPath);
+        String tempDirName = "#tempTemplates/";
+        String tempTplsPath = disPath + tempDirName;
+        FileGenerator fileGenerator = new FileGenerator();
+        fileGenerator.generateTempTpls(rootContext, rootInfo.getPath(), tempTplsPath, rootInfo);
+        SourceFileInfo generateTplInfo = FileUtils.getSourceFileInfo(tempTplsPath);
         List<Map> data = (List<Map>) rootContext.get(TPConfig.KEY_DATA);
-        progressSourceFileInfo(generateTplInfo, data, new File(tplPath).getName());
+        progressSourceFileInfo(generateTplInfo, data, tempDirName);
 
         // FIXME: 可以不删除，用于debug
-        FileSystemUtils.deleteRecursively(Paths.get(generateTplInfo.getPath()));
+        FileSystemUtils.deleteRecursively(Paths.get(tempTplsPath));
     }
 
-    private void progressSourceFileInfo(SourceFileInfo info, List<Map> data, String tplDirName) throws IOException {
-        if (!info.isDir()) {
-            String tplPath = info.getPath();
+    private void progressSourceFileInfo(SourceFileInfo tplInfo, List<Map> data, String tempDirName) throws IOException {
+        if (!tplInfo.isDir()) {
+            String tplPath = tplInfo.getPath();
             String newDirName = new File(tplPath)
                     .getParent()
                     .replaceAll("\\\\", "/")
-                    .replace(tplDirName,TPConfig.KEY_USER_FILES + '/'+ tplDirName);
+                    .replaceAll(tempDirName, "/");
             for (Map d : data) {
                 StringBuffer sb = new StringBuffer();
                 Pattern pat = Pattern.compile(TPConfig.STRING_PATTERN, Pattern.DOTALL);
-                Matcher matcher = pat.matcher(info.getName());
+                Matcher matcher = pat.matcher(tplInfo.getName());
                 while (matcher.find()) {
                     String s = matcher.group();
                     String key = s.substring(3, s.length() - 2);
@@ -87,10 +88,10 @@ public class TPEngine {
                 progress(tplPath, newFilePath, d);
             }
         } else {
-            List<SourceFileInfo> childs = (List<SourceFileInfo>) info.getChildren();
+            List<SourceFileInfo> childs = (List<SourceFileInfo>) tplInfo.getChildren();
             if (null != childs) {
                 for (SourceFileInfo c : childs) {
-                    progressSourceFileInfo(c, data, tplDirName);
+                    progressSourceFileInfo(c, data, tempDirName);
                 }
             }
         }

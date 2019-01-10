@@ -66,6 +66,19 @@ public class CodeTemplateDaoImpl extends NamedParameterJdbcDaoSupport implements
     }
   }
 
+  private static final String SQL_FIND_BY_PATH = "SELECT template_id, path, lock, owner FROM code_template " +
+          " WHERE path = ?";
+  @Override
+  public List<CodeTemplate> findByPath(String path) {
+    try {
+      return this.getJdbcTemplate().query(SQL_FIND_BY_PATH, CODE_TEMPLATE_ROW_MAPPER, path);
+    }
+    catch(Exception e) {
+      log.error("Error : " + e.getMessage());
+      return null;
+    }
+  }
+
   @Override
   public List<CodeTemplate> findListByKey(String templateId) {
     try {

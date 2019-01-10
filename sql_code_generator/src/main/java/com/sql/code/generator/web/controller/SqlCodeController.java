@@ -40,6 +40,11 @@ public class SqlCodeController {
 		return commonService.getCodeFileInfo(packageName, dataSourceId, templateId);
 	}
 
+	@RequestMapping(value = "/getUserRootDirCodeFileInfo", method = RequestMethod.GET)
+	public @ResponseBody SourceFileInfo getUserRootDirCodeFileInfo() throws IOException {
+		return commonService.getUserRootDirCodeFileInfo();
+	}
+
 	@RequestMapping(value = "/getSourceFileCode", method = RequestMethod.GET)
 	public @ResponseBody String getSourceFileCode(String path) throws IOException {
 		return commonService.getSourceFileCode(path);
@@ -100,6 +105,11 @@ public class SqlCodeController {
 	@RequestMapping(value = "/deleteFile",method = RequestMethod.POST)
 	public @ResponseBody CommonResponse deleteFile(String path) throws IOException {
 		return codeService.deleteFile(path);
+	}
+
+	@RequestMapping(value = "/deleteUserTemplate",method = RequestMethod.POST)
+	public @ResponseBody CommonResponse deleteUserTemplate(String path) throws IOException {
+		return commonService.deleteUserTemplate(path);
 	}
 
 	@RequestMapping(value = "/getUserDbFilesInfo", method = RequestMethod.GET)

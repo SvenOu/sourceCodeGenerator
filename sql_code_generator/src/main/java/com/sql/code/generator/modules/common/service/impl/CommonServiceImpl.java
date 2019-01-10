@@ -7,8 +7,10 @@ import com.sql.code.generator.modules.common.dao.CodeTemplateDao;
 import com.sql.code.generator.modules.common.dao.DataSourceDao;
 import com.sql.code.generator.modules.common.service.CodeGenerator;
 import com.sql.code.generator.modules.common.composite.SqlType;
+import com.sql.code.generator.modules.common.service.CodeService;
 import com.sql.code.generator.modules.common.vo.CodeTemplate;
 import com.sql.code.generator.modules.common.vo.DataSource;
+import com.sven.common.lib.bean.CommonResponse;
 import com.sven.common.lib.codetemplate.config.TPConfig;
 import com.sven.common.lib.codetemplate.dataBean.SourceFileInfo;
 import com.sql.code.generator.modules.common.service.CommonService;
@@ -29,6 +31,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import java.io.BufferedReader;
@@ -51,6 +54,9 @@ public class CommonServiceImpl implements CommonService {
     private DataSourceDao dataSourceDao;
     @Autowired
     private CodeTemplateDao codeTemplateDao;
+
+    @Autowired
+    private CodeService codeService;
 
     @Autowired
     @Qualifier("sqlite")
@@ -89,17 +95,15 @@ public class CommonServiceImpl implements CommonService {
         String password = dataSource.getPassword();
 
         Map rootContext = null;
-        String path = null;
+        String path = getUserRootPath() + new File(codeTpl.getPath()).getName() + '/';
         if (DatasourceEnum.MSSQL.getValue().equalsIgnoreCase(dataSource.getType())) {
             rootContext = sCodeGenerator.generateCodeModel(packageName, driverClassName, url, username, password);
-            path = sCodeGenerator.generateCodeFiles(rootContext, codeTpl.getPath(),
-                    generatorDirPath + new File(codeTpl.getPath()).getName() + '/');
-            return FileUtils.getSourceFileInfo(path);
+            sCodeGenerator.generateCodeFiles(rootContext, codeTpl.getPath(), path);
+            return FileUtils.getSourceFileInfo(getUserRootPath());
         } else if (DatasourceEnum.SQLITE.getValue().equalsIgnoreCase(dataSource.getType())) {
             rootContext = codeGenerator.generateCodeModel(packageName, driverClassName, url, username, password);
-            path = codeGenerator.generateCodeFiles(rootContext, codeTpl.getPath(),
-                    generatorDirPath + new File(codeTpl.getPath()).getName() + '/');
-            return FileUtils.getSourceFileInfo(path);
+            codeGenerator.generateCodeFiles(rootContext, codeTpl.getPath(), path);
+            return FileUtils.getSourceFileInfo(getUserRootPath());
         }else {
             throw new RuntimeException("not support this dataSource: " + dataSource);
         }
@@ -161,6 +165,40 @@ public class CommonServiceImpl implements CommonService {
         return getSourceFileCode(docFilePath);
     }
 
+    @Override
+    public SourceFileInfo getUserRootDirCodeFileInfo() {
+        return FileUtils.getSourceFileInfo(getUserRootPath());
+    }
+
+    @Override
+    public String getUserRootPath() {
+        return generatorDirPath + SecurityUtils.getCurrentUserId() + '/';
+    }
+
+    @Override
+    public CommonResponse deleteUserTemplate(String path) throws IOException {
+        String parentPath = new File(path).getParent().replaceAll("\\\\", "/") + "/";
+        if(!codeService.getUserTemplatePath().equals(parentPath)){
+            return CommonResponse.failure("this path is not a template root directory !");
+        }
+        if(!StringUtils.isEmpty(path) && !path.substring(path.length() - 1).equals("/")){
+            path += "/";
+        }
+        List<CodeTemplate> dbTpls = codeTemplateDao.findByPath(path);
+        if(dbTpls != null && dbTpls.size() ==1){
+            if(dbTpls.get(0).getLock()){
+                return CommonResponse.failure("this template is locked.");
+            }
+        }
+        for(CodeTemplate tpl: dbTpls){
+            if(!tpl.getLock()){
+                codeTemplateDao.deleteByKey(tpl.getTemplateId());
+            }
+        }
+        FileSystemUtils.deleteRecursively(Paths.get(path));
+        return CommonResponse.SIMPLE_SUCCESS;
+    }
+
     private void getFileNamesByDirPath(List<String> fileNames,  String path) {
         File folder = new File(path);
         if(!folder.exists()){
@@ -177,8 +215,9 @@ public class CommonServiceImpl implements CommonService {
 
     @Override
     public String getSourceFileCode(String path) throws IOException {
-        String ext = FileUtils.getFileExtension(new File(path));
-        if(ext.equalsIgnoreCase("zip")){
+        File file = new File(path);
+        String ext = FileUtils.getFileExtension(file);
+        if(ext.equalsIgnoreCase("zip") || !file.isFile()){
             return "";
         }
         BufferedReader reader = new BufferedReader(new FileReader(path));

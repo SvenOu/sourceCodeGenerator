@@ -134,15 +134,7 @@ public class SqliteCodeGeneratorImpl implements CodeGenerator {
     }
 
     @Override
-    public String generateCodeFiles(String packageName, String driverClassName, String url, String username, String password) throws IOException {
-        Map rootContext = generateCodeModel(packageName, driverClassName, url, username, password);
-        String tplPath = templatesDirPath + defaultTemplatesDirName + '/' + sqlite + "_android/";
-        String disPath = generatorDirPath + sqlite + "_android/";
-        return generateCodeFiles(rootContext, tplPath, disPath);
-    }
-
-    @Override
-    public String generateCodeFiles(Map rootContext, String tplDirPath, String disPath)
+    public void generateCodeFiles(Map rootContext, String tplDirPath, String disPath)
             throws IOException {
         String sessionId = "empty_sessionId";
         String userName = "empty_userName";
@@ -156,12 +148,9 @@ public class SqliteCodeGeneratorImpl implements CodeGenerator {
         rootContext.put("userName", userName);
         rootContext.put("sessionId", sessionId);
 
-        String generatePath = generatorDirPath + TPConfig.KEY_USER_FILES + '/'
-                + new File(tplDirPath).getName() + '/' + userName + '/';
-        FileSystemUtils.deleteRecursively(Paths.get(generatePath));
+        FileSystemUtils.deleteRecursively(Paths.get(disPath));
         tpEngine.progressAll(tplDirPath,
                 disPath,
                 rootContext);
-        return generatePath;
     }
 }
