@@ -29,6 +29,9 @@ Ext.define('CGT.controller.GeneratorController', {
            'generatorPanel button[name=selectDataSourceBtn]': {
                click: this.selectDataSourceBtnClick
            },
+           'generatorPanel button[name=clearGenerateCodeBtn]': {
+               click: this.clearGenerateCodeBtnClick
+           },
            'generatorPanel button[name=selectTemplateBtn]': {
                click: this.selectTemplateBtnClick
            },
@@ -49,7 +52,39 @@ Ext.define('CGT.controller.GeneratorController', {
            }
        });
     },
-    generatorPanelAfterRender: function(panel){
+    clearGenerateCodeBtnClick: function(btn, e, eOpts){
+	    var me = this, codeTreePanel = this.getCodeTreePanel(),
+            url = app.API_PREFIX +'/clearGenerateCode';
+        Ext.Msg.confirm('Message', 'Do you want to delete all generate code?', function(optional){
+            if(optional=='yes'){
+                codeTreePanel.setLoading(true);
+                var params = {};
+                Ext.Ajax.request({
+                    method: 'POST',
+                    params: params,
+                    url: url,
+                    success: function(response){
+                        codeTreePanel.setLoading(false);
+                        var responseText = Ext.JSON.decode(response.responseText);
+                        if(responseText){
+                            if(responseText.success){
+                                app.method.toastMsg('Message', 'clear generate code success.');
+                            }else {
+                                app.method.toastMsg('Message', responseText.errorCode);
+                            }
+                        }
+                        me.doRefreshCodeTreePanel();
+                    },
+                    failure: function(response){
+                        app.method.toastMsg('Message', 'delete fail!');
+                        codeTreePanel.setLoading(false);
+                    },
+                    scope: me
+                });
+            }
+        });
+    },
+    doRefreshCodeTreePanel: function () {
         var me = this, codeTreeStore = this.getCodeTreePanel().store,
             downloadAllFileBtn = this.getDownloadAllFileBtn();
         codeTreeStore.getProxy().url =  app.API_PREFIX +'/getUserRootDirCodeFileInfo';
@@ -63,6 +98,9 @@ Ext.define('CGT.controller.GeneratorController', {
                 }
             }
         });
+    },
+    generatorPanelAfterRender: function(panel){
+	    this.doRefreshCodeTreePanel();
     },
     docWindowAfterRender: function(win){
         var me = this, docCodeEditor = this.getDocCodeEditor(),

@@ -29,4 +29,6 @@ public interface CommonService {
     String getUserRootPath();
 
     CommonResponse deleteUserTemplate(String path) throws IOException;
+
+    CommonResponse clearGenerateCode() throws IOException;
 }

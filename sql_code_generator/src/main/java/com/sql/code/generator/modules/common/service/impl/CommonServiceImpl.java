@@ -199,6 +199,12 @@ public class CommonServiceImpl implements CommonService {
         return CommonResponse.SIMPLE_SUCCESS;
     }
 
+    @Override
+    public CommonResponse clearGenerateCode() throws IOException {
+        FileSystemUtils.deleteRecursively(Paths.get(getUserRootPath()));
+        return CommonResponse.SIMPLE_SUCCESS;
+    }
+
     private void getFileNamesByDirPath(List<String> fileNames,  String path) {
         File folder = new File(path);
         if(!folder.exists()){

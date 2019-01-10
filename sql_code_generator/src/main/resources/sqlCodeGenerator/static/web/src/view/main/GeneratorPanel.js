@@ -81,6 +81,12 @@ Ext.define('CGT.view.main.GeneratorPanel', {
                         },
                         items: [
                             {
+                                name: 'clearGenerateCodeBtn',
+                                xtype: 'button',
+                                margin: 10,
+                                text: 'clear'
+                            },
+                            {
                                 xtype: 'textfield',
                                 name: 'packageName',
                                 allowBlank: false,

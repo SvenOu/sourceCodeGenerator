@@ -102,6 +102,11 @@ public class SqlCodeController {
 		return codeService.deleteCodeTemplate(templateId);
 	}
 
+	@RequestMapping(value = "/clearGenerateCode",method = RequestMethod.POST)
+	public @ResponseBody CommonResponse clearGenerateCode() throws IOException {
+		return commonService.clearGenerateCode();
+	}
+
 	@RequestMapping(value = "/deleteFile",method = RequestMethod.POST)
 	public @ResponseBody CommonResponse deleteFile(String path) throws IOException {
 		return codeService.deleteFile(path);
