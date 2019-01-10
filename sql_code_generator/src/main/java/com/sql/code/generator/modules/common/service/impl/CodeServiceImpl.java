@@ -11,6 +11,9 @@ import com.sven.common.lib.bean.CommonResponse;
 import com.sven.common.lib.codetemplate.dataBean.SourceFileInfo;
 import com.sven.common.lib.codetemplate.utils.FileUtils;
 import com.sven.common.lib.codetemplate.utils.IdUtils;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.UnzipParameters;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.zip.ZipEntry;
 
 @Service
 public class CodeServiceImpl implements CodeService {
@@ -40,8 +40,12 @@ public class CodeServiceImpl implements CodeService {
 
     @Value("${sql-code-generator.templates.default.file.dir}")
     private String defaultTemplateFileDirPath;
+
     @Value("${sql-code-generator.templates.default.file.name}")
     private String defaultTemplateDefaultFileName;
+
+    @Value("${sql-code-templates.user.name}")
+    private String templatesUserName;
 
     @Autowired
     private DataSourceDao dataSourceDao;
@@ -99,6 +103,42 @@ public class CodeServiceImpl implements CodeService {
     }
 
     @Override
+    public CommonResponse saveTemplateFile(MultipartFile tplFile, String fileName) throws IOException, ZipException {
+        String destination = getUserTmeplatePath() +  fileName + '/';
+
+        File tempRootDir = new File(destination + "temp");
+        File tempFile = new File(tempRootDir.getAbsolutePath() + "/temp.zip");
+        File tempDir = new File(tempRootDir.getAbsolutePath() + "/tempDir");
+        if(!tempRootDir.exists()){
+            tempRootDir.mkdirs();
+        }
+        //save file to temp
+        FileCopyUtils.copy(tplFile.getBytes(), tempFile);
+
+        // extract to temp
+        ZipFile zipFile = new ZipFile(tempFile);
+        zipFile.extractAll(tempDir.getPath());
+        tempFile.delete();
+
+        // check temp dir
+        File[] childs = tempDir.listFiles();
+        if(childs != null && childs.length > 0 && fileName.equals(childs[0].getName())){
+            FileSystemUtils.copyRecursively(childs[0], new File(destination));
+        }else {
+            FileSystemUtils.copyRecursively(tempDir, new File(destination));
+        }
+        FileSystemUtils.deleteRecursively(tempRootDir);
+        // insert to db
+        CodeTemplate codeTemplate = new CodeTemplate();
+        codeTemplate.setTemplateId(IdUtils.getId(CodeTemplate.TEMPLATE_PREFIX));
+        codeTemplate.setPath(destination.replaceAll("\\\\","/") + '/');
+        codeTemplate.setLock(false);
+        codeTemplate.setOwner(SecurityUtils.getCurrentUserId());
+        codeTemplateDao.save(codeTemplate);
+        return CommonResponse.SIMPLE_SUCCESS;
+    }
+
+    @Override
     public CommonResponse deleteDataSource(String dataSourceId) {
         DataSource dbSource = dataSourceDao.findByKey(dataSourceId);
         if(dbSource != null && dbSource.getLock()){
@@ -131,9 +171,9 @@ public class CodeServiceImpl implements CodeService {
 
     @Override
     public SourceFileInfo getTemplateFilesInfo() throws IOException {
-        String userDbFileDir = getUserTemplateFileDir();
+        String userTplFileDir = getUserTemplateFileDir();
         initDefaultTemplates();
-        return FileUtils.getSourceFileInfo(userDbFileDir);
+        return FileUtils.getSourceFileInfo(userTplFileDir);
     }
 
     @Override
@@ -148,15 +188,15 @@ public class CodeServiceImpl implements CodeService {
 
     @Override
     public void initDefaultTemplates() throws IOException {
-        String userDbFileDir = getUserTemplateFileDir();
-        File userDbFileDirFile = new File(userDbFileDir);
+        String userTplFileDir = getUserTemplateFileDir();
+        File userDbFileDirFile = new File(userTplFileDir);
         if(!userDbFileDirFile.exists()
                 || null == userDbFileDirFile.listFiles()
                 || userDbFileDirFile.listFiles().length <= 0){
             userDbFileDirFile.mkdirs();
             String userId = SecurityUtils.getCurrentUserDetails().getUsername();
             FileSystemUtils.copyRecursively(new File(defaultTemplateFileDirPath), userDbFileDirFile);
-            File[] defTpls = new File(userDbFileDir + "/" + defaultTemplateDefaultFileName).listFiles();
+            File[] defTpls = new File(userTplFileDir + "/" + defaultTemplateDefaultFileName).listFiles();
             for(int i =0 ; i<defTpls.length; i++){
                 File f= defTpls[i];
                 CodeTemplate codeTemplate = new CodeTemplate();
@@ -197,8 +237,8 @@ public class CodeServiceImpl implements CodeService {
 
     @Override
     public CommonResponse resetDefaultUserTemplate() throws IOException {
-        String userDbFileDir = getUserTemplateFileDir();
-        File userDbFileDirFile = new File(userDbFileDir);
+        String userTplFileDir = getUserTemplateFileDir();
+        File userDbFileDirFile = new File(userTplFileDir);
         FileSystemUtils.copyRecursively(new File(defaultTemplateFileDirPath), userDbFileDirFile);
         return CommonResponse.SIMPLE_SUCCESS;
     }
@@ -213,5 +253,10 @@ public class CodeServiceImpl implements CodeService {
     public String getUserTemplateFileDir() {
         String userId = SecurityUtils.getCurrentUserDetails().getUsername();
         return templateFileDirPath + userId + '/';
+    }
+
+    private String getUserTmeplatePath() {
+        String userTplFileDir = getUserTemplateFileDir();
+        return userTplFileDir + templatesUserName + "/";
     }
 }

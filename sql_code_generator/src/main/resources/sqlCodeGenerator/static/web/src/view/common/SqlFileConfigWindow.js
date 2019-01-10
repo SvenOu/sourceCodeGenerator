@@ -4,7 +4,7 @@ Ext.define('CGT.view.common.SqlFileConfigWindow',{
 	closeAction:'destroy',
 	title: 'Config file database',
 	modal: true,
-	cls: 'main-common-condif-database-window',
+	cls: 'main-common-config-database-window',
 	width: 1000,
 	// height: 700,
 	padding: 15,

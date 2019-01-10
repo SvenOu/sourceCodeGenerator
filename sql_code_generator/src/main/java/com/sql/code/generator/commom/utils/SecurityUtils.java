@@ -37,4 +37,8 @@ public class SecurityUtils {
         return null;
     }
 
+    public static String getCurrentUserId(){
+        return getCurrentUserDetails().getUsername();
+    }
+
 }

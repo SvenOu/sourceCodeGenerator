@@ -76,7 +76,7 @@ public class TPEngine {
                         formatType = key.substring(formatIndex + 1);
                         key = key.substring(0, formatIndex);
                     }
-                    String value = StringUtils.isEmpty(d.get(key)) ? "" : (String) d.get(key);
+                    String value = StringUtils.isEmpty(d.get(key)) ? String.format(TPConfig.FORMAT_ERROR, key): (String) d.get(key);
                     if (formatType != null) {
                         value = CaseFormat.formatString(value, formatType);
                     }
@@ -178,7 +178,7 @@ public class TPEngine {
                     formatType = key.substring(formatIndex + 1);
                     key = key.substring(0, formatIndex);
                 }
-                String value = StringUtils.isEmpty(c.get(key)) ? "" : (String) c.get(key);
+                String value = StringUtils.isEmpty(c.get(key)) ? String.format(TPConfig.FORMAT_ERROR, key) : (String) c.get(key);
                 if (formatType != null) {
                     value = CaseFormat.formatString(value, formatType);
                 }
@@ -207,7 +207,10 @@ public class TPEngine {
                 formatType = key.substring(formatIndex + 1);
                 key = key.substring(0, formatIndex);
             }
-            String value = StringUtils.isEmpty(context.get(key)) ? "" : (String) context.get(key);
+            if(StringUtils.isEmpty(context.get(key))){
+                log.info(String.format(TPConfig.FORMAT_ERROR, key));
+            }
+            String value = StringUtils.isEmpty(context.get(key)) ? String.format(TPConfig.FORMAT_ERROR, key) : (String) context.get(key);
             if (formatType != null) {
                 value = CaseFormat.formatString(value, formatType);
             }

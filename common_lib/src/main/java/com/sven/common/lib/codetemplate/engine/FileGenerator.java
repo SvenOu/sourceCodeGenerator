@@ -1,6 +1,8 @@
 package com.sven.common.lib.codetemplate.engine;
 import com.sven.common.lib.codetemplate.config.TPConfig;
 import com.sven.common.lib.codetemplate.dataBean.TplSourceFileInfo;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import java.io.File;
@@ -11,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FileGenerator {
+    private static Log log = LogFactory.getLog(FileGenerator.class);
     public void generateTempTpls(Map rootData, String rootPath, String tempRootPath, TplSourceFileInfo rootInfo) throws IOException {
         modifySourceDirsData(rootData, rootPath, rootInfo, tempRootPath);
         createSourceFiles(rootData, rootPath, rootInfo, tempRootPath);
@@ -44,7 +47,7 @@ public class FileGenerator {
                 formatType = key.substring(formatIndex + 1);
                 key = key.substring(0, formatIndex);
             }
-            String value = StringUtils.isEmpty(rootData.get(key)) ? "" : (String) rootData.get(key);
+            String value = StringUtils.isEmpty(rootData.get(key)) ? String.format(TPConfig.FORMAT_ERROR, key) : (String) rootData.get(key);
             if (formatType != null) {
                 value = CaseFormat.formatString(value, formatType);
             }

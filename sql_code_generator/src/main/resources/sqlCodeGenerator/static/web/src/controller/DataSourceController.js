@@ -254,7 +254,6 @@ Ext.define('CGT.controller.DataSourceController', {
                 sqlfileConfigWindow.close();
             }
         });
-
     },
     refreshDbFiles: function(btn, e, eOpts){
         this.refreshDbFilesTreePanelContainer();

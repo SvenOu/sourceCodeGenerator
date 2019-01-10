@@ -19,6 +19,14 @@ Ext.define('CGT.view.main.TemplatesPanel', {
                 hidden : true
             },
             {
+                tbar: [
+                    {
+                        name: 'uploadTemplateBtn',
+                        xtype: 'button',
+                        margin: '0 10 0 0',
+                        text: 'upload your template'
+                    }
+                ],
                 xtype: 'templategrid',
                 name : 'templateGrid',
                 flex: 1,

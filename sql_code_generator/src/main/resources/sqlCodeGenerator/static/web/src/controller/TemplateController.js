@@ -7,7 +7,14 @@ Ext.define('CGT.controller.TemplateController', {
         {ref: 'commonMainContainer', selector: 'commonMainContainer'},
         {ref: 'templatesTreePanel', selector: 'templatedetailpanel treepanel[name=templatesTreePanel]'},
         {ref: 'templateGrid', selector: 'templatesPanel templategrid[name=templateGrid]'},
-        {ref: 'templatesPanelBackBtn', selector: 'templatesPanel button[name=backBtn]'}
+        {ref: 'templatesPanelBackBtn', selector: 'templatesPanel button[name=backBtn]'},
+        {ref: 'uploadTemplateBtn', selector: 'templatesPanel button[name=uploadTemplateBtn]'},
+        {ref: 'uploadTemplateFileWindow', selector: 'uploadtemplatefilewindow'},
+        {ref: 'uploadWinStartUploadBtn', selector: 'uploadtemplatefilewindow button[name=startUploadBtn]'},
+        {ref: 'templateFolderFile', selector: 'uploadtemplatefilewindow filefield[name=templateFolderFile]'},
+        {ref: 'templateFileForm', selector: 'uploadtemplatefilewindow form[name=templateFileForm]'},
+        {ref: 'winTemplateName', selector: 'uploadtemplatefilewindow textfield[name=templateName]'},
+        {ref: 'templatesTreePanel', selector: 'templatedetailpanel treepanel[name=templatesTreePanel]'}
 	],
     init: function(application) {
         this.control({
@@ -17,8 +24,68 @@ Ext.define('CGT.controller.TemplateController', {
                },
                'templatesPanel button[name=backBtn]': {
                    click: this.templatesPanelBackBtnClick
+               },
+               'templatesPanel button[name=uploadTemplateBtn]': {
+                   click: this.uploadTemplateBtnClick
+               },
+               'uploadtemplatefilewindow button[name=startUploadBtn]': {
+                   click: this.startUploadBtnClick
                }
         });
+    },
+    startUploadBtnClick: function(btn, e, eOpts){
+        var me = this, templateFileForm =  this.getTemplateFileForm(),
+            uploadTemplateFileWindow = this.getUploadTemplateFileWindow(),
+            templateFolderFile = this.getTemplateFolderFile(),
+            winTemplateName = this.getWinTemplateName();
+
+        if(Ext.isEmpty(templateFolderFile.getValue())){
+            app.method.toastMsg('Message', 'must select a templates Archive file.');
+            return;
+        }
+
+        if(!templateFolderFile.validate()){
+            app.method.toastMsg('Message', 'Only zip format file allowed.');
+            return;
+        }
+
+        if(Ext.isEmpty(winTemplateName.getValue())){
+            app.method.toastMsg('Message', 'template name must not empty.');
+            return;
+        }
+
+        var params = {
+            fileName: winTemplateName.getValue()
+        };
+        templateFileForm.setLoading(true);
+        templateFileForm.getForm().submit({
+            headers: {Accept: 'application/json;charset=UTF-8'},
+            method: 'POST',
+            url: app.API_PREFIX + '/uploadTemplateFile',
+            params: params,
+            success: function(form, action) {
+                app.method.toastMsg('Message', 'upload template file success');
+                me.getTemplateGrid().getStore().load();
+                me.getTemplatesTreePanel().getStore().load();
+                templateFileForm.setLoading(false);
+                uploadTemplateFileWindow.close();
+
+            },
+            failure: function(form, action) {
+                app.method.toastMsg('Warning', 'upload template file fail');
+                templateFileForm.setLoading(false);
+                uploadTemplateFileWindow.close();
+            }
+        });
+    },
+    uploadTemplateBtnClick: function(btn, e, eOpts){
+        var uploadTplWin = Ext.create('CGT.view.common.UploadTemplateFileWindow',{
+            contentValues :{
+                m_folderPath: '',
+                m_uploadFieldId: 'templateFileFieldId'
+            }
+        });
+        uploadTplWin.show();
     },
     templatesPanelBackBtnClick: function(btn, e, eOpts){
         var contentValues = this.getTemplatesPanel().contentValues,

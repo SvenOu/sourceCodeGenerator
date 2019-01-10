@@ -2,10 +2,8 @@ package com.sql.code.generator.web.controller;
 
 import com.sql.code.generator.configs.anotation.APIController;
 import com.sql.code.generator.modules.common.service.CodeService;
-import com.sql.code.generator.modules.common.vo.CodeTemplate;
 import com.sql.code.generator.modules.common.vo.DataSource;
 import com.sven.common.lib.bean.CommonResponse;
-import com.sven.common.lib.bean.InteractionContro;
 import com.sven.common.lib.codetemplate.dataBean.SourceFileInfo;
 import com.sql.code.generator.modules.common.service.CommonService;
 import net.lingala.zip4j.exception.ZipException;
@@ -18,11 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * @author sven-ou
@@ -80,6 +75,11 @@ public class SqlCodeController {
 	@RequestMapping(value = "/uploadDbFile",method = RequestMethod.POST)
 	public @ResponseBody CommonResponse uploadDbFile(MultipartFile dbFile, String type) throws IOException {
 		return codeService.saveDbFile(dbFile, type);
+	}
+
+	@RequestMapping(value = "/uploadTemplateFile",method = RequestMethod.POST)
+	public @ResponseBody CommonResponse uploadTemplateFile(MultipartFile templateFolderFile, String fileName) throws IOException, ZipException {
+		return codeService.saveTemplateFile(templateFolderFile, fileName);
 	}
 
 	@RequestMapping(value = "/addRemoteDbConfig",method = RequestMethod.POST)

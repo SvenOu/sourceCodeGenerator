@@ -36,6 +36,7 @@ Ext.application({
 		'common.Viewport',
 		'common.SqlRemoteConfigWindow',
 		'common.SqlFileConfigWindow',
+		'common.UploadTemplateFileWindow',
 		'common.DataSourceGrid',
 		'common.TemplateGrid',
 		'common.CodeEditor',

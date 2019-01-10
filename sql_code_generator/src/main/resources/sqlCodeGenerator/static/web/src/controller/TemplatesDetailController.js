@@ -32,10 +32,14 @@ Ext.define('CGT.controller.TemplatesDetailController', {
 	    });
     },
     showDocBtnClick: function(btn, e, eOpts){
-        var docWindow = Ext.create('CGT.view.common.DocWindow',{
+	    var me = this;
+	    if(me.docWindow && me.docWindow.isVisible(true)){
+	        return;
+        }
+        me.docWindow = Ext.create('CGT.view.common.DocWindow',{
             renderTo: Ext.getBody(),
         });
-        docWindow.show();
+        me.docWindow.show();
     },
     resetDefTplBtnClick: function(btn, e, eOpts){
         var me = this, templateDetailPanel = this.getTemplateDetailPanel(),
