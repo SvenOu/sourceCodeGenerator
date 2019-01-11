@@ -22,6 +22,8 @@ public interface CommonService {
 
     String generateDirZip(String dataSourceId, String templateId) throws IOException, ZipException;
 
+    String generateUserDirZip() throws ZipException;
+
     String getDoucumentFile() throws IOException;
 
     SourceFileInfo getUserRootDirCodeFileInfo();
@@ -31,4 +33,6 @@ public interface CommonService {
     CommonResponse deleteUserTemplate(String path) throws IOException;
 
     CommonResponse clearGenerateCode() throws IOException;
+
+
 }

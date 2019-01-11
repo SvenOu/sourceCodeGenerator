@@ -40,8 +40,8 @@ public class DataSourceDaoImpl extends NamedParameterJdbcDaoSupport implements D
     setDataSource(dataSource);
   }
 
-  private static final String SQL_INSERT = "INSERT INTO data_source (data_source_id, type, url, user_name, password, lock, drive_class, owner) " +
-          " VALUES (:dataSourceId, :type, :url, :userName, :password, :lock, :driveClass, :owner)";
+  private static final String SQL_INSERT = "INSERT INTO data_source (data_source_id, type, url, user_name, password, lock, drive_class, owner, json_data) " +
+          " VALUES (:dataSourceId, :type, :url, :userName, :password, :lock, :driveClass, :owner, :jsonData)";
   @Override
   public int insert(DataSource dataSource) {
     try {
@@ -53,7 +53,7 @@ public class DataSourceDaoImpl extends NamedParameterJdbcDaoSupport implements D
     }
   }
 
-  private static final String SQL_FIND_BY_KEY = "SELECT data_source_id, type, url, user_name, password, lock, drive_class, owner FROM data_source " +
+  private static final String SQL_FIND_BY_KEY = "SELECT data_source_id, type, url, user_name, password, lock, drive_class, owner, json_data FROM data_source " +
           " WHERE data_source_id = :dataSourceId";
   @Override
   public DataSource findByKey(String dataSourceId) {
@@ -66,7 +66,7 @@ public class DataSourceDaoImpl extends NamedParameterJdbcDaoSupport implements D
     }
   }
 
-  private static final String SQL_FIND_ALL= "SELECT data_source_id, type, url, user_name, password, lock, drive_class, owner FROM data_source " +
+  private static final String SQL_FIND_ALL= "SELECT data_source_id, type, url, user_name, password, lock, drive_class, owner, json_data FROM data_source " +
           " WHERE owner = :owner";
   @Override
   public List<DataSource> findAll(String owner) {
@@ -90,7 +90,7 @@ public class DataSourceDaoImpl extends NamedParameterJdbcDaoSupport implements D
     }
   }
 
-  private static final String SQL_UPDATE = "UPDATE data_source SET data_source_id = :dataSourceId, type = :type, url = :url, user_name = :userName, password = :password, lock = :lock, drive_class = :driveClass, owner = :owner " +
+  private static final String SQL_UPDATE = "UPDATE data_source SET data_source_id = :dataSourceId, type = :type, url = :url, user_name = :userName, password = :password, lock = :lock, drive_class = :driveClass, owner = :owner, json_data = :jsonData " +
           " WHERE data_source_id = :dataSourceId";
   @Override
   public int update(DataSource dataSource) {

@@ -286,6 +286,17 @@ Ext.define('CGT.controller.DataSourceController', {
             me.getWinSqlType().setValue(sqlWindow.contentValues.m_type);
             me.getWinExampleUrl().setValue(sqlWindow.contentValues.m_exampleUrl);
             me.getWinUrl().emptyText = [sqlWindow.contentValues.m_urlEmptyText];
+        }else if(dbType == 'custom_json'){
+            if(me.jsonEditorWindow && me.jsonEditorWindow.isVisible(true)){
+                return;
+            }
+            me.jsonEditorWindow = Ext.create('CGT.view.common.JsonEditorWindow',{
+                renderTo: Ext.getBody(),
+                contentValues: {
+                    m_editorId: 'jsonEditorWindow'
+                }
+            });
+            me.jsonEditorWindow .show();
         }
     },
     headerPanelAfterRender: function (panel) {

@@ -4,6 +4,7 @@ Ext.define('CGT.model.generator.Datasource',{
         { name: 'dataSourceId'},
         { name: 'type'},
         { name: 'url'},
-        { name: 'lock' }
+        { name: 'lock' },
+        { name: 'jsonData' }
     ]
 });

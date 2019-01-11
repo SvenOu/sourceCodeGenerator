@@ -60,9 +60,15 @@ public class SqlCodeController {
 		return commonService.downloadSourcesFile(path);
 	}
 
-	@RequestMapping(path = "/downloadAllFile", method = RequestMethod.GET)
-	public ResponseEntity<Resource> downloadAllFile(String dataSourceId, String templateId) throws IOException, ZipException {
+	@RequestMapping(path = "/downloadSpecialFile", method = RequestMethod.GET)
+	public ResponseEntity<Resource> downloadSpecialFile(String dataSourceId, String templateId) throws IOException, ZipException {
 		String zipPath = commonService.generateDirZip(dataSourceId, templateId);
+		return commonService.downloadSourcesFile(zipPath);
+	}
+
+	@RequestMapping(path = "/downloadAllFile", method = RequestMethod.GET)
+	public ResponseEntity<Resource> downloadAllFile() throws IOException, ZipException {
+		String zipPath = commonService.generateUserDirZip();
 		return commonService.downloadSourcesFile(zipPath);
 	}
 

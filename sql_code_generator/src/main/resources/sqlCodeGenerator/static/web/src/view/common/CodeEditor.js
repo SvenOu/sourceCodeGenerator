@@ -1,8 +1,7 @@
 Ext.define('CGT.view.common.CodeEditor', {
 	extend: 'Ext.panel.Panel',
 	alias: ['widget.codeeditor'],
-    layout: 'fit',
-    bodyCls : 'code-panel-container',
+    bodyCls : 'common-code-editor',
     header: false,
     // custom attr
     contentValues: {

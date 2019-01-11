@@ -47,7 +47,7 @@ public class FileGenerator {
                 formatType = key.substring(formatIndex + 1);
                 key = key.substring(0, formatIndex);
             }
-            String value = StringUtils.isEmpty(rootData.get(key)) ? String.format(TPConfig.FORMAT_ERROR, key) : (String) rootData.get(key);
+            String value = CaseFormat.getFormatData(rootData, key);
             if (formatType != null) {
                 value = CaseFormat.formatString(value, formatType);
             }

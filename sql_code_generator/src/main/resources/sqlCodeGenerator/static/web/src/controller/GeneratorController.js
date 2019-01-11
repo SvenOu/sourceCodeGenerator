@@ -126,19 +126,8 @@ Ext.define('CGT.controller.GeneratorController', {
         });
     },
     downloadAllFileBtnClick: function(btn, e, eOpts){
-	    var me = this, tplContentValues = this.getTemplatesPanel().contentValues,
-            dataSourcesContentValues = this.getDataSourcesPanel().contentValues;
-
-        var templateId = tplContentValues.m_lastChooseVal.get('templateId'),
-            dataSourceId = dataSourcesContentValues.m_lastChooseVal.get('dataSourceId');
-	    if(!Ext.isEmpty(dataSourceId)){
-            var url = app.API_PREFIX +'/downloadAllFile?' + Ext.urlEncode({
-                userId: app.user.userId,
-                templateId: templateId,
-                dataSourceId: dataSourceId
-            });
-            window.open(url, '_blank');
-        }
+        var url = app.API_PREFIX +'/downloadAllFile';
+        window.open(url, '_blank');
     },
     downloadCurrentFileBtnClick: function(btn, e, eOpts){
 	    var me = this, codePath = this.getGenerateCodeEditor().m_codePath;

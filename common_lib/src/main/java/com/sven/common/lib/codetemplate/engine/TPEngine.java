@@ -6,7 +6,6 @@ import com.sven.common.lib.codetemplate.dataBean.TplSourceFileInfo;
 import com.sven.common.lib.codetemplate.utils.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 
@@ -18,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -44,29 +42,40 @@ public class TPEngine {
         TplSourceFileInfo rootInfo = FileUtils.getSourceFileInfo(tplPath);
         FileSystemUtils.deleteRecursively(new File(disPath));
 
-        String tempDirName = "#tempTemplates/";
+        String tempDirName = "/#tempTemplates/";
         String tempTplsPath = disPath + tempDirName;
         FileGenerator fileGenerator = new FileGenerator();
         fileGenerator.generateTempTpls(rootContext, rootInfo.getPath(), tempTplsPath, rootInfo);
         SourceFileInfo generateTplInfo = FileUtils.getSourceFileInfo(tempTplsPath);
         List<Map> data = (List<Map>) rootContext.get(TPConfig.KEY_DATA);
-        progressSourceFileInfo(generateTplInfo, data, tempDirName);
+        progressSourceFileInfo(generateTplInfo, data, tempDirName, rootContext);
 
         // FIXME: 可以不删除，用于debug
         FileSystemUtils.deleteRecursively(Paths.get(tempTplsPath));
     }
 
-    private void progressSourceFileInfo(SourceFileInfo tplInfo, List<Map> data, String tempDirName) throws IOException {
+    private void progressSourceFileInfo(SourceFileInfo tplInfo, List<Map> data, String tempDirName, Map rootContext) throws IOException {
         if (!tplInfo.isDir()) {
             String tplPath = tplInfo.getPath();
-            String newDirName = new File(tplPath)
-                    .getParent()
+            String parentDirPath = new File(tplPath).getParent();
+            if(!parentDirPath.substring(parentDirPath.length() -1).equals("/")){
+                parentDirPath += "/";
+            }
+            String newDirName = parentDirPath
                     .replaceAll("\\\\", "/")
                     .replaceAll(tempDirName, "/");
+            String fileName = tplInfo.getName();
+
+            // 处理不存在表达式的文件
+            if(!hasExpression(fileName)){
+                data = new ArrayList<>(1);
+                data.add(rootContext);
+            }
+
             for (Map d : data) {
                 StringBuffer sb = new StringBuffer();
                 Pattern pat = Pattern.compile(TPConfig.STRING_PATTERN, Pattern.DOTALL);
-                Matcher matcher = pat.matcher(tplInfo.getName());
+                Matcher matcher = pat.matcher(fileName);
                 while (matcher.find()) {
                     String s = matcher.group();
                     String key = s.substring(3, s.length() - 2);
@@ -77,7 +86,7 @@ public class TPEngine {
                         formatType = key.substring(formatIndex + 1);
                         key = key.substring(0, formatIndex);
                     }
-                    String value = StringUtils.isEmpty(d.get(key)) ? String.format(TPConfig.FORMAT_ERROR, key): (String) d.get(key);
+                    String value = CaseFormat.getFormatData(d, key);
                     if (formatType != null) {
                         value = CaseFormat.formatString(value, formatType);
                     }
@@ -91,10 +100,15 @@ public class TPEngine {
             List<SourceFileInfo> childs = (List<SourceFileInfo>) tplInfo.getChildren();
             if (null != childs) {
                 for (SourceFileInfo c : childs) {
-                    progressSourceFileInfo(c, data, tempDirName);
+                    progressSourceFileInfo(c, data, tempDirName, rootContext);
                 }
             }
         }
+    }
+
+    private boolean hasExpression(String fileName) {
+        Pattern pat = Pattern.compile(TPConfig.STRING_PATTERN, Pattern.DOTALL);
+        return pat.matcher(fileName).find();
     }
 
     public void progress(String tplPath, String disPath, Map context) throws IOException {
@@ -179,7 +193,7 @@ public class TPEngine {
                     formatType = key.substring(formatIndex + 1);
                     key = key.substring(0, formatIndex);
                 }
-                String value = StringUtils.isEmpty(c.get(key)) ? String.format(TPConfig.FORMAT_ERROR, key) : (String) c.get(key);
+                String value = CaseFormat.getFormatData(c, key);
                 if (formatType != null) {
                     value = CaseFormat.formatString(value, formatType);
                 }
@@ -208,10 +222,7 @@ public class TPEngine {
                 formatType = key.substring(formatIndex + 1);
                 key = key.substring(0, formatIndex);
             }
-            if(StringUtils.isEmpty(context.get(key))){
-                log.info(String.format(TPConfig.FORMAT_ERROR, key));
-            }
-            String value = StringUtils.isEmpty(context.get(key)) ? String.format(TPConfig.FORMAT_ERROR, key) : (String) context.get(key);
+            String value = CaseFormat.getFormatData(context, key);
             if (formatType != null) {
                 value = CaseFormat.formatString(value, formatType);
             }

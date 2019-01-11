@@ -130,19 +130,16 @@ public class CommonServiceImpl implements CommonService {
     public String generateDirZip(String dataSourceId, String templateId) throws ZipException, IOException {
         CodeTemplate tpl = codeTemplateDao.findByKey(templateId);
         String tplName = new File(tpl.getPath()).getName();
-        String generatePath = generatorDirPath + TPConfig.KEY_USER_FILES + '/' + tplName + '/';
+        String generatePath = getUserRootPath() + tplName + '/';
         String userName = SecurityUtils.getCurrentUserDetails().getUsername();
         // Initiate ZipFile object with the path/name of the zip file.
-        String dirPath = generatePath + "tempFiles/";
+        String dirPath = generatorDirPath + "z_tempFiles/";
         File dir = new File(dirPath);
         FileSystemUtils.deleteRecursively(dir);
         if(!dir.exists()){
             dir.mkdirs();
         }
         ZipFile zipFile = new ZipFile(dirPath + "_" + tplName + "_" + userName +".zip");
-
-        // Folder to add
-        String folderToAdd = generatePath + userName +  '/';
 
         // Initiate Zip Parameters which define various properties such
         // as compression method, etc.
@@ -155,7 +152,37 @@ public class CommonServiceImpl implements CommonService {
         parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
 
         // Add folder to the zip file
-        zipFile.addFolder(folderToAdd, parameters);
+        zipFile.addFolder(generatePath, parameters);
+
+        return zipFile.getFile().getAbsolutePath();
+    }
+
+    @Override
+    public String generateUserDirZip() throws ZipException {
+
+        String generatePath = getUserRootPath();
+        String userName = SecurityUtils.getCurrentUserId();
+        // Initiate ZipFile object with the path/name of the zip file.
+        String dirPath = generatorDirPath + "z_tempFiles/";
+        File dir = new File(dirPath);
+        FileSystemUtils.deleteRecursively(dir);
+        if(!dir.exists()){
+            dir.mkdirs();
+        }
+        ZipFile zipFile = new ZipFile(dirPath + "_"  + userName +"_GenerateCodes.zip");
+
+        // Initiate Zip Parameters which define various properties such
+        // as compression method, etc.
+        ZipParameters parameters = new ZipParameters();
+
+        // set compression method to store compression
+        parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+
+        // Set the compression level
+        parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+
+        // Add folder to the zip file
+        zipFile.addFolder(generatePath, parameters);
 
         return zipFile.getFile().getAbsolutePath();
     }

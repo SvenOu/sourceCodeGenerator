@@ -24,7 +24,6 @@ public class TPConfig {
 
     // 文件名
     public static final String KEY_DATA = "data";
-    public static final String KEY_USER_FILES = "UserFiles";
 
     //错误反馈表达式
     public static final String FORMAT_ERROR = "[errorForKey-%s]";

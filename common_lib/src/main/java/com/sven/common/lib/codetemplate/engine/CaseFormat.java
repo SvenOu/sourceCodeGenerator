@@ -1,6 +1,9 @@
 package com.sven.common.lib.codetemplate.engine;
 
+import com.sven.common.lib.codetemplate.config.TPConfig;
 import org.springframework.util.StringUtils;
+
+import java.util.Map;
 
 public class CaseFormat {
     /***************************** formatArray ***********************************/
@@ -112,5 +115,16 @@ public class CaseFormat {
             param = param.substring(0, 1).toLowerCase() + param.substring(1);
         }
         return param;
+    }
+    public static String getFormatData(Map data, String key){
+        Object d = data.get(key) == null? "" :  data.get(key);
+        String value = null;
+        if(d instanceof String){
+            value = StringUtils.isEmpty(d) ? String.format(TPConfig.FORMAT_ERROR, key) : (String) d;
+        }else {
+            d = data.get(key).toString();
+            value = StringUtils.isEmpty(d) ? String.format(TPConfig.FORMAT_ERROR, key) : (String) d;
+        }
+        return value;
     }
 }

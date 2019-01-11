@@ -40,6 +40,7 @@ Ext.application({
 		'common.DataSourceGrid',
 		'common.TemplateGrid',
 		'common.CodeEditor',
+		'common.JsonEditorWindow',
 		'common.DocWindow',
 
 		//  main
