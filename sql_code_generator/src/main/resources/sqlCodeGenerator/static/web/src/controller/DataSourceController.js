@@ -19,8 +19,11 @@ Ext.define('CGT.controller.DataSourceController', {
         {ref: 'winUrl', selector: 'sqlremoteconfigwindow textfield[name=url]'},
         {ref: 'winUsername', selector: 'sqlremoteconfigwindow textfield[name=username]'},
         {ref: 'winPassword', selector: 'sqlremoteconfigwindow textfield[name=password]'},
-        {ref: 'sqlRemoteConfigWindowAddBtn', selector: 'sqlremoteconfigwindow button[name=addBtn]'},
-        {ref: 'dataSourcesPanelBackBtn', selector: 'datasourcespanel button[name=backBtn]'}
+        {ref: 'sqlRemoteConfigWindowSaveBtn', selector: 'sqlremoteconfigwindow button[name=saveBtn]'},
+        {ref: 'dataSourcesPanelBackBtn', selector: 'datasourcespanel button[name=backBtn]'},
+        {ref: 'jsonEditorWindow', selector: 'jsoneditorwindow'},
+        {ref: 'jsonEditorWindowAppleChangeBtn', selector: 'jsoneditorwindow button[name=appleChangeBtn]'},
+        {ref: 'jsonEditorWindowDataSourceName', selector: 'jsoneditorwindow textfield[name=dataSourceName]'}
 	],
     init: function(application) {
         this.control({
@@ -34,7 +37,8 @@ Ext.define('CGT.controller.DataSourceController', {
                    itemclick: this.dataSourceGridItemClick
                },
                'datasourcegrid[name=dataSourceGrid] actioncolumn': {
-                   deleteBtnClick: this.dataSourceDeleteBtnClick
+                   deleteBtnClick: this.dataSourceDeleteBtnClick,
+                   editBtnClick: this.dataSourceEditBtnClickClick
                },
                'datasourcegrid button[name=addDatasourceBtn]': {
                    click: this.addDatasourceBtnClick
@@ -42,8 +46,8 @@ Ext.define('CGT.controller.DataSourceController', {
                'datasourcegrid button[name=refreshDbFiles]': {
                    click: this.refreshDbFiles
                },
-               'sqlremoteconfigwindow button[name=addBtn]': {
-                   click: this.sqlRemoteConfigWindowAddBtnClick
+               'sqlremoteconfigwindow button[name=saveBtn]': {
+                   click: this.sqlRemoteConfigWindowSaveBtnClick
                },
                'sqlfileconfigwindow button[name=uploadDbFiles]': {
                    click: this.uploadDbFilesBtnClick
@@ -56,12 +60,61 @@ Ext.define('CGT.controller.DataSourceController', {
                },
                'datasourcespanel button[name=backBtn]': {
                    click: this.dataSourcesPanelBackBtnClick
+               },
+               'jsoneditorwindow button[name=appleChangeBtn]': {
+                   click: this.jsonEditorWindowAppleChangeBtnClick
                }
+        });
+    },
+    jsonEditorWindowAppleChangeBtnClick: function(btn, e, eOpts){
+        var me = this, jsonEditorWindow = this.getJsonEditorWindow(),
+            jsonEditorWindowDataSourceName = this.getJsonEditorWindowDataSourceName();
+        var params = {
+            type: 'custom_json',
+            jsonData: jsonEditorWindow.getJsonText(),
+            dataSourceName: jsonEditorWindowDataSourceName.getValue(),
+            dataSourceId: jsonEditorWindow.m_dataSourceId
+        };
+
+        if(Ext.isEmpty(jsonEditorWindowDataSourceName.getValue())){
+            app.method.toastMsg('Message', 'data source name is empty.');
+            return;
+        }
+        try {
+            JSON.parse(params.jsonData)
+        }catch (e) {
+            app.method.toastMsg('Message', 'json data is not valid format.');
+            return;
+        }
+
+        jsonEditorWindow.setLoading(true);
+        Ext.Ajax.request({
+            type : "POST",
+            dataType : 'json',
+            params: params,
+            url : app.API_PREFIX + '/saveJsonDataSource',
+            success: function(response){
+                var responseText = Ext.JSON.decode(response.responseText);
+                if(responseText){
+                    if(responseText.success){
+                        app.method.toastMsg('Message', 'save json datasource success.');
+                    }else {
+                        app.method.toastMsg('Message', responseText.errorCode);
+                    }
+                }
+                me.getDataSourceGrid().getStore().load();
+                jsonEditorWindow.setLoading(false);
+                jsonEditorWindow.close();
+            },
+            failure: function() {
+                app.method.toastMsg('Message', 'save json datasource fail.');
+                jsonEditorWindow.setLoading(false);
+            }
         });
     },
     dataSourcesPanelBackBtnClick: function(btn, e, eOpts){
         var contentValues = this.getDatasourcesPanel().contentValues,
-            mainContainer = this.getCommonMainContainer();;
+            mainContainer = this.getCommonMainContainer();
         mainContainer.getLayout().setActiveItem(contentValues.m_chooseFrom);
         contentValues.m_mode = 'default';
         btn.setVisible(false);
@@ -113,6 +166,8 @@ Ext.define('CGT.controller.DataSourceController', {
             contentValues.m_callBack(contentValues);
             mainContainer.getLayout().setActiveItem(contentValues.m_chooseFrom);
             contentValues.m_mode = 'default';
+        }else if(contentValues.m_mode === 'default'){
+
         }
     },
     refreshDbFilesTreePanelContainer: function () {
@@ -155,6 +210,43 @@ Ext.define('CGT.controller.DataSourceController', {
             }
         });
     },
+    dataSourceEditBtnClickClick: function(view, rowIndex, colIndex, item, e, record, row){
+	    var me = this, type = record.get('type');
+        if(type === 'custom_json'){
+            if(me.jsonEditorWindow && me.jsonEditorWindow.isVisible(true)){
+                me.jsonEditorWindow.close();
+                return;
+            }
+            me.jsonEditorWindow = Ext.create('CGT.view.common.JsonEditorWindow',{
+                renderTo: Ext.getBody(),
+                contentValues: {
+                    m_editorId: 'jsonEditorWindow'
+                },
+                m_jsonData: JSON.parse(record.get('jsonData')),
+                m_dataSourceName: (record.get('url').split(':'))[1],
+                m_dataSourceId: record.get('dataSourceId')
+            });
+            me.jsonEditorWindow .show();
+        }else if(type === 'sqlite'){
+            // console.log(type);
+        }else if(type === 'mssql'){
+            if(me.sqlRemoteConfigWindow && me.sqlRemoteConfigWindow.isVisible(true)){
+                me.sqlRemoteConfigWindow.close();
+                return;
+            }
+            me.sqlRemoteConfigWindow = Ext.create('CGT.view.common.SqlRemoteConfigWindow');
+            me.sqlRemoteConfigWindow.contentValues = {
+                m_type: record.get('type'),
+                m_url: record.get('url').replace(/\s*jdbc:jtds:sqlserver:\/\/\s*/g,""),
+                m_username: record.get('username'),
+                m_password: record.get('password'),
+                m_exampleUrl:'sql30.easternphoenix.com:1433/ChurchsYMTC',
+                m_urlEmptyText:'a db url',
+                m_dataSourceId: record.get('dataSourceId')
+            };
+            me.sqlRemoteConfigWindow.show();
+        }
+    },
     dataSourceDeleteBtnClick: function(view, rowIndex, colIndex, item, e, record, row){
 	    var me = this;
         Ext.Msg.confirm('Message', 'Do you want to delete this dataSource?', function(optional){
@@ -172,7 +264,7 @@ Ext.define('CGT.controller.DataSourceController', {
         combo.getStore().load();
     },
 
-    sqlRemoteConfigWindowAddBtnClick: function(btn, e, eOpts){
+    sqlRemoteConfigWindowSaveBtnClick: function(btn, e, eOpts){
         var me = this, sqlRemoteConfigWindow = me.getSqlRemoteConfigWindow();
         if(!me.remoteConfigWinFormValid()){
             return;
@@ -182,13 +274,14 @@ Ext.define('CGT.controller.DataSourceController', {
             url: me.getWinUrl().getValue(),
             userName: me.getWinUsername().getValue(),
             password: me.getWinPassword().getValue(),
+            dataSourceId: sqlRemoteConfigWindow.contentValues.m_dataSourceId
         };
         sqlRemoteConfigWindow.setLoading(true);
         Ext.Ajax.request({
             type : "POST",
             dataType : 'json',
             params: params,
-            url : app.API_PREFIX + '/addRemoteDbConfig',
+            url : app.API_PREFIX + '/saveRemoteDbConfig',
             success: function(response){
                 var responseText = Ext.JSON.decode(response.responseText);
                 if(responseText.success === true){
@@ -273,8 +366,11 @@ Ext.define('CGT.controller.DataSourceController', {
             };
             sqlWindow.show();
         }else if(dbType == 'mssql'){
-            var sqlWindow = Ext.create('CGT.view.common.SqlRemoteConfigWindow');
-            sqlWindow.contentValues = {
+            if(me.sqlRemoteConfigWindow && me.sqlRemoteConfigWindow.isVisible(true)){
+                return;
+            }
+            me.sqlRemoteConfigWindow = Ext.create('CGT.view.common.SqlRemoteConfigWindow');
+            me.sqlRemoteConfigWindow.contentValues = {
                 m_type: dbType,
                 m_url: '',
                 m_username: '',
@@ -282,10 +378,7 @@ Ext.define('CGT.controller.DataSourceController', {
                 m_exampleUrl:'sql30.easternphoenix.com:1433/ChurchsYMTC',
                 m_urlEmptyText:'a db url',
             };
-            sqlWindow.show();
-            me.getWinSqlType().setValue(sqlWindow.contentValues.m_type);
-            me.getWinExampleUrl().setValue(sqlWindow.contentValues.m_exampleUrl);
-            me.getWinUrl().emptyText = [sqlWindow.contentValues.m_urlEmptyText];
+            me.sqlRemoteConfigWindow.show();
         }else if(dbType == 'custom_json'){
             if(me.jsonEditorWindow && me.jsonEditorWindow.isVisible(true)){
                 return;

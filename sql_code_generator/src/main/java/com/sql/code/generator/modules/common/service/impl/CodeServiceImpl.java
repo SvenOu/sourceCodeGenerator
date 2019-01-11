@@ -20,11 +20,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.FileSystemUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class CodeServiceImpl implements CodeService {
@@ -146,19 +150,62 @@ public class CodeServiceImpl implements CodeService {
     }
 
     @Override
-    public CommonResponse addRemoteDbConfig(DataSource dataSource) {
+    public CommonResponse saveJsonDataSource(String dataSourceId, String type, String dataSourceName, String jsonData) {
+        if(!DatasourceEnum.CUSTOM_JSON.getValue().equals(type)){
+            throw new RuntimeException("do not support this type: " + type);
+        }
+        DataSource dbDataSource = null;
+        if(!StringUtils.isEmpty(dataSourceId) ){
+            dbDataSource = dataSourceDao.findByKey(dataSourceId);
+        }
+        if(dbDataSource != null){
+            dbDataSource.setType(type);
+            dbDataSource.setUrl("dataSourceName:" + dataSourceName);
+            dbDataSource.setJsonData(jsonData);
+            return CommonResponse.success(dataSourceDao.save(dbDataSource));
+        }else {
+            DataSource dataSource = new DataSource();
+            dataSource.setDataSourceId(IdUtils.getId(DatasourceEnum.CUSTOM_JSON.getValue()));
+            String shortData = jsonData.length() > 100 ? jsonData.substring(0, 99): jsonData;
+            dataSource.setUrl("dataSourceName:" + dataSourceName);
+            dataSource.setType(type);
+            dataSource.setJsonData(jsonData);
+            dataSource.setLock(false);
+            dataSource.setOwner(SecurityUtils.getCurrentUserDetails().getUsername());
+            return CommonResponse.success(dataSourceDao.save(dataSource));
+        }
+    }
+
+    @Override
+    public CommonResponse saveRemoteDbConfig(DataSource dataSource) {
         if(!DatasourceEnum.MSSQL.getValue().equals(dataSource.getType())){
             throw new RuntimeException("do not support this type: " + dataSource.getType());
         }
-        dataSource.setDataSourceId(IdUtils.getId(DatasourceEnum.MSSQL.getValue()));
-        dataSource.setDriveClass(DatasourceEnum.MSSQL.getDriveClass());
-        String originUrl = dataSource.getUrl();
-        if(!originUrl.contains(DatasourceEnum.MSSQL.getUrlPrefix())){
-            dataSource.setUrl(DatasourceEnum.MSSQL.getUrlPrefix() + originUrl);
+        DataSource dbDataSource = null;
+        if(!StringUtils.isEmpty(dataSource.getDataSourceId())){
+            dbDataSource = dataSourceDao.findByKey(dataSource.getDataSourceId());
         }
-        dataSource.setLock(false);
-        dataSource.setOwner(SecurityUtils.getCurrentUserDetails().getUsername());
-        return CommonResponse.success(dataSourceDao.save(dataSource));
+        if(dbDataSource != null){
+            String originUrl = dataSource.getUrl();
+            if(!originUrl.contains(DatasourceEnum.MSSQL.getUrlPrefix())){
+                dbDataSource.setUrl(DatasourceEnum.MSSQL.getUrlPrefix() + originUrl);
+            }else {
+                dbDataSource.setUrl(dataSource.getUrl());
+            }
+            dbDataSource.setUserName(dataSource.getUserName());
+            dbDataSource.setPassword(dataSource.getPassword());
+            return CommonResponse.success(dataSourceDao.save(dbDataSource));
+        }else {
+            dataSource.setDataSourceId(IdUtils.getId(DatasourceEnum.MSSQL.getValue()));
+            dataSource.setDriveClass(DatasourceEnum.MSSQL.getDriveClass());
+            String originUrl = dataSource.getUrl();
+            if(!originUrl.contains(DatasourceEnum.MSSQL.getUrlPrefix())){
+                dataSource.setUrl(DatasourceEnum.MSSQL.getUrlPrefix() + originUrl);
+            }
+            dataSource.setLock(false);
+            dataSource.setOwner(SecurityUtils.getCurrentUserDetails().getUsername());
+            return CommonResponse.success(dataSourceDao.save(dataSource));
+        }
     }
 
     @Override

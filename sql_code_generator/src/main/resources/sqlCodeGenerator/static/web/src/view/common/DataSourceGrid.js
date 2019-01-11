@@ -23,6 +23,24 @@ Ext.define('CGT.view.common.DataSourceGrid', {
             }},
             {
                 xtype:'actioncolumn',
+                text: 'Edit',
+                align: 'center',
+                width: 70,
+                items: [{
+                    icon: 'images/table_edit.png',
+                    tooltip: 'edit this row',
+                    handler: function (view, rowIndex, colIndex, item, e, record, row) {
+                        this.fireEvent('editBtnClick', view, rowIndex, colIndex, item, e, record, row);
+                    },
+                    getClass: function(v, metadata, r, rowIndex, colIndex, store){
+                        if(r.get('type') === 'sqlite'){
+                            metadata.css = 'hide-cell';
+                        }
+                    }
+                }]
+            },
+            {
+                xtype:'actioncolumn',
                 text: 'Delete',
                 align: 'center',
                 width: 70,

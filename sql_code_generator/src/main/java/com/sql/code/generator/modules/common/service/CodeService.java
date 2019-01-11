@@ -19,7 +19,9 @@ public interface CodeService {
 
 	CommonResponse deleteDataSource(String dataSourceId);
 
-	CommonResponse addRemoteDbConfig(DataSource dataSource);
+	CommonResponse saveJsonDataSource(String dataSourceId, String type, String dataSourceName, String jsonData);
+
+	CommonResponse saveRemoteDbConfig(DataSource dataSource);
 
 	SourceFileInfo getUserDbFilesInfo();
 
@@ -40,4 +42,5 @@ public interface CodeService {
 	String getUserDbFileDir();
 	String getUserTemplateFileDir();
 	String getUserTemplatePath();
+
 }

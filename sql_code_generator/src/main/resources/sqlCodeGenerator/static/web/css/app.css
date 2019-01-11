@@ -146,4 +146,7 @@
 	position: absolute;
 	background: #cce6cf;
 }
+.hide-cell .x-grid-cell-inner{
+	display: none;
+}
 

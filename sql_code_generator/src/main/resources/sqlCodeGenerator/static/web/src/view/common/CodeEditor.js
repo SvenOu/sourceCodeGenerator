@@ -14,25 +14,31 @@ Ext.define('CGT.view.common.CodeEditor', {
 		me.layout = {
 		   type: 'fit'
         };
-		me.bbar = [
-            {
-                xtype:'combo',
-                fieldLabel:'Editor Mode',
-                labelWidth: 85,
-                name:'editorMode',
-                queryMode:'local',
-                store:['text','java','javascript','objectivec','json','xml'],
-                displayField:'division',
-                value: me.contentValues.m_mode,
-                autoSelect:true,
-                editable: false,
-                forceSelection:true,
-                listeners: {
-                    select: me.onSelectEditorMode,
-                    scope: me
-                }
+
+        var editorModeCombo = {
+            xtype: 'combo',
+            fieldLabel: 'Editor Mode',
+            labelWidth: 85,
+            name: 'editorMode',
+            queryMode: 'local',
+            store: ['text', 'java', 'javascript', 'objectivec', 'json', 'xml'],
+            displayField: 'division',
+            value: me.contentValues.m_mode,
+            autoSelect: true,
+            editable: false,
+            forceSelection: true,
+            listeners: {
+                select: me.onSelectEditorMode,
+                scope: me
             }
-        ];
+        };
+
+		if(Ext.isEmpty(me.bbar)){
+            me.bbar = [editorModeCombo];
+        }else{
+            me.bbar.unshift(editorModeCombo);
+        }
+
         this.items = [
             {
                 autoScroll: true,

@@ -93,14 +93,19 @@ public class SqlCodeController {
 		return codeService.saveTemplateFile(templateFolderFile, fileName);
 	}
 
-	@RequestMapping(value = "/addRemoteDbConfig",method = RequestMethod.POST)
-	public @ResponseBody CommonResponse addRemoteDbConfig(DataSource dataSource) throws IOException {
-		return codeService.addRemoteDbConfig(dataSource);
+	@RequestMapping(value = "/saveRemoteDbConfig",method = RequestMethod.POST)
+	public @ResponseBody CommonResponse saveRemoteDbConfig(DataSource dataSource) throws IOException {
+		return codeService.saveRemoteDbConfig(dataSource);
 	}
 
 	@RequestMapping(value = "/deleteDataSource",method = RequestMethod.POST)
 	public @ResponseBody CommonResponse deleteDataSource(String dataSourceId) throws IOException {
 		return codeService.deleteDataSource(dataSourceId);
+	}
+
+	@RequestMapping(value = "/saveJsonDataSource",method = RequestMethod.POST)
+	public @ResponseBody CommonResponse saveJsonDataSource(String dataSourceId, String type, String dataSourceName, String jsonData) throws IOException {
+		return codeService.saveJsonDataSource(dataSourceId, type, dataSourceName, jsonData);
 	}
 
 	@RequestMapping(value = "/deleteCodeTemplate",method = RequestMethod.POST)
