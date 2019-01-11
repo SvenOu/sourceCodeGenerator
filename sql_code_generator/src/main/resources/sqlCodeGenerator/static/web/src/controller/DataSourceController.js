@@ -217,12 +217,14 @@ Ext.define('CGT.controller.DataSourceController', {
                 me.jsonEditorWindow.close();
                 return;
             }
+            var jsonData = JSON.parse(record.get('jsonData'));
             me.jsonEditorWindow = Ext.create('CGT.view.common.JsonEditorWindow',{
                 renderTo: Ext.getBody(),
                 contentValues: {
                     m_editorId: 'jsonEditorWindow'
                 },
-                m_jsonData: JSON.parse(record.get('jsonData')),
+                m_jsonData: jsonData,
+                m_defaultJsonData: jsonData,
                 m_dataSourceName: (record.get('url').split(':'))[1],
                 m_dataSourceId: record.get('dataSourceId')
             });
