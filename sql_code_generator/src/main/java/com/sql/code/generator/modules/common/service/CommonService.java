@@ -34,5 +34,5 @@ public interface CommonService {
 
     CommonResponse clearGenerateCode() throws IOException;
 
-
+    String downloadAllTemplateFile() throws IOException, ZipException;
 }

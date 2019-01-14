@@ -9,7 +9,8 @@ Ext.define('CGT.controller.TemplatesDetailController', {
         {ref: 'resetDefTplBtn', selector: 'treepanel button[name=resetDefTplBtn]'},
         {ref: 'showDocBtn', selector: 'templatedetailpanel button[name=showDocBtn]'},
         {ref: 'deleteSelectedEdBtn', selector: 'templatedetailpanel button[name=deleteSelectedEdBtn]'},
-        {ref: 'templateGrid', selector: 'templatesPanel templategrid[name=templateGrid]'}
+        {ref: 'templateGrid', selector: 'templatesPanel templategrid[name=templateGrid]'},
+        {ref: 'downloadAllTemplatesBtn', selector: 'templatedetailpanel button[name=downloadAllTemplatesBtn]'},
 	],
     init: function(application) {
 	    this.control({
@@ -33,8 +34,15 @@ Ext.define('CGT.controller.TemplatesDetailController', {
             },
             'templatedetailpanel button[name=deleteSelectedEdBtn]': {
                 click: this.deleteSelectedEdBtnClick
+            },
+            'templatedetailpanel button[name=downloadAllTemplatesBtn]': {
+                click: this.downloadAllTemplatesBtnClick
             }
 	    });
+    },
+    downloadAllTemplatesBtnClick: function(btn, e, eOpts){
+        var url = app.API_PREFIX +'/downloadAllTemplateFile';
+        window.open(url, '_blank');
     },
     deleteSelectedEdBtnClick: function(btn, e, eOpts){
 	    var me = this, templatesTreePanel = this.getTemplatesTreePanel();

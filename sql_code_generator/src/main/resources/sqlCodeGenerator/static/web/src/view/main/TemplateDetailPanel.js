@@ -29,6 +29,15 @@ Ext.define('CGT.view.main.TemplateDetailPanel', {
                         },
                         '->'
                     ],
+                    bbar: [
+                        {
+                            name: 'downloadAllTemplatesBtn',
+                            xtype: 'button',
+                            margin: '0 0 0 30',
+                            text: 'download all templates'
+                        },
+                        '->'
+                    ],
                     width: 350,
                     cls: 'code-tree-panel',
                     autoScroll: true,

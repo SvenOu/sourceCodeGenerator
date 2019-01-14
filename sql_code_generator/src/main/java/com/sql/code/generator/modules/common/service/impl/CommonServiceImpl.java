@@ -239,6 +239,35 @@ public class CommonServiceImpl implements CommonService {
         return CommonResponse.SIMPLE_SUCCESS;
     }
 
+    @Override
+    public String downloadAllTemplateFile() throws IOException, ZipException {
+        String targetDir = codeService.getUserTemplateFileDir();
+        String userName = SecurityUtils.getCurrentUserId();
+        // Initiate ZipFile object with the path/name of the zip file.
+        String dirPath = generatorDirPath + "z_tempFiles/";
+        File dir = new File(dirPath);
+        FileSystemUtils.deleteRecursively(dir);
+        if(!dir.exists()){
+            dir.mkdirs();
+        }
+        ZipFile zipFile = new ZipFile(dirPath + "_"  + userName +"_TemplateCodes.zip");
+
+        // Initiate Zip Parameters which define various properties such
+        // as compression method, etc.
+        ZipParameters parameters = new ZipParameters();
+
+        // set compression method to store compression
+        parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+
+        // Set the compression level
+        parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+
+        // Add folder to the zip file
+        zipFile.addFolder(targetDir, parameters);
+
+        return zipFile.getFile().getAbsolutePath();
+    }
+
     private void getFileNamesByDirPath(List<String> fileNames,  String path) {
         File folder = new File(path);
         if(!folder.exists()){

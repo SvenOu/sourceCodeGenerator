@@ -71,6 +71,11 @@ public class SqlCodeController {
 		String zipPath = commonService.generateUserDirZip();
 		return commonService.downloadSourcesFile(zipPath);
 	}
+	@RequestMapping(path = "/downloadAllTemplateFile", method = RequestMethod.GET)
+	public ResponseEntity<Resource> downloadAllTemplateFile() throws IOException, ZipException {
+		String zipPath = commonService.downloadAllTemplateFile();
+		return commonService.downloadSourcesFile(zipPath);
+	}
 
 	/**  code generator start **/
 	@RequestMapping(value = "/getDatasource",method = RequestMethod.POST)
