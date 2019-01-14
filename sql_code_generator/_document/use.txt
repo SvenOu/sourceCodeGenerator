@@ -7,8 +7,9 @@ $tp-repeat(arrayName-arrayFormator~formatorStr){{
  $(elementName-stringFormator)
 }}
 
-//变量表达式,仅仅用于文件夹生成
+//dir, file 表达式,仅仅用于文件夹生成
 $dir{{elementName-stringFormator}}
+$file-repeat(arrayName){{$(elementName-stringFormator)}}
 
 // example:
 public class ${{voClassName}} implements Serializable {
