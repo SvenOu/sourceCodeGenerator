@@ -16,8 +16,20 @@ Ext.define('CGT.view.common.JsonEditorWindow', {
     m_dataSourceId: '',
     m_dataSourceName: '',
     m_defaultJsonData: {
-	    dirName1: "dirName1",
-	    dirName2: "dirName2",
+	    dirName1: "文件夹1",
+	    dirName2: "文件夹2",
+        extraData: [
+            {
+                title: 'extraData title',
+                name: 'extraData name'
+            }
+        ],
+        extraData2: [
+            {
+                title2: 'extraData title2',
+                name2: 'extraData name2 呵呵'
+            }
+        ],
 	    data: [
             {
                 attr1: 'record1-attr1',

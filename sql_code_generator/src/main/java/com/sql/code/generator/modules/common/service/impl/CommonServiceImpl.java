@@ -6,14 +6,13 @@ import com.sql.code.generator.modules.common.bean.DatasourceEnum;
 import com.sql.code.generator.modules.common.dao.CodeTemplateDao;
 import com.sql.code.generator.modules.common.dao.DataSourceDao;
 import com.sql.code.generator.modules.common.service.CodeGenerator;
-import com.sql.code.generator.modules.common.composite.SqlType;
 import com.sql.code.generator.modules.common.service.CodeService;
+import com.sql.code.generator.modules.common.service.CommonService;
 import com.sql.code.generator.modules.common.vo.CodeTemplate;
 import com.sql.code.generator.modules.common.vo.DataSource;
 import com.sven.common.lib.bean.CommonResponse;
-import com.sven.common.lib.codetemplate.config.TPConfig;
 import com.sven.common.lib.codetemplate.dataBean.SourceFileInfo;
-import com.sql.code.generator.modules.common.service.CommonService;
+import com.sven.common.lib.codetemplate.engine.TPEngine;
 import com.sven.common.lib.codetemplate.utils.FileUtils;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -32,7 +31,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,7 +39,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author sven-ou
@@ -79,6 +78,9 @@ public class CommonServiceImpl implements CommonService {
     private String generatorDirPath;
 
     @Autowired
+    private TPEngine tpEngine;
+
+    @Autowired
     private ObjectMapper mapper;
 
     @Override
@@ -104,7 +106,12 @@ public class CommonServiceImpl implements CommonService {
             rootContext = codeGenerator.generateCodeModel(packageName, driverClassName, url, username, password);
             codeGenerator.generateCodeFiles(rootContext, codeTpl.getPath(), path);
             return FileUtils.getSourceFileInfo(getUserRootPath());
-        }else {
+        }else if (DatasourceEnum.CUSTOM_JSON.getValue().equalsIgnoreCase(dataSource.getType())) {
+            Map context = mapper.readValue(dataSource.getJsonData(), Map.class);
+            tpEngine.progressAll(codeTpl.getPath(), path, context);
+            return FileUtils.getSourceFileInfo(getUserRootPath());
+        }
+        else {
             throw new RuntimeException("not support this dataSource: " + dataSource);
         }
     }

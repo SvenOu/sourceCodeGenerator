@@ -47,14 +47,15 @@ public class TPEngine {
         FileGenerator fileGenerator = new FileGenerator();
         fileGenerator.generateTempTpls(rootContext, rootInfo.getPath(), tempTplsPath, rootInfo);
         SourceFileInfo generateTplInfo = FileUtils.getSourceFileInfo(tempTplsPath);
-        List<Map> data = (List<Map>) rootContext.get(TPConfig.KEY_DATA);
-        progressSourceFileInfo(generateTplInfo, data, tempDirName, rootContext);
+
+        progressSourceFileInfo(generateTplInfo, tempDirName, rootContext);
 
         // FIXME: 可以不删除，用于debug
         FileSystemUtils.deleteRecursively(Paths.get(tempTplsPath));
     }
 
-    private void progressSourceFileInfo(SourceFileInfo tplInfo, List<Map> data, String tempDirName, Map rootContext) throws IOException {
+
+    private void progressSourceFileInfo(SourceFileInfo tplInfo, String tempDirName, Map rootContext) throws IOException {
         if (!tplInfo.isDir()) {
             String tplPath = tplInfo.getPath();
             String parentDirPath = new File(tplPath).getParent();
@@ -66,49 +67,61 @@ public class TPEngine {
                     .replaceAll(tempDirName, "/");
             String fileName = tplInfo.getName();
 
-            // 处理不存在表达式的文件
-            if(!hasExpression(fileName)){
-                data = new ArrayList<>(1);
-                data.add(rootContext);
-            }
+            List<Map> data = null;
 
-            for (Map d : data) {
-                StringBuffer sb = new StringBuffer();
-                Pattern pat = Pattern.compile(TPConfig.STRING_PATTERN, Pattern.DOTALL);
-                Matcher matcher = pat.matcher(fileName);
-                while (matcher.find()) {
-                    String s = matcher.group();
-                    String key = s.substring(3, s.length() - 2);
+            Matcher matcherFileArray = Pattern.compile(TPConfig.FILE_ARRAY_PATTERN, Pattern.DOTALL).matcher(fileName);
+            if(matcherFileArray.find()){
+                String arrayStr = matcherFileArray.group();
+                Matcher matcherFileArrayForName = Pattern.compile(TPConfig.FILE_ARRAY_PATTERN_FOR_NAME, Pattern.DOTALL).matcher(arrayStr);
+                if(matcherFileArrayForName.find()){
+                    String arrayStrForName = matcherFileArrayForName.group();
+                    String arrayStrForNameKey = arrayStrForName.substring(TPConfig.FILE_ARRAY_PATTERN_FOR_NAME_START.length(),
+                            arrayStrForName.length() - TPConfig.FILE_ARRAY_PATTERN_FOR_NAME_END.length());
+                    int formatIndex = arrayStrForNameKey.indexOf(TPConfig.FORMAT_SEPARATE_CHAR);
+                    if(formatIndex > 0){
+                        arrayStrForNameKey = arrayStrForNameKey.substring(0, formatIndex);
+                    }
+                    data = (List<Map>) rootContext.get(arrayStrForNameKey);
+                    if(StringUtils.isEmpty(data)){
+                        data = new ArrayList<>(0);
+                    }
+                    String repeatStrContent = arrayStr.substring(arrayStrForName.length(), arrayStr.length() - 2);
+                    Matcher matcherFileArrayForAttr = Pattern.compile(TPConfig.FILE_ARRAY_PATTERN_FOR_ATTIBUTE, Pattern.DOTALL).matcher(repeatStrContent);
+                    if(matcherFileArrayForAttr.find()){
+                        String attrStrForName = matcherFileArrayForAttr.group();
+                        String attrKey = attrStrForName.substring(TPConfig.FILE_ARRAY_PATTERN_FOR_ATTIBUTE_START.length(),
+                                attrStrForName.length() - TPConfig.FILE_ARRAY_PATTERN_FOR_ATTIBUTE_END.length());
 
-                    int formatIndex = key.indexOf(TPConfig.FORMAT_SEPARATE_CHAR);
-                    String formatType = null;
-                    if (formatIndex > 0) {
-                        formatType = key.substring(formatIndex + 1);
-                        key = key.substring(0, formatIndex);
+                        int attrFormatIndex = attrKey.indexOf(TPConfig.FORMAT_SEPARATE_CHAR);
+                        String formatType = null;
+                        if (attrFormatIndex > 0) {
+                            formatType = attrKey.substring(attrFormatIndex + 1);
+                            attrKey = attrKey.substring(0, attrFormatIndex);
+                        }
+
+                        for (Map d : data) {
+                            String name = CaseFormat.getFormatData(d, attrKey);
+                            if (formatType != null) {
+                                name = CaseFormat.formatString(name, formatType);
+                            }
+                            String newFileName = fileName.replace(arrayStr, repeatStrContent.replace(attrStrForName, name));
+                            String newFilePath = newDirName + '/' + newFileName;
+                            progress(tplPath, newFilePath, d);
+                        }
                     }
-                    String value = CaseFormat.getFormatData(d, key);
-                    if (formatType != null) {
-                        value = CaseFormat.formatString(value, formatType);
-                    }
-                    matcher.appendReplacement(sb, value);
                 }
-                matcher.appendTail(sb);
-                String newFilePath = newDirName + '/' + sb;
-                progress(tplPath, newFilePath, d);
+            }else {//notthing  matcher
+                String newFilePath = newDirName + '/' + fileName;
+                progress(tplPath, newFilePath, rootContext);
             }
         } else {
             List<SourceFileInfo> childs = (List<SourceFileInfo>) tplInfo.getChildren();
             if (null != childs) {
                 for (SourceFileInfo c : childs) {
-                    progressSourceFileInfo(c, data, tempDirName, rootContext);
+                    progressSourceFileInfo(c, tempDirName, rootContext);
                 }
             }
         }
-    }
-
-    private boolean hasExpression(String fileName) {
-        Pattern pat = Pattern.compile(TPConfig.STRING_PATTERN, Pattern.DOTALL);
-        return pat.matcher(fileName).find();
     }
 
     public void progress(String tplPath, String disPath, Map context) throws IOException {
@@ -122,32 +135,90 @@ public class TPEngine {
         Charset charset = StandardCharsets.UTF_8;
         String content = new String(Files.readAllBytes(path), charset);
 
-        String result1 = applyStringValues(content, context);
-        String result2 = applyArrayValues(result1, context);
-        Files.write(Paths.get(disPath), result2.getBytes(charset));
+        String result =  applyStringAndValues(content, context,
+                TPConfig.STRING_PATTERN,
+                TPConfig.STRING_PATTERN_START,
+                TPConfig.STRING_PATTERN_END,
+
+                TPConfig.ARRAY_PATTERN,
+                TPConfig.ARRAY_PATTERN_FOR_NAME,
+                TPConfig.ARRAY_PATTERN_FOR_NAME_START,
+                TPConfig.ARRAY_PATTERN_FOR_NAME_END,
+
+                TPConfig.ARRAY_PATTERN_FOR_ATTIBUTE,
+                TPConfig.ARRAY_PATTERN_FOR_ATTIBUTE_START,
+                TPConfig.ARRAY_PATTERN_FOR_ATTIBUTE_END
+        );
+
+        Files.write(Paths.get(disPath), result.getBytes(charset));
     }
 
-    private String applyArrayValues(String content, Map context) {
+    private String applyStringAndValues(String content, Map context,
+                                        String stringPattern,
+                                        String stringPatternStart,
+                                        String stringPatternEnd,
+                                        String arrayPattern,
+                                        String arrayPatternForName,
+                                        String arrayPatternForNameStart,
+                                        String arrayPatternForNameEnd,
+                                        String arrayPatternForAttribute,
+                                        String arrayPatternForAttributeStart,
+                                        String arrayPatternForAttributeEnd) {
+        String result1 = applyStringValues(content, context,
+                stringPattern, stringPatternStart, stringPatternEnd);
+
+        String result2 = applyArrayValues(result1, context,
+                arrayPattern,
+                arrayPatternForName,
+                arrayPatternForNameStart,
+                arrayPatternForNameEnd,
+                arrayPatternForAttribute,
+                arrayPatternForAttributeStart,
+                arrayPatternForAttributeEnd);
+        return result2;
+    }
+
+    private String applyArrayValues(String content, Map context,
+                                    String arrayPattern,
+                                    String arrayPatternForName,
+                                    String arrayPatternForNameStart,
+                                    String arrayPatternForNameEnd,
+                                    String arrayPatternForAttribute,
+                                    String arrayPatternForAttributeStart,
+                                    String arrayPatternForAttributeEnd) {
         StringBuffer sb = new StringBuffer();
-        Pattern pattern = Pattern.compile(TPConfig.ARRAY_PATTERN, Pattern.DOTALL);
+        Pattern pattern = Pattern.compile(arrayPattern, Pattern.DOTALL);
         Matcher matcher = pattern.matcher(content);
         while (matcher.find()) {
             String s = matcher.group();
-            String replaceText = applyTpRepeat(s, context);
+            String replaceText = applyTpRepeat(s, context,
+                    arrayPatternForName,
+                    arrayPatternForNameStart,
+                    arrayPatternForNameEnd,
+                    arrayPatternForAttribute,
+                    arrayPatternForAttributeStart,
+                    arrayPatternForAttributeEnd);
             matcher.appendReplacement(sb, replaceText);
         }
         matcher.appendTail(sb);
         return sb.toString();
     }
 
-    private String applyTpRepeat(String repeatStr, Map context) {
-        Pattern arrayPat = Pattern.compile(TPConfig.ARRAY_PATTERN_FOR_NAME, Pattern.DOTALL);
+    private String applyTpRepeat(String repeatStr, Map context,
+                                 String arrayPatternForName,
+                                 String arrayPatternForNameStart,
+                                 String arrayPatternForNameEnd,
+                                 String arrayPatternForAttribute,
+                                 String arrayPatternForAttributeStart,
+                                 String arrayPatternForAttributeEnd) {
+        Pattern arrayPat = Pattern.compile(arrayPatternForName, Pattern.DOTALL);
         Matcher arrayMatcher = arrayPat.matcher(repeatStr);
         if (!arrayMatcher.find()) {
             return "";
         }
         String arrayNameStr = arrayMatcher.group();
-        String arrayFormatName = arrayNameStr.substring(11, arrayNameStr.length() - 3);
+        //$tp-repeat(  and  ){{
+        String arrayFormatName = arrayNameStr.substring(arrayPatternForNameStart.length(), arrayNameStr.length() - arrayPatternForNameEnd.length());
         String repeatStrContent = repeatStr.substring(arrayNameStr.length(), repeatStr.length() - 2);
 
         String arrayName = arrayFormatName;
@@ -180,12 +251,13 @@ public class TPEngine {
 
         for (int i = 0; i < arrayContexts.size(); i++) {
             Map c = arrayContexts.get(i);
-            Pattern pat = Pattern.compile(TPConfig.ARRAY_PATTERN_FOR_ATTIBUTE, Pattern.DOTALL);
+            Pattern pat = Pattern.compile(arrayPatternForAttribute, Pattern.DOTALL);
             Matcher matcher = pat.matcher(repeatStrContent);
             sb.append(prefix);
             while (matcher.find()) {
                 String s = matcher.group();
-                String key = s.substring(2, s.length() - 1);
+                //$(  )
+                String key = s.substring(arrayPatternForAttributeStart.length(), s.length() - arrayPatternForAttributeEnd.length());
 
                 int formatIndex = key.indexOf(TPConfig.FORMAT_SEPARATE_CHAR);
                 String formatType = null;
@@ -208,13 +280,17 @@ public class TPEngine {
         return sb.toString();
     }
 
-    private String applyStringValues(String content, Map context) {
+    private String applyStringValues(String content, Map context,
+                                     String stringPattern,
+                                     String stringPatternStart,
+                                     String stringPatternEnd) {
         StringBuffer sb = new StringBuffer();
-        Pattern pattern = Pattern.compile(TPConfig.STRING_PATTERN, Pattern.DOTALL);
+        Pattern pattern = Pattern.compile(stringPattern, Pattern.DOTALL);
         Matcher matcher = pattern.matcher(content);
         while (matcher.find()) {
             String s = matcher.group();
-            String key = s.substring(3, s.length() - 2);
+            //${{ }}
+            String key = s.substring(stringPatternStart.length(), s.length() - stringPatternEnd.length());
 
             int formatIndex = key.indexOf(TPConfig.FORMAT_SEPARATE_CHAR);
             String formatType = null;
@@ -231,7 +307,6 @@ public class TPEngine {
         matcher.appendTail(sb);
         return sb.toString();
     }
-
     public FileGenerator getFileGenerator() {
         return fileGenerator;
     }

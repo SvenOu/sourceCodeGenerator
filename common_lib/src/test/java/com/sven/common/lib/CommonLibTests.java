@@ -65,7 +65,7 @@ public class CommonLibTests {
         Map rootData = new HashMap();
         rootData.put("userName", "okMark");
         rootData.put("dirName", "GFile");
-        rootData.put(TPConfig.KEY_DATA, data);
+        rootData.put("data", data);
 
         FileGenerator fileGenerator = new FileGenerator();
         fileGenerator.generateTempTpls(rootData, rootPath, generateRootPath, rootInfo);

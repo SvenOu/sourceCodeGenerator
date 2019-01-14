@@ -39,7 +39,8 @@ public class FileGenerator {
         Matcher matcher = pat.matcher(info.getName());
         while (matcher.find()) {
             String s = matcher.group();
-            String key = s.substring(6, s.length() - 2);
+            String key = s.substring(TPConfig.DIR_STRING_PATTERN_START.length(),
+                    s.length() - TPConfig.DIR_STRING_PATTERN_END.length());
 
             int formatIndex = key.indexOf(TPConfig.FORMAT_SEPARATE_CHAR);
             String formatType = null;

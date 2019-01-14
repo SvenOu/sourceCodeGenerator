@@ -207,6 +207,10 @@ Ext.define('CGT.controller.TemplatesDetailController', {
         });
     },
     templatesTreePanelAfterRender: function (panel) {
-	    this.refreshTreePanel();
+	    var me = this;
+        var task = new Ext.util.DelayedTask(function(){
+            me.refreshTreePanel();
+        });
+        task.delay(2000);
     }
 });
