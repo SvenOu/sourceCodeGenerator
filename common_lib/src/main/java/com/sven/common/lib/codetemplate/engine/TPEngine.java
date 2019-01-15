@@ -56,7 +56,7 @@ public class TPEngine {
 
 
     private void progressSourceFileInfo(SourceFileInfo tplInfo, String tempDirName, Map rootContext) throws IOException {
-        if (!tplInfo.isDir()) {
+        if (tplInfo.isLeaf()) {
             String tplPath = tplInfo.getPath();
             String parentDirPath = new File(tplPath).getParent();
             if(!parentDirPath.substring(parentDirPath.length() -1).equals("/")){
@@ -67,8 +67,11 @@ public class TPEngine {
                     .replaceAll(tempDirName, "/");
             String fileName = tplInfo.getName();
 
+            if(tplInfo.isDir()){
+                new File(newDirName + '/' + fileName).mkdirs();
+                return;
+            }
             List<Map> data = null;
-
             Matcher matcherFileArray = Pattern.compile(TPConfig.FILE_ARRAY_PATTERN, Pattern.DOTALL).matcher(fileName);
             if(matcherFileArray.find()){
                 String arrayStr = matcherFileArray.group();

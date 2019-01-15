@@ -20,6 +20,7 @@ public class CaseFormat {
     public static final String UP_CASE_FIRST = "upCaseFirst";
     public static final String LOWER_CASE_FIRST = "lowerCaseFirst";
     public static final String UP_CASE_ALL = "upCaseALL";
+    public static final String LOWER_CASE_ALL = "lowerCaseALL";
 
     public static String formatString(String str, String type){
         switch (type){
@@ -40,6 +41,9 @@ public class CaseFormat {
                 break;
             case UP_CASE_ALL:
                 str = str.toUpperCase();
+                break;
+            case LOWER_CASE_ALL:
+                str = str.toLowerCase();
                 break;
             default:break;
         }

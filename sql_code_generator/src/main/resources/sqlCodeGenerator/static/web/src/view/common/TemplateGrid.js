@@ -11,7 +11,7 @@ Ext.define('CGT.view.common.TemplateGrid', {
             sortable: true
         },
         items: [
-            { text: 'data_source_id',  dataIndex: 'templateId', width: 190},
+            { text: 'template_id',  dataIndex: 'templateId', width: 190},
             {
                 xtype:'actioncolumn',
                 text: 'Files',

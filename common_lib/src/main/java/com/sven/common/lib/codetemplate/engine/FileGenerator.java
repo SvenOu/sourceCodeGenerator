@@ -57,10 +57,9 @@ public class FileGenerator {
         matcher.appendTail(sb);
         String parentDirPath = info.getPath().replace(info.getName(), "");
         String newParentDirPath = parentDirPath.replace(rootPath, generateRootPath);
-        TplSourceFileInfo ci = info.cloneSelf();
-        ci.setName(sb.toString());
-        ci.setPath(newParentDirPath + sb);
-        modifyChilds(ci);
+        info.setName(sb.toString());
+        info.setPath(newParentDirPath + sb);
+        modifyChilds(info);
     }
 
     private void modifyChilds(TplSourceFileInfo info) {

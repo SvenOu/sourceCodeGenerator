@@ -32,10 +32,4 @@ public class TplSourceFileInfo extends SourceFileInfo{
                 ", originPath='" + originPath + '\'' +
                 '}';
     }
-
-    public TplSourceFileInfo cloneSelf(){
-        TplSourceFileInfo sourceFileInfo = new TplSourceFileInfo();
-        BeanUtils.copyProperties(this, sourceFileInfo);
-        return sourceFileInfo;
-    }
 }
