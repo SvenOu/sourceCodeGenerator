@@ -1,5 +1,6 @@
 package com.sven.common.lib.codetemplate.utils;
 
+import com.sven.common.lib.codetemplate.config.TPConfig;
 import com.sven.common.lib.codetemplate.dataBean.TplSourceFileInfo;
 
 import java.io.File;
@@ -28,7 +29,7 @@ public class FileUtils {
         fileInfo.setDir(parent.isDirectory());
         fileInfo.setName(parent.getName());
         fileInfo.setOriginName(fileInfo.getName());
-        fileInfo.setPath(parent.getAbsolutePath().replaceAll("\\\\","/"));
+        fileInfo.setPath(parent.getAbsolutePath().replaceAll("\\\\", TPConfig.PATH_SEPARATOR));
         fileInfo.setOriginPath(fileInfo.getPath());
         // for children
         File[] childs = parent.listFiles();

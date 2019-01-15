@@ -59,12 +59,12 @@ public class TPEngine {
         if (tplInfo.isLeaf()) {
             String tplPath = tplInfo.getPath();
             String parentDirPath = new File(tplPath).getParent();
-            if(!parentDirPath.substring(parentDirPath.length() -1).equals("/")){
-                parentDirPath += "/";
+            if(!parentDirPath.substring(parentDirPath.length() -1).equals(TPConfig.PATH_SEPARATOR)){
+                parentDirPath += TPConfig.PATH_SEPARATOR;
             }
             String newDirName = parentDirPath
-                    .replaceAll("\\\\", "/")
-                    .replaceAll(tempDirName, "/");
+                    .replaceAll("\\\\", TPConfig.PATH_SEPARATOR)
+                    .replaceAll(tempDirName, TPConfig.PATH_SEPARATOR);
             String fileName = tplInfo.getName();
 
             if(tplInfo.isDir()){
