@@ -1,4 +1,4 @@
-Ext.define('${{packageName}}.store.${{moduleName}}.${{name}}',{
+Ext.define('${{packageName}}.store.${{moduleName}}.${{name}}Store',{
     extend:'Ext.data.TreeStore',
     model:'${{packageName}}.model.${{moduleName}}.${{name}}',
     autoLoad: false,

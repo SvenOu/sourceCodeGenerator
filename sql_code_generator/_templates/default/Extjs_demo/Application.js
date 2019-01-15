@@ -8,12 +8,12 @@ Ext.application({
 	],
     models: [
         $tp-repeat(components-suffixNotIncludeEnd~,){{
-        '$(moduleName).$(name)'
+        '$(moduleName).$(name)Model'
         }}
 	],
     stores: [
         $tp-repeat(components-suffixNotIncludeEnd~,){{
-        '$(moduleName).$(name)'
+        '$(moduleName).$(name)Store'
         }}
     ],
     views: [

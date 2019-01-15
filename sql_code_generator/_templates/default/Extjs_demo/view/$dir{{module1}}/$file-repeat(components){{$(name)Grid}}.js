@@ -1,6 +1,6 @@
 Ext.define('${{packageName}}.view.${{moduleName}}.${{name-upCaseFirst}}Grid', {
 	extend: 'Ext.grid.Panel',
-	alias: 'widget.${{name-lowerCaseALL}}',
+	alias: 'widget.${{name-lowerCaseALL}}grid',
     bodyCls: '${{moduleName}}-${{name-lowerCaseALL}}-grid',
     viewConfig: {
         enableTextSelection: true
