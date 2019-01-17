@@ -49,23 +49,18 @@ Ext.define('CGT.controller.MainController', {
         option.callback = function (responseText) {
             fileActionWindow.close();
             var params = option.params, record = option.record;
-            if('edit name' === params.fileAction){
-                record.set('text', params.fileName);
-                record.commit();
-                console.log(record.store);
-            }else{
-                var newFilePath = record.get('path');
-                if('new folder' ===  params.fileAction
-                    || 'new file' ===  params.fileAction){
-                    if(record.parentNode){
-                        newFilePath = record.parentNode.get('path') + '/' + params.fileName;
-                    }
-                }else if('new child folder' ===  params.fileAction
-                    || 'new child file' ===  params.fileAction){
-                    newFilePath = record.get('path') + '/' + params.fileName;
+            var newFilePath = record.get('path');
+            if('new folder' ===  params.fileAction
+                || 'new file' ===  params.fileAction
+                ||'edit name' === params.fileAction){
+                if(record.parentNode){
+                    newFilePath = record.parentNode.get('path') + '/' + params.fileName;
                 }
-                option.panel.reloadTreeWithExpanded(newFilePath);
+            }else if('new child folder' ===  params.fileAction
+                || 'new child file' ===  params.fileAction){
+                newFilePath = record.get('path') + '/' + params.fileName;
             }
+            option.panel.reloadTreeWithExpanded(newFilePath);
         };
         app.method.CommonResponseEequest(option);
     },

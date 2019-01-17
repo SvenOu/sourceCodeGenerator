@@ -1,0 +1,24 @@
+// 变量表达式, stringFormator: camelToUnderline, underlineToCame,
+// underlineToCameUPCASEFirst, upCaseFirst, lowerCaseFirst, upCaseALL, lowerCaseALL
+${{elementName-stringFormator}}
+
+// 数组表达式, arrayFormator: prefix, suffix, suffixNotIncludeEnd
+$tp-repeat(arrayName-arrayFormator~formatorStr){{
+ $(elementName-stringFormator)
+}}
+
+//dir, file 表达式,仅仅用于文件夹生成
+$dir{{elementName-stringFormator}}
+$file-repeat(arrayName){{$(elementName-stringFormator)}}
+
+// example:
+public class ${{voClassName}} implements Serializable {
+  $tp-repeat(fields){{private $(type) $(name-underlineToCame);
+  }}
+  @Override
+  public String toString() {
+    return String.format(
+    "${{voClassName}}{$tp-repeat(fields-suffixNotIncludeEnd~,){{$(name-underlineToCame)='%s'}} }",
+        $tp-repeat(fields-suffixNotIncludeEnd~,){{$(name-underlineToCame)}});
+  }
+}
