@@ -42,7 +42,7 @@ Ext.define('CGT.view.main.TemplateDetailPanel', {
                     cls: 'code-tree-panel',
                     autoScroll: true,
                     name: 'templatesTreePanel',
-                    xtype: 'treepanel',
+                    xtype: 'filesystemtree',
                     // custom attr
                     contentValues: {
                         m_selectRecord: null

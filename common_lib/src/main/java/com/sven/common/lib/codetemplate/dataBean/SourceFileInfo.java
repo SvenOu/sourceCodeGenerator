@@ -9,6 +9,8 @@ import java.util.List;
  * Created by sven-ou on 2017/2/22.
  */
 public class SourceFileInfo {
+    public static final String TEMPLATE_VIRTUAL_ROOT = "#SourceFileInfoRoot/";
+
     private String name;
     private String path;
     private boolean leaf;

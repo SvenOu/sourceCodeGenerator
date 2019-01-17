@@ -11,7 +11,10 @@ Ext.define('CGT.controller.MainController', {
 	    {ref: 'dataSourceGrid', selector: 'datasourcespanel datasourcegrid[name=dataSourceGrid]'},
 	    {ref: 'templatesPanel', selector: 'templatesPanel'},
 	    {ref: 'templateDetailPanel', selector: 'templatedetailpanel'},
-        {ref: 'generateCodeEditor', selector: 'generatorPanel codeeditor[name=generateCodeEditor]'}
+        {ref: 'generateCodeEditor', selector: 'generatorPanel codeeditor[name=generateCodeEditor]'},
+        {ref: 'fileActionWindow', selector: 'fileactionwindow'},
+        {ref: 'winDoActionBtn', selector: 'fileactionwindow button[name=doActionBtn]'},
+        {ref: 'winFileName', selector: 'fileactionwindow textfield[name=fileName]'}
     ],
     init: function(application) {
    	this.control({
@@ -24,8 +27,87 @@ Ext.define('CGT.controller.MainController', {
            },
            'generatorPanel button[name=toggleSpaceBtn]': {
                click: this.toggleSpaceBtnClick
+           },
+           'filesystemtree': {
+               treeContextMenuItemClick: this.fileSystemTreeContextMenuItemClick
+           },
+           'fileactionwindow button[name=doActionBtn]': {
+               click: this.doActionBtnClick
            }
        });
+    },
+    doActionBtnClick: function(btn, e, eOpts){
+        var me = this, fileActionWindow = this.getFileActionWindow();
+        var winFileName = me.getWinFileName(),
+            option = fileActionWindow.contentValues.m_option;
+        if(!winFileName.validate()){
+            app.method.toastMsg('Message', 'file name invalid !');
+            return;
+        }
+        option.loadingPanel = btn;
+        option.params.fileName = winFileName.getValue();
+        option.callback = function (responseText) {
+            fileActionWindow.close();
+            var params = option.params, record = option.record;
+            if('edit name' === params.fileAction){
+                record.set('text', params.fileName);
+                record.commit();
+                console.log(record.store);
+            }else{
+                var newFilePath = record.get('path');
+                if('new folder' ===  params.fileAction
+                    || 'new file' ===  params.fileAction){
+                    if(record.parentNode){
+                        newFilePath = record.parentNode.get('path') + '/' + params.fileName;
+                    }
+                }else if('new child folder' ===  params.fileAction
+                    || 'new child file' ===  params.fileAction){
+                    newFilePath = record.get('path') + '/' + params.fileName;
+                }
+                option.panel.reloadTreeWithExpanded(newFilePath);
+            }
+        };
+        app.method.CommonResponseEequest(option);
+    },
+    fileSystemTreeContextMenuItemClick: function(panel, action, menu, record){
+        var me = this, url = app.API_PREFIX +'/doFileAction',
+            params = {
+                path: record.get('path'),
+                fileAction: menu,
+                fileName: ""
+            };
+        var option = {
+            url: url,
+            params: params,
+            callback: null,
+            method: 'POST',
+            successMsg: menu + ' success.',
+            errorMsg: menu + ' fail',
+            loadingPanel: null,
+            panel: panel,
+            record:record,
+            scope: me
+        };
+        if('delete' === menu){
+            Ext.Msg.confirm('Message', 'Do you want to delete this file: <br>'+ params.path +'?', function(optional){
+                if(optional === 'yes'){
+                    option.callback = function (responseText) {
+                        record.remove();
+                    };
+                    app.method.CommonResponseEequest(option);
+                }
+            });
+        }else{
+            var win = Ext.create('CGT.view.common.FileActionWindow',{
+                contentValues: {
+                    m_title: menu,
+                    m_fileName: record.get('text'),
+                    m_action: menu,
+                    m_option: option
+                }
+            });
+            win.show();
+        }
     },
     toggleSpaceBtnClick: function(btn, e, eOpts){
         var headerPanel = this.getHeaderPanel(),

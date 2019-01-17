@@ -4,6 +4,7 @@ import com.sql.code.generator.commom.utils.SecurityUtils;
 import com.sql.code.generator.modules.common.composite.ClassTypeUtils;
 import com.sql.code.generator.modules.common.dao.DyDao;
 import com.sql.code.generator.modules.common.service.CodeGenerator;
+import com.sql.code.generator.modules.common.service.FileService;
 import com.sql.code.generator.modules.mssql.dao.STableInfoDAO;
 import com.sql.code.generator.modules.mssql.dataBean.SSQLServerWithJavaClassType;
 import com.sql.code.generator.modules.mssql.vo.SColumnInfo;
@@ -26,18 +27,6 @@ import java.util.*;
 @Component("mssql")
 public class MSSqlCodeGeneratorImpl implements CodeGenerator {
     private static Log log = LogFactory.getLog(MSSqlCodeGeneratorImpl.class);
-
-    @Value("${sql-code-templates.dir}")
-    private String templatesDirPath;
-
-    @Value("${sql-code-templates.default.name}")
-    private String defaultTemplatesDirName;
-
-    @Value("${sql-code-generator.dir}")
-    private String generatorDirPath;
-
-    @Value("${sql-code-templates.mssql.type.name}")
-    private String mssql;
 
     @Autowired
     private TPEngine tpEngine;

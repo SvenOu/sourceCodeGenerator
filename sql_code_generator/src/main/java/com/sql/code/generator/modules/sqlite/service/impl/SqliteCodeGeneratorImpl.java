@@ -2,6 +2,7 @@ package com.sql.code.generator.modules.sqlite.service.impl;
 
 import com.sql.code.generator.commom.utils.SecurityUtils;
 import com.sql.code.generator.modules.common.service.CodeGenerator;
+import com.sql.code.generator.modules.common.service.FileService;
 import com.sql.code.generator.modules.sqlite.dao.SqliteDao;
 import com.sql.code.generator.modules.sqlite.dataBean.SQLiteWithJavaClassType;
 import com.sql.code.generator.modules.sqlite.vo.ColumnInfo;
@@ -29,19 +30,6 @@ import java.util.*;
 @Component("sqlite")
 public class SqliteCodeGeneratorImpl implements CodeGenerator {
     private static Log log = LogFactory.getLog(SqliteCodeGeneratorImpl.class);
-
-    @Value("${sql-code-templates.dir}")
-    private String templatesDirPath;
-
-    @Value("${sql-code-templates.default.name}")
-    private String defaultTemplatesDirName;
-
-    @Value("${sql-code-generator.dir}")
-    private String generatorDirPath;
-
-    @Value("${sql-code-templates.sqlite.name}")
-    private String sqlite;
-
     @Autowired
     private SqliteDao sqliteDao;
 

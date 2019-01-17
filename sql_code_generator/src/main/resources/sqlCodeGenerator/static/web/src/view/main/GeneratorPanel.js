@@ -123,7 +123,7 @@ Ext.define('CGT.view.main.GeneratorPanel', {
                                 cls: 'code-tree-panel',
                                 autoScroll: true,
                                 name: 'codeTreePanel',
-                                xtype: 'treepanel',
+                                xtype: 'filesystemtree',
                                 store: me.codeViewStore,
                                 root: {
                                     expanded: true,

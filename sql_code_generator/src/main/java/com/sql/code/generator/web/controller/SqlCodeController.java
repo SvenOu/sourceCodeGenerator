@@ -40,9 +40,9 @@ public class SqlCodeController {
 		return commonService.getCodeFileInfo(packageName, dataSourceId, templateId);
 	}
 
-	@RequestMapping(value = "/getUserRootDirCodeFileInfo", method = RequestMethod.GET)
-	public @ResponseBody SourceFileInfo getUserRootDirCodeFileInfo() throws IOException {
-		return commonService.getUserRootDirCodeFileInfo();
+	@RequestMapping(value = "/getUserGenerateRootCodeFileInfo", method = RequestMethod.GET)
+	public @ResponseBody SourceFileInfo getUserGenerateRootCodeFileInfo() throws IOException {
+		return commonService.getUserGenerateRootCodeFileInfo();
 	}
 
 	@RequestMapping(value = "/getSourceFileCode", method = RequestMethod.GET)
@@ -100,7 +100,7 @@ public class SqlCodeController {
 
 	@RequestMapping(value = "/saveRemoteDbConfig",method = RequestMethod.POST)
 	public @ResponseBody CommonResponse saveRemoteDbConfig(DataSource dataSource) throws IOException {
-		return codeService.saveRemoteDbConfig(dataSource);
+		return codeService.saveDbConfig(dataSource);
 	}
 
 	@RequestMapping(value = "/deleteDataSource",method = RequestMethod.POST)
@@ -128,11 +128,6 @@ public class SqlCodeController {
 		return codeService.deleteFile(path);
 	}
 
-	@RequestMapping(value = "/deleteUserTemplate",method = RequestMethod.POST)
-	public @ResponseBody CommonResponse deleteUserTemplate(String path) throws IOException {
-		return commonService.deleteUserTemplate(path);
-	}
-
 	@RequestMapping(value = "/getUserDbFilesInfo", method = RequestMethod.GET)
 	public @ResponseBody SourceFileInfo getUserDbFilesInfo(){
 		return codeService.getUserDbFilesInfo();
@@ -156,6 +151,11 @@ public class SqlCodeController {
 	@RequestMapping(value = "/resetDefaultUserTemplate", method = RequestMethod.POST)
 	public @ResponseBody CommonResponse resetDefaultUserTemplate() throws IOException {
 		return codeService.resetDefaultUserTemplate();
+	}
+
+	@RequestMapping(value = "/doFileAction", method = RequestMethod.POST)
+	public @ResponseBody CommonResponse doFileAction(String path, String fileAction, String fileName) throws IOException {
+		return codeService.doFileAction(path, fileAction, fileName);
 	}
 
 	// FIXME: 不同 controller 交互

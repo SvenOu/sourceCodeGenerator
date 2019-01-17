@@ -1,6 +1,7 @@
 package com.sven.common.lib.codetemplate.utils;
 
 import com.sven.common.lib.codetemplate.config.TPConfig;
+import com.sven.common.lib.codetemplate.dataBean.SourceFileInfo;
 import com.sven.common.lib.codetemplate.dataBean.TplSourceFileInfo;
 
 import java.io.File;
@@ -19,6 +20,25 @@ public class FileUtils {
             return "";
         }
     }
+    public static TplSourceFileInfo getSourceFileInfo(String path, String rootPath, String replaceRootPath) {
+        TplSourceFileInfo infos = getSourceFileInfo(path);
+        replaceSourceFileInfoRootPath(infos, rootPath, replaceRootPath);
+        return infos;
+    }
+
+    private static void replaceSourceFileInfoRootPath(TplSourceFileInfo infos, String rootPath, String replaceRootPath) {
+        if(null == infos){
+            return;
+        }
+        infos.setPath(infos.getPath().replace(rootPath, replaceRootPath));
+        if(infos.getChildren() != null){
+            List<TplSourceFileInfo> childs = (List<TplSourceFileInfo>) infos.getChildren();
+            for(TplSourceFileInfo child: childs){
+                replaceSourceFileInfoRootPath(child, rootPath, replaceRootPath);
+            }
+        }
+    }
+
     public static TplSourceFileInfo getSourceFileInfo(String path) {
         File parent = new File(path);
         if (!parent.exists()) {

@@ -16,6 +16,65 @@ app = {
 
 Ext.apply(app, {
 	method: {
+        CommonResponseEequest: function(option){
+            /*
+	        var option = {
+	            url: '',
+	            params: {},
+        		callback: function (responseText) {},
+        		method: 'POST',
+                successMsg: '',
+                errorMsg: '',
+                loadingPanel: null,
+                scope: null
+			};
+			*/
+        	if(Ext.isEmpty(option.successMsg)){
+                option.successMsg = 'success';
+			}
+        	if(Ext.isEmpty(option.errorMsg)){
+                option.errorMsg = 'fail';
+			}
+        	if(Ext.isEmpty(option.method)){
+                option.method = 'GET';
+			}
+			var ajaxOption = {
+                method: option.method,
+                params: option.params,
+                url: option.url,
+                success: function(response){
+                    if(option.loadingPanel){
+                        option.loadingPanel.setLoading(false);
+                    }
+                    var responseText = Ext.JSON.decode(response.responseText);
+                    if(responseText){
+                        if(responseText.success){
+                            app.method.toastMsg('Message', option.successMsg);
+                        }else {
+                            if(Ext.isEmpty(responseText.errorCode)){
+                                app.method.toastMsg('Message', option.errorMsg);
+							}else {
+                                app.method.toastMsg('Message', responseText.errorCode);
+							}
+                        }
+                    }
+                    option.callback(responseText);
+                },
+                failure: function(response){
+                    app.method.toastMsg('Message', option.errorMsg);
+                    if(option.loadingPanel){
+                        option.loadingPanel.setLoading(false);
+                    }
+                }
+            };
+        	if(!Ext.isEmpty(ajaxOption.scope)){
+                ajaxOption.scope = option.scope;
+			}
+            if(option.loadingPanel){
+                option.loadingPanel.setLoading(true);
+            }
+            Ext.Ajax.request(ajaxOption);
+		},
 		columnsRenderer: {
 			addtooltip: function(value, metaData){
 				metaData.tdAttr = 'data-qwidth="300" data-qtip="'+value+'"';

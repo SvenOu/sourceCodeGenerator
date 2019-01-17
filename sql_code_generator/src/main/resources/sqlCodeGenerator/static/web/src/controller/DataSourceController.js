@@ -8,7 +8,6 @@ Ext.define('CGT.controller.DataSourceController', {
         {ref: 'addDatasourceBtn', selector: 'datasourcegrid button[name=addDatasourceBtn]'},
         {ref: 'dbFilesTreePanelContainer', selector: 'container[name=dbFilesTreePanelContainer]'},
         {ref: 'dbFilesTreePanel', selector: 'treepanel[name=dbFilesTreePanel]'},
-        {ref: 'deleteFileBtn', selector: 'treepanel button[name=deleteFileBtn]'},
         {ref: 'sqlfileConfigWindow', selector: 'sqlfileconfigwindow'},
         {ref: 'sqlFileConfigForm', selector: 'sqlfileconfigwindow form[name=sqlFileConfigForm]'},
         {ref: 'dbFile', selector: 'sqlfileconfigwindow filefield[name=dbFile]'},
@@ -51,9 +50,6 @@ Ext.define('CGT.controller.DataSourceController', {
                },
                'sqlfileconfigwindow button[name=uploadDbFiles]': {
                    click: this.uploadDbFilesBtnClick
-               },
-               'treepanel button[name=deleteFileBtn]': {
-                   click: this.deleteFileBtnClick
                },
                'datasourcegrid combobox[name=dataSourceType]': {
                    render: this.dataSourceTypeRender
@@ -118,42 +114,6 @@ Ext.define('CGT.controller.DataSourceController', {
         mainContainer.getLayout().setActiveItem(contentValues.m_chooseFrom);
         contentValues.m_mode = 'default';
         btn.setVisible(false);
-    },
-    deleteFileBtnClick: function(btn, e, eOpts){
-	    var me = this, record = this.getDbFilesTreePanel().contentValues.m_selectRecord;
-        if(Ext.isEmpty(record)){
-            app.method.toastMsg('Message', 'please select a node first.');
-            return;
-        }
-        Ext.Msg.confirm('Message', 'Do you want to delete this file? , ' +
-            'this will cause the data source to invalid, ' +
-            'please be careful to delete !', function(optional){
-            if(optional=='yes'){
-                var params = {
-                    path: record.get('path')
-                };
-                Ext.Ajax.request({
-                    type : "GET",
-                    dataType : 'json',
-                    params: params,
-                    url : app.API_PREFIX + '/deleteFile',
-                    success: function(response){
-                        var responseText = Ext.JSON.decode(response.responseText);
-                        if(responseText){
-                            if(responseText.success){
-                                app.method.toastMsg('Message', 'delete file success.');
-                            }else {
-                                app.method.toastMsg('Message', responseText.errorCode);
-                            }
-                        }
-                        me.getDbFilesTreePanel().getStore().load();
-                    },
-                    failure: function() {
-                        app.method.toastMsg('Message', 'delete file fail.');
-                    }
-                });
-            }
-        });
     },
     dbFilesTreePanelSelect: function(treePanel, record, index, eOpts){
         this.getDbFilesTreePanel().contentValues.m_selectRecord = record;

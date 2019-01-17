@@ -8,6 +8,7 @@ import java.lang.String;
 public class CodeTemplate implements Serializable {
   private static final long serialVersionUID = 1L;
   public static final String TEMPLATE_PREFIX = "codeTemplate";
+  public static final String TEMPLATE_VIRTUAL_ROOT = "#tplRoot/";
   private String templateId;
   private String path;
   private boolean lock;

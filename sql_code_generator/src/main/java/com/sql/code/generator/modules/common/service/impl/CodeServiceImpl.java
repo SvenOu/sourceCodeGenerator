@@ -2,9 +2,11 @@ package com.sql.code.generator.modules.common.service.impl;
 
 import com.sql.code.generator.commom.utils.SecurityUtils;
 import com.sql.code.generator.modules.common.bean.DatasourceEnum;
+import com.sql.code.generator.modules.common.bean.FileActionEnum;
 import com.sql.code.generator.modules.common.dao.CodeTemplateDao;
 import com.sql.code.generator.modules.common.dao.DataSourceDao;
 import com.sql.code.generator.modules.common.service.CodeService;
+import com.sql.code.generator.modules.common.service.FileService;
 import com.sql.code.generator.modules.common.vo.CodeTemplate;
 import com.sql.code.generator.modules.common.vo.DataSource;
 import com.sven.common.lib.bean.CommonResponse;
@@ -16,7 +18,6 @@ import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.FileSystemUtils;
@@ -34,20 +35,8 @@ import java.util.Map;
 public class CodeServiceImpl implements CodeService {
     private Log log = LogFactory.getLog(CodeServiceImpl.class);
 
-    @Value("${sql-code-generator.db.file.dir}")
-    private String dbFileDirPath;
-
-    @Value("${sql-code-generator.templates.file.dir}")
-    private String templateFileDirPath;
-
-    @Value("${sql-code-generator.templates.default.file.dir}")
-    private String defaultTemplateFileDirPath;
-
-    @Value("${sql-code-generator.templates.default.file.name}")
-    private String defaultTemplateDefaultFileName;
-
-    @Value("${sql-code-templates.user.name}")
-    private String templatesUserName;
+    @Autowired
+    private FileService fileService;
 
     @Autowired
     private DataSourceDao dataSourceDao;
@@ -85,7 +74,7 @@ public class CodeServiceImpl implements CodeService {
         if(!DatasourceEnum.SQLITE.getValue().equals(type)){
             throw new RuntimeException("do not support this type: " + type);
         }
-        String savePath = getUserDbFileDir() + dbFile.getOriginalFilename() + '/';
+        String savePath = fileService.getUserDbFileDir() + dbFile.getOriginalFilename();
         File newFile = new File(savePath);
         File newFileParent = newFile.getParentFile();
         if(!newFileParent.exists()){
@@ -97,7 +86,7 @@ public class CodeServiceImpl implements CodeService {
         dataSource.setDataSourceId(IdUtils.getId(DatasourceEnum.SQLITE.getValue()));
         dataSource.setDriveClass(DatasourceEnum.SQLITE.getDriveClass());
         dataSource.setType(type);
-        dataSource.setUrl(DatasourceEnum.SQLITE.getUrlPrefix() + savePath);
+        dataSource.setUrl(savePath.replace(fileService.getUserBaseRootPath(), "/"));
         dataSource.setLock(false);
         dataSource.setOwner(SecurityUtils.getCurrentUserDetails().getUsername());
         dataSourceDao.save(dataSource);
@@ -106,7 +95,7 @@ public class CodeServiceImpl implements CodeService {
 
     @Override
     public CommonResponse saveTemplateFile(MultipartFile tplFile, String fileName) throws IOException, ZipException {
-        String destination = getUserTemplatePath() +  fileName + '/';
+        String destination = fileService.getUserTemplatePath() +  fileName + '/';
 
         File tempRootDir = new File(destination + "temp");
         File tempFile = new File(tempRootDir.getAbsolutePath() + "/temp.zip");
@@ -133,7 +122,10 @@ public class CodeServiceImpl implements CodeService {
         // insert to db
         CodeTemplate codeTemplate = new CodeTemplate();
         codeTemplate.setTemplateId(IdUtils.getId(CodeTemplate.TEMPLATE_PREFIX));
-        codeTemplate.setPath(destination.replaceAll("\\\\","/"));
+        String targetPath = destination
+                .replaceAll("\\\\","/")
+                .replaceAll(fileService.getUserBaseRootPath(), CodeTemplate.TEMPLATE_VIRTUAL_ROOT);
+        codeTemplate.setPath(targetPath);
         codeTemplate.setLock(false);
         codeTemplate.setOwner(SecurityUtils.getCurrentUserId());
         codeTemplateDao.save(codeTemplate);
@@ -166,7 +158,6 @@ public class CodeServiceImpl implements CodeService {
         }else {
             DataSource dataSource = new DataSource();
             dataSource.setDataSourceId(IdUtils.getId(DatasourceEnum.CUSTOM_JSON.getValue()));
-            String shortData = jsonData.length() > 100 ? jsonData.substring(0, 99): jsonData;
             dataSource.setUrl("dataSourceName:" + dataSourceName);
             dataSource.setType(type);
             dataSource.setJsonData(jsonData);
@@ -177,7 +168,7 @@ public class CodeServiceImpl implements CodeService {
     }
 
     @Override
-    public CommonResponse saveRemoteDbConfig(DataSource dataSource) {
+    public CommonResponse saveDbConfig(DataSource dataSource) {
         if(!DatasourceEnum.MSSQL.getValue().equals(dataSource.getType())){
             throw new RuntimeException("do not support this type: " + dataSource.getType());
         }
@@ -186,22 +177,12 @@ public class CodeServiceImpl implements CodeService {
             dbDataSource = dataSourceDao.findByKey(dataSource.getDataSourceId());
         }
         if(dbDataSource != null){
-            String originUrl = dataSource.getUrl();
-            if(!originUrl.contains(DatasourceEnum.MSSQL.getUrlPrefix())){
-                dbDataSource.setUrl(DatasourceEnum.MSSQL.getUrlPrefix() + originUrl);
-            }else {
-                dbDataSource.setUrl(dataSource.getUrl());
-            }
             dbDataSource.setUserName(dataSource.getUserName());
             dbDataSource.setPassword(dataSource.getPassword());
             return CommonResponse.success(dataSourceDao.save(dbDataSource));
         }else {
             dataSource.setDataSourceId(IdUtils.getId(DatasourceEnum.MSSQL.getValue()));
             dataSource.setDriveClass(DatasourceEnum.MSSQL.getDriveClass());
-            String originUrl = dataSource.getUrl();
-            if(!originUrl.contains(DatasourceEnum.MSSQL.getUrlPrefix())){
-                dataSource.setUrl(DatasourceEnum.MSSQL.getUrlPrefix() + originUrl);
-            }
             dataSource.setLock(false);
             dataSource.setOwner(SecurityUtils.getCurrentUserDetails().getUsername());
             return CommonResponse.success(dataSourceDao.save(dataSource));
@@ -210,19 +191,24 @@ public class CodeServiceImpl implements CodeService {
 
     @Override
     public SourceFileInfo getUserDbFilesInfo() {
-        String userDbFileDir = getUserDbFileDir();
-        return FileUtils.getSourceFileInfo(userDbFileDir);
+        String userDbFileDir = fileService.getUserDbFileDir();
+        return FileUtils.getSourceFileInfo(userDbFileDir,
+                fileService.getUserBaseRootPath(),
+                SourceFileInfo.TEMPLATE_VIRTUAL_ROOT);
     }
 
     @Override
     public SourceFileInfo getTemplateFilesInfo() throws IOException {
-        String userTplFileDir = getUserTemplateFileDir();
+        String userTplFileDir = fileService.getUserTemplateFileDir();
         initDefaultTemplates();
-        return FileUtils.getSourceFileInfo(userTplFileDir);
+        return FileUtils.getSourceFileInfo(userTplFileDir,
+                fileService.getUserBaseRootPath(),
+                SourceFileInfo.TEMPLATE_VIRTUAL_ROOT);
     }
 
     @Override
     public CommonResponse deleteFile(String path) throws IOException {
+        path = path.replace(SourceFileInfo.TEMPLATE_VIRTUAL_ROOT, fileService.getUserBaseRootPath());
         File file = new File(path);
         if(!file.exists()){
             return CommonResponse.failure("file： " + path + " not exit ");
@@ -233,20 +219,22 @@ public class CodeServiceImpl implements CodeService {
 
     @Override
     public void initDefaultTemplates() throws IOException {
-        String userTplFileDir = getUserTemplateFileDir();
-        File userDbFileDirFile = new File(userTplFileDir);
-        if(!userDbFileDirFile.exists()
-                || null == userDbFileDirFile.listFiles()
-                || userDbFileDirFile.listFiles().length <= 0){
-            userDbFileDirFile.mkdirs();
+        String userTplFileDir = fileService.getUserTemplateFileDir();
+        File usertplFilesDir = new File(userTplFileDir);
+        if(!usertplFilesDir.exists()
+                || null == usertplFilesDir.listFiles()
+                || usertplFilesDir.listFiles().length <= 0){
+            usertplFilesDir.mkdirs();
             String userId = SecurityUtils.getCurrentUserDetails().getUsername();
-            FileSystemUtils.copyRecursively(new File(defaultTemplateFileDirPath), userDbFileDirFile);
-            File[] defTpls = new File(userTplFileDir + "/" + defaultTemplateDefaultFileName).listFiles();
+            FileSystemUtils.copyRecursively(new File(fileService.getDefaultTemplateRootPath()), usertplFilesDir);
+            File[] defTpls = new File(userTplFileDir + "/" + fileService.getDefaultTemplateDirName()).listFiles();
             for(int i =0 ; i<defTpls.length; i++){
                 File f= defTpls[i];
                 CodeTemplate codeTemplate = new CodeTemplate();
-                codeTemplate.setTemplateId(i + userId + "_"+defaultTemplateDefaultFileName + "_" + f.getName());
-                codeTemplate.setPath(f.getAbsolutePath().replaceAll("\\\\","/") + '/');
+                codeTemplate.setTemplateId(i + userId + "_"+fileService.getDefaultTemplateDirName() + "_" + f.getName());
+                String path = (f.getAbsolutePath().replaceAll("\\\\","/") + '/')
+                        .replace(fileService.getUserBaseRootPath(), CodeTemplate.TEMPLATE_VIRTUAL_ROOT);
+                codeTemplate.setPath(path);
                 codeTemplate.setLock(true);
                 codeTemplate.setOwner(userId);
                 codeTemplateDao.save(codeTemplate);
@@ -276,33 +264,54 @@ public class CodeServiceImpl implements CodeService {
 
     @Override
     public CommonResponse saveSourceFileCode(String path, String content) throws IOException {
+        path = path.replace(SourceFileInfo.TEMPLATE_VIRTUAL_ROOT, fileService.getUserBaseRootPath());
         FileCopyUtils.copy(content.getBytes(), new File(path));
         return CommonResponse.SIMPLE_SUCCESS;
     }
 
     @Override
     public CommonResponse resetDefaultUserTemplate() throws IOException {
-        String userTplFileDir = getUserTemplateFileDir();
+        String userTplFileDir = fileService.getUserTemplateFileDir();
         File userDbFileDirFile = new File(userTplFileDir);
-        FileSystemUtils.copyRecursively(new File(defaultTemplateFileDirPath), userDbFileDirFile);
+        FileSystemUtils.copyRecursively(new File(fileService.getDefaultTemplateRootPath()), userDbFileDirFile);
         return CommonResponse.SIMPLE_SUCCESS;
     }
 
     @Override
-    public String getUserDbFileDir() {
-        String userId = SecurityUtils.getCurrentUserDetails().getUsername();
-        return dbFileDirPath + userId + '/';
-    }
-
-    @Override
-    public String getUserTemplateFileDir() {
-        String userId = SecurityUtils.getCurrentUserDetails().getUsername();
-        return templateFileDirPath + userId + '/';
-    }
-
-    @Override
-    public String getUserTemplatePath() {
-        String userTplFileDir = getUserTemplateFileDir();
-        return userTplFileDir + templatesUserName + "/";
+    public CommonResponse doFileAction(String path, String fileAction, String fileName) throws IOException {
+        path = path.replace(SourceFileInfo.TEMPLATE_VIRTUAL_ROOT, fileService.getUserBaseRootPath());
+        boolean success = false;
+        if(FileActionEnum.EDIT_NAME.getName().equals(fileAction)){
+            File oldfile = new File(path);
+            File newfile = new File(path.replace(oldfile.getName(), fileName));
+            success = oldfile.renameTo(newfile);
+        }else
+            if(FileActionEnum.NEW_FOLDER.getName().equals(fileAction)){
+                String parentPath = new File(path).getParent();
+                File newfile = new File(parentPath + "/" + fileName);
+                success = newfile.mkdir();
+        }else
+            if(FileActionEnum.NEW_FILE.getName().equals(fileAction)){
+                String parentPath = new File(path).getParent();
+                File newfile = new File(parentPath + "/" + fileName);
+                success = newfile.createNewFile();
+        }else
+            if(FileActionEnum.NEW_CHILD_FOLDER.getName().equals(fileAction)){
+                File newfile = new File(path + "/" + fileName);
+                success = newfile.mkdir();
+        }else
+            if(FileActionEnum.NEW_CHILD_FILE.getName().equals(fileAction)){
+                File newfile = new File(path + "/" + fileName);
+                success = newfile.createNewFile();
+        }else
+            if(FileActionEnum.DELETE.getName().equals(fileAction)){
+                File newfile = new File(path);
+                if(newfile.isFile()){
+                    success = newfile.delete();
+                }else {
+                    success = FileSystemUtils.deleteRecursively(newfile);
+                }
+        }
+        return success? CommonResponse.SIMPLE_SUCCESS: CommonResponse.SIMPLE_FAILURE;
     }
 }

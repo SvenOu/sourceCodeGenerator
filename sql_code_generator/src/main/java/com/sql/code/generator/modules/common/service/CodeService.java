@@ -21,7 +21,7 @@ public interface CodeService {
 
 	CommonResponse saveJsonDataSource(String dataSourceId, String type, String dataSourceName, String jsonData);
 
-	CommonResponse saveRemoteDbConfig(DataSource dataSource);
+	CommonResponse saveDbConfig(DataSource dataSource);
 
 	SourceFileInfo getUserDbFilesInfo();
 
@@ -39,8 +39,5 @@ public interface CodeService {
 
 	CommonResponse resetDefaultUserTemplate() throws IOException;
 
-	String getUserDbFileDir();
-	String getUserTemplateFileDir();
-	String getUserTemplatePath();
-
+	CommonResponse doFileAction(String path, String fileAction, String fileName) throws IOException;
 }

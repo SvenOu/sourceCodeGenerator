@@ -8,7 +8,6 @@ Ext.define('CGT.controller.TemplatesDetailController', {
         {ref: 'reloadCodeBtn', selector: 'codeeditor button[name=reloadCodeBtn]'},
         {ref: 'resetDefTplBtn', selector: 'treepanel button[name=resetDefTplBtn]'},
         {ref: 'showDocBtn', selector: 'templatedetailpanel button[name=showDocBtn]'},
-        {ref: 'deleteSelectedEdBtn', selector: 'templatedetailpanel button[name=deleteSelectedEdBtn]'},
         {ref: 'templateGrid', selector: 'templatesPanel templategrid[name=templateGrid]'},
         {ref: 'downloadAllTemplatesBtn', selector: 'templatedetailpanel button[name=downloadAllTemplatesBtn]'},
 	],
@@ -32,9 +31,6 @@ Ext.define('CGT.controller.TemplatesDetailController', {
             'templatedetailpanel button[name=showDocBtn]': {
                 click: this.showDocBtnClick
             },
-            'templatedetailpanel button[name=deleteSelectedEdBtn]': {
-                click: this.deleteSelectedEdBtnClick
-            },
             'templatedetailpanel button[name=downloadAllTemplatesBtn]': {
                 click: this.downloadAllTemplatesBtnClick
             }
@@ -43,48 +39,6 @@ Ext.define('CGT.controller.TemplatesDetailController', {
     downloadAllTemplatesBtnClick: function(btn, e, eOpts){
         var url = app.API_PREFIX +'/downloadAllTemplateFile';
         window.open(url, '_blank');
-    },
-    deleteSelectedEdBtnClick: function(btn, e, eOpts){
-	    var me = this, templatesTreePanel = this.getTemplatesTreePanel();
-	    var selectRec = templatesTreePanel.contentValues.m_selectRecord,
-            url = app.API_PREFIX +'/deleteUserTemplate';
-
-	    if(!selectRec){
-            app.method.toastMsg('Message', 'must select a template root directory.');
-	        return;
-        }
-
-        Ext.Msg.confirm('Warning', 'Delete this template file, the related records will also be deleted, do you want to delete?', function(optional){
-            if(optional=='yes'){
-                templatesTreePanel.setLoading(true);
-                var params = {
-                    path: selectRec.get('path')
-                };
-                Ext.Ajax.request({
-                    method: 'POST',
-                    params: params,
-                    url: url,
-                    success: function(response){
-                        templatesTreePanel.setLoading(false);
-                        var responseText = Ext.JSON.decode(response.responseText);
-                        if(responseText){
-                            if(responseText.success){
-                                app.method.toastMsg('Message', 'delete template success.');
-                            }else {
-                                app.method.toastMsg('Message', responseText.errorCode);
-                            }
-                        }
-                        me.refreshTreePanel();
-                        me.getTemplateGrid().getStore().load();
-                    },
-                    failure: function(response){
-                        app.method.toastMsg('Message', 'delete template error!');
-                        templatesTreePanel.setLoading(false);
-                    },
-                    scope: me
-                });
-            }
-        });
     },
     showDocBtnClick: function(btn, e, eOpts){
 	    var me = this;
@@ -197,7 +151,7 @@ Ext.define('CGT.controller.TemplatesDetailController', {
     codeTreePanelItemSelect: function (treePanel, record, index, eOpts){
         var me = this;
         me.getTemplatesTreePanel().contentValues.m_selectRecord = record;
-        if(record.get('leaf')){
+        if(record.get('leaf') && !record.get('dir')){
             var params = {path: record.get('path')};
             me.doReloadFileCode(params);
         }

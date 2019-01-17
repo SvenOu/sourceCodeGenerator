@@ -6,8 +6,8 @@ import com.sql.code.generator.modules.common.bean.DatasourceEnum;
 import com.sql.code.generator.modules.common.dao.CodeTemplateDao;
 import com.sql.code.generator.modules.common.dao.DataSourceDao;
 import com.sql.code.generator.modules.common.service.CodeGenerator;
-import com.sql.code.generator.modules.common.service.CodeService;
 import com.sql.code.generator.modules.common.service.CommonService;
+import com.sql.code.generator.modules.common.service.FileService;
 import com.sql.code.generator.modules.common.vo.CodeTemplate;
 import com.sql.code.generator.modules.common.vo.DataSource;
 import com.sven.common.lib.bean.CommonResponse;
@@ -22,7 +22,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -55,7 +54,7 @@ public class CommonServiceImpl implements CommonService {
     private CodeTemplateDao codeTemplateDao;
 
     @Autowired
-    private CodeService codeService;
+    private FileService fileService;
 
     @Autowired
     @Qualifier("sqlite")
@@ -65,17 +64,6 @@ public class CommonServiceImpl implements CommonService {
     @Qualifier("mssql")
     private CodeGenerator sCodeGenerator;
 
-    @Value("${sql-code-templates.dir}")
-    private String templatesDirPath;
-
-    @Value("${sql-code-templates.doc.dir}")
-    private String docFilePath;
-
-    @Value("${sql-code-templates.default.name}")
-    private String defaultTemplatesDirName;
-
-    @Value("${sql-code-generator.dir}")
-    private String generatorDirPath;
 
     @Autowired
     private TPEngine tpEngine;
@@ -97,27 +85,30 @@ public class CommonServiceImpl implements CommonService {
         String password = dataSource.getPassword();
 
         Map rootContext = null;
-        String path = getUserRootPath() + new File(codeTpl.getPath()).getName() + '/';
+        String path = fileService.getUserGeneratorDirPath() + new File(getTplPath(codeTpl)).getName() + '/';
         if (DatasourceEnum.MSSQL.getValue().equalsIgnoreCase(dataSource.getType())) {
+            url = DatasourceEnum.MSSQL.getUrlPrefix() + url;
             rootContext = sCodeGenerator.generateCodeModel(packageName, driverClassName, url, username, password);
-            sCodeGenerator.generateCodeFiles(rootContext, codeTpl.getPath(), path);
-            return FileUtils.getSourceFileInfo(getUserRootPath());
-        } else if (DatasourceEnum.SQLITE.getValue().equalsIgnoreCase(dataSource.getType())) {
-            rootContext = codeGenerator.generateCodeModel(packageName, driverClassName, url, username, password);
-            codeGenerator.generateCodeFiles(rootContext, codeTpl.getPath(), path);
-            return FileUtils.getSourceFileInfo(getUserRootPath());
-        }else if (DatasourceEnum.CUSTOM_JSON.getValue().equalsIgnoreCase(dataSource.getType())) {
-            Map context = mapper.readValue(dataSource.getJsonData(), Map.class);
-            tpEngine.progressAll(codeTpl.getPath(), path, context);
-            return FileUtils.getSourceFileInfo(getUserRootPath());
+            sCodeGenerator.generateCodeFiles(rootContext, getTplPath(codeTpl), path);
+        } else
+            if (DatasourceEnum.SQLITE.getValue().equalsIgnoreCase(dataSource.getType())) {
+                url = DatasourceEnum.SQLITE.getUrlPrefix() + fileService.getUserBaseRootPath() + url;
+                rootContext = codeGenerator.generateCodeModel(packageName, driverClassName, url, username, password);
+                codeGenerator.generateCodeFiles(rootContext, getTplPath(codeTpl), path);
+        }else
+            if (DatasourceEnum.CUSTOM_JSON.getValue().equalsIgnoreCase(dataSource.getType())) {
+                Map context = mapper.readValue(dataSource.getJsonData(), Map.class);
+                tpEngine.progressAll(getTplPath(codeTpl), path, context);
         }
         else {
             throw new RuntimeException("not support this dataSource: " + dataSource);
         }
+        return getUserGenerateRootCodeFileInfo();
     }
 
     @Override
     public ResponseEntity<Resource> downloadSourcesFile(String path) throws IOException {
+        path = path.replace(SourceFileInfo.TEMPLATE_VIRTUAL_ROOT, fileService.getUserBaseRootPath());
         File file = new File(path);
         if(!file.exists() || file.isDirectory()){
             return ResponseEntity.notFound().build();
@@ -136,11 +127,11 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public String generateDirZip(String dataSourceId, String templateId) throws ZipException, IOException {
         CodeTemplate tpl = codeTemplateDao.findByKey(templateId);
-        String tplName = new File(tpl.getPath()).getName();
-        String generatePath = getUserRootPath() + tplName + '/';
+        String tplName = new File(getTplPath(tpl)).getName();
+        String generatePath = fileService.getUserBaseRootPath() + tplName + '/';
         String userName = SecurityUtils.getCurrentUserDetails().getUsername();
         // Initiate ZipFile object with the path/name of the zip file.
-        String dirPath = generatorDirPath + "z_tempFiles/";
+        String dirPath = fileService.getUserGeneratorDirPath() + "z_tempFiles/";
         File dir = new File(dirPath);
         FileSystemUtils.deleteRecursively(dir);
         if(!dir.exists()){
@@ -164,13 +155,17 @@ public class CommonServiceImpl implements CommonService {
         return zipFile.getFile().getAbsolutePath();
     }
 
+    private String getTplPath(CodeTemplate codeTemplate){
+        return codeTemplate.getPath()
+                .replace(CodeTemplate.TEMPLATE_VIRTUAL_ROOT, fileService.getUserBaseRootPath());
+    }
     @Override
     public String generateUserDirZip() throws ZipException {
 
-        String generatePath = getUserRootPath();
+        String generatePath = fileService.getUserGeneratorDirPath();
         String userName = SecurityUtils.getCurrentUserId();
         // Initiate ZipFile object with the path/name of the zip file.
-        String dirPath = generatorDirPath + "z_tempFiles/";
+        String dirPath = fileService.getUserBaseRootPath() + "z_tempFiles/";
         File dir = new File(dirPath);
         FileSystemUtils.deleteRecursively(dir);
         if(!dir.exists()){
@@ -196,55 +191,28 @@ public class CommonServiceImpl implements CommonService {
 
     @Override
     public String getDoucumentFile() throws IOException {
-        return getSourceFileCode(docFilePath);
+        return getSourceFileCode(fileService.getDocFilePath());
     }
 
     @Override
-    public SourceFileInfo getUserRootDirCodeFileInfo() {
-        return FileUtils.getSourceFileInfo(getUserRootPath());
-    }
-
-    @Override
-    public String getUserRootPath() {
-        return generatorDirPath + SecurityUtils.getCurrentUserId() + '/';
-    }
-
-    @Override
-    public CommonResponse deleteUserTemplate(String path) throws IOException {
-        String parentPath = new File(path).getParent().replaceAll("\\\\", "/") + "/";
-        if(!codeService.getUserTemplatePath().equals(parentPath)){
-            return CommonResponse.failure("this path is not a template root directory !");
-        }
-        if(!StringUtils.isEmpty(path) && !path.substring(path.length() - 1).equals("/")){
-            path += "/";
-        }
-        List<CodeTemplate> dbTpls = codeTemplateDao.findByPath(path);
-        if(dbTpls != null && dbTpls.size() ==1){
-            if(dbTpls.get(0).getLock()){
-                return CommonResponse.failure("this template is locked.");
-            }
-        }
-        for(CodeTemplate tpl: dbTpls){
-            if(!tpl.getLock()){
-                codeTemplateDao.deleteByKey(tpl.getTemplateId());
-            }
-        }
-        FileSystemUtils.deleteRecursively(Paths.get(path));
-        return CommonResponse.SIMPLE_SUCCESS;
+    public SourceFileInfo getUserGenerateRootCodeFileInfo() {
+        return FileUtils.getSourceFileInfo(fileService.getUserGeneratorDirPath(),
+                fileService.getUserBaseRootPath(),
+                SourceFileInfo.TEMPLATE_VIRTUAL_ROOT);
     }
 
     @Override
     public CommonResponse clearGenerateCode() throws IOException {
-        FileSystemUtils.deleteRecursively(Paths.get(getUserRootPath()));
+        FileSystemUtils.deleteRecursively(Paths.get(fileService.getUserGeneratorDirPath()));
         return CommonResponse.SIMPLE_SUCCESS;
     }
 
     @Override
     public String downloadAllTemplateFile() throws IOException, ZipException {
-        String targetDir = codeService.getUserTemplateFileDir();
+        String targetDir = fileService.getUserTemplateFileDir();
         String userName = SecurityUtils.getCurrentUserId();
         // Initiate ZipFile object with the path/name of the zip file.
-        String dirPath = generatorDirPath + "z_tempFiles/";
+        String dirPath = fileService.getUserBaseRootPath() + "z_tempFiles/";
         File dir = new File(dirPath);
         FileSystemUtils.deleteRecursively(dir);
         if(!dir.exists()){
@@ -267,23 +235,22 @@ public class CommonServiceImpl implements CommonService {
 
         return zipFile.getFile().getAbsolutePath();
     }
-
-    private void getFileNamesByDirPath(List<String> fileNames,  String path) {
-        File folder = new File(path);
-        if(!folder.exists()){
-            return;
-        }
-        for (File fileEntry : folder.listFiles()) {
-            if (fileEntry.isDirectory()) {
-                getFileNamesByDirPath(fileNames, fileEntry.getAbsolutePath());
-            } else {
-                fileNames.add(fileEntry.getAbsolutePath());
-            }
-        }
-    }
-
+//    private void getFileNamesByDirPath(List<String> fileNames,  String path) {
+//        File folder = new File(path);
+//        if(!folder.exists()){
+//            return;
+//        }
+//        for (File fileEntry : folder.listFiles()) {
+//            if (fileEntry.isDirectory()) {
+//                getFileNamesByDirPath(fileNames, fileEntry.getAbsolutePath());
+//            } else {
+//                fileNames.add(fileEntry.getAbsolutePath());
+//            }
+//        }
+//    }
     @Override
     public String getSourceFileCode(String path) throws IOException {
+        path = path.replace(SourceFileInfo.TEMPLATE_VIRTUAL_ROOT, fileService.getUserBaseRootPath());
         File file = new File(path);
         String ext = FileUtils.getFileExtension(file);
         if(ext.equalsIgnoreCase("zip") || !file.isFile()){

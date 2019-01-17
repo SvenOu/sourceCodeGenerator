@@ -26,11 +26,7 @@ public interface CommonService {
 
     String getDoucumentFile() throws IOException;
 
-    SourceFileInfo getUserRootDirCodeFileInfo();
-
-    String getUserRootPath();
-
-    CommonResponse deleteUserTemplate(String path) throws IOException;
+    SourceFileInfo getUserGenerateRootCodeFileInfo();
 
     CommonResponse clearGenerateCode() throws IOException;
 

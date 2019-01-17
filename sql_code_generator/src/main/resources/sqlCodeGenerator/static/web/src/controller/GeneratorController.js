@@ -87,7 +87,7 @@ Ext.define('CGT.controller.GeneratorController', {
     doRefreshCodeTreePanel: function () {
         var me = this, codeTreeStore = this.getCodeTreePanel().store,
             downloadAllFileBtn = this.getDownloadAllFileBtn();
-        codeTreeStore.getProxy().url =  app.API_PREFIX +'/getUserRootDirCodeFileInfo';
+        codeTreeStore.getProxy().url =  app.API_PREFIX +'/getUserGenerateRootCodeFileInfo';
         codeTreeStore.load({
             params:{},
             callback: function (records, operation, success) {
@@ -141,7 +141,7 @@ Ext.define('CGT.controller.GeneratorController', {
     },
     codeTreePanelItemSelect: function (treePanel, record, index, eOpts){
         var me = this, url = app.API_PREFIX +'/getSourceFileCode';
-        if(record.get('leaf')){
+        if(record.get('leaf') && !record.get('dir')){
             var params = {path: record.get('path')};
             me.getGenerateCodeEditor().setLoading(true);
             Ext.Ajax.request({
@@ -175,7 +175,7 @@ Ext.define('CGT.controller.GeneratorController', {
         me.getGenerateCodeEditor().clearData();
         me.getDataSourceId().setValue(dataSourcesContentValues.m_lastChooseVal.get('dataSourceId'));
         codeTreeStore.getProxy().url =  app.API_PREFIX +'/getCodeFileInfo';
-
+        btn.setLoading('progressing...');
         codeTreeStore.load({
             params:{
                 packageName: me.getPackageName().getValue(),
@@ -188,6 +188,7 @@ Ext.define('CGT.controller.GeneratorController', {
                 }else {
                     downloadAllFileBtn.enable();
                 }
+                btn.setLoading(false);
             }
         });
     },

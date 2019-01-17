@@ -41,7 +41,9 @@ Ext.application({
 		'common.TemplateGrid',
 		'common.CodeEditor',
 		'common.JsonEditorWindow',
+		'common.FileActionWindow',
 		'common.DocWindow',
+		'common.FileSystemTree',
 
 		//  main
         'main.GeneratorPanel',
