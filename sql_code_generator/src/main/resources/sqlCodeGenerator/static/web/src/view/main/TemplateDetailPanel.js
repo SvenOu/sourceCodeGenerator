@@ -21,12 +21,6 @@ Ext.define('CGT.view.main.TemplateDetailPanel', {
                             name: 'resetDefTplBtn',
                             text: 'reset default templates'
                         },
-                        {
-                            xtype: 'button',
-                            name: 'deleteSelectedEdBtn',
-                            margin: '0 0 0 10',
-                            text: 'delete selected tpl dir'
-                        },
                         '->'
                     ],
                     bbar: [
