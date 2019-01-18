@@ -73,6 +73,7 @@ public class TPEngine {
             }
             List<Map> data = null;
             Matcher matcherFileArray = Pattern.compile(TPConfig.FILE_ARRAY_PATTERN, Pattern.DOTALL).matcher(fileName);
+            Matcher matcherFileString = Pattern.compile(TPConfig.FILE_STRING_PATTERN, Pattern.DOTALL).matcher(fileName);
             if(matcherFileArray.find()){
                 String arrayStr = matcherFileArray.group();
                 Matcher matcherFileArrayForName = Pattern.compile(TPConfig.FILE_ARRAY_PATTERN_FOR_NAME, Pattern.DOTALL).matcher(arrayStr);
@@ -115,7 +116,26 @@ public class TPEngine {
                         }
                     }
                 }
-            }else {//notthing  matcher
+            }else if(matcherFileString.find()){
+                String s = matcherFileString.group();
+                String key = s.substring(TPConfig.FILE_STRING_PATTERN_START.length(),
+                        s.length() - TPConfig.FILE_STRING_PATTERN_END.length());
+
+                int formatIndex = key.indexOf(TPConfig.FORMAT_SEPARATE_CHAR);
+                String formatType = null;
+                if (formatIndex > 0) {
+                    formatType = key.substring(formatIndex + 1);
+                    key = key.substring(0, formatIndex);
+                }
+                String value = CaseFormat.getFormatData(rootContext, key);
+                if (formatType != null) {
+                    value = CaseFormat.formatString(value, formatType);
+                }
+                fileName = fileName.replace(s, value);
+                String newFilePath = newDirName + '/' + fileName;
+                progress(tplPath, newFilePath, rootContext);
+            }
+            else {//notthing  matcher
                 String newFilePath = newDirName + '/' + fileName;
                 progress(tplPath, newFilePath, rootContext);
             }

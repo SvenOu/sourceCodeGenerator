@@ -2,6 +2,7 @@
     "dirName1": "文件夹1",
     "dirName2": "文件夹2",
     "testObject": {
+        "testFileName": "我是单个文件名",
         "a": {
             "b": {
                 "testArray": [
