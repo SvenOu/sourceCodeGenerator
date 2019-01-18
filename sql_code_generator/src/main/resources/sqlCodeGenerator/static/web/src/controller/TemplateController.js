@@ -112,7 +112,7 @@ Ext.define('CGT.controller.TemplateController', {
         }else{
             if(cellIndex === 4){
                 Ext.Msg.confirm('Message', 'Do you want to delete this template?', function(optional){
-                    if(optional=='yes'){
+                    if(optional ==='yes'){
                         me.preformDeleteTemplate(table, td, cellIndex, record, tr, rowIndex, e, eOpts);
                     }
                 });
