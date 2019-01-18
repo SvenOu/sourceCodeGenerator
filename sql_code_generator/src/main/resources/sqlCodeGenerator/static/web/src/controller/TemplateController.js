@@ -119,11 +119,17 @@ Ext.define('CGT.controller.TemplateController', {
             }else if(cellIndex === 1){
                 me.getSidebarDataView().getSelectionModel().select(3);
                 mainContainer.getLayout().setActiveItem(templateDetailPanel);
-                // // path 多了反斜杠,需要slice去掉 todo
-                // var nodeId = record.get('path').slice(0, -1);
-                // var rec = codeTreePanel.getStore().getNodeById(nodeId);
-                // // me.expandPath(rec.getPath());
-                // codeTreePanel.getSelectionModel().select(rec);
+                // path 多了反斜杠,需要slice去掉
+                var path = record.get('path')
+                    .slice(0, -1)
+                    .replace('#tplRoot/','#SourceFileInfoRoot/');
+                var rec = codeTreePanel.getStore()
+                    .getRootNode()
+                    .findChild('path', path, true);
+                codeTreePanel.expandPath(rec.getPath(),
+                    null, null, function (success, lastNode){
+                    codeTreePanel.getSelectionModel().select(rec);
+                });
             }
         }
     },
