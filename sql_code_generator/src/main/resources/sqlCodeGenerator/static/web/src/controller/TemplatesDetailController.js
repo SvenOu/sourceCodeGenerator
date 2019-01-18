@@ -66,11 +66,11 @@ Ext.define('CGT.controller.TemplatesDetailController', {
                         var responseText = Ext.JSON.decode(response.responseText);
                         if(responseText){
                             if(responseText.success){
-                                // me.refreshTreePanel();
                                 var params = {path: this.getDetailCodeEditor().m_codePath};
                                 if(!Ext.isEmpty(params.path)){
                                     me.doReloadFileCode(params);
                                 }
+                                me.refreshTreePanel();
                                 app.method.toastMsg('Message', 'reset default templates file success.');
                             }else {
                                 app.method.toastMsg('Message', responseText.errorCode);

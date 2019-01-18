@@ -1,11 +1,15 @@
 package com.sven.common.lib.codetemplate.engine;
 
 import com.sven.common.lib.codetemplate.config.TPConfig;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 
 public class CaseFormat {
+    private static Log log = LogFactory.getLog(CaseFormat.class);
     /***************************** formatArray ***********************************/
     public static final String PREFIX = "prefix";
     public static final String SUFFIX = "suffix";
@@ -120,15 +124,45 @@ public class CaseFormat {
         }
         return param;
     }
-    public static String getFormatData(Map data, String key){
-        Object d = data.get(key) == null? "" :  data.get(key);
-        String value = null;
-        if(d instanceof String){
-            value = StringUtils.isEmpty(d) ? String.format(TPConfig.FORMAT_ERROR, key) : (String) d;
-        }else {
-            d = data.get(key).toString();
-            value = StringUtils.isEmpty(d) ? String.format(TPConfig.FORMAT_ERROR, key) : (String) d;
+
+    public static List<Map> getFormatDataMap(Map data, String key){
+        String[] keyArray = key.split("\\s*\\.\\s*");
+        try {
+            return getKeyArrayFormatDataMap(data, keyArray,0);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
         }
-        return value;
+    }
+    public static List<Map> getKeyArrayFormatDataMap(Map data, String[] keyArray, int index){
+        String curKey = keyArray[index];
+        Object curData = data.get(curKey);
+        index ++;
+        if(index >= keyArray.length){
+            return (List<Map>) curData;
+        }else {
+            return getKeyArrayFormatDataMap((Map) curData, keyArray,  index);
+        }
+    }
+
+    public static String getFormatData(Map data, String key){
+        String[] keyArray = key.split("\\s*\\.\\s*");
+        try {
+            return getKeyArrayFormatData(data, keyArray,0);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return String.format(TPConfig.FORMAT_ERROR, key);
+        }
+    }
+
+    public static String getKeyArrayFormatData(Map data, String[] keyArray, int index){
+        String curKey = keyArray[index];
+        Object curData = data.get(curKey);
+        index ++;
+        if(index >= keyArray.length){
+            return curData.toString();
+        }else {
+            return getKeyArrayFormatData((Map) curData, keyArray,  index);
+        }
     }
 }

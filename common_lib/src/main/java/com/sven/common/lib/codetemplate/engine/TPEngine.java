@@ -84,10 +84,12 @@ public class TPEngine {
                     if(formatIndex > 0){
                         arrayStrForNameKey = arrayStrForNameKey.substring(0, formatIndex);
                     }
-                    data = (List<Map>) rootContext.get(arrayStrForNameKey);
-                    if(StringUtils.isEmpty(data)){
+
+                    data= CaseFormat.getFormatDataMap(rootContext, arrayStrForNameKey);
+                    if(data == null || data.size() <=0){
                         data = new ArrayList<>(0);
                     }
+
                     String repeatStrContent = arrayStr.substring(arrayStrForName.length(), arrayStr.length() - 2);
                     Matcher matcherFileArrayForAttr = Pattern.compile(TPConfig.FILE_ARRAY_PATTERN_FOR_ATTIBUTE, Pattern.DOTALL).matcher(repeatStrContent);
                     if(matcherFileArrayForAttr.find()){
@@ -223,7 +225,6 @@ public class TPEngine {
         //$tp-repeat(  and  ){{
         String arrayFormatName = arrayNameStr.substring(arrayPatternForNameStart.length(), arrayNameStr.length() - arrayPatternForNameEnd.length());
         String repeatStrContent = repeatStr.substring(arrayNameStr.length(), repeatStr.length() - 2);
-
         String arrayName = arrayFormatName;
         String prefix = "";
         String suffix = "";
@@ -241,16 +242,14 @@ public class TPEngine {
             }
             arrayName = arrayFormatName.substring(0, arrayFormatIndex);
         }
-
-        if (context.get(arrayName) == null) {
-            return "";
-        }
-        if (!(context.get(arrayName) instanceof List)) {
-            log.error("Error: " + arrayName + "is not a List !");
-            return "";
-        }
-        List<Map> arrayContexts = (List<Map>) context.get(arrayName);
         StringBuffer sb = new StringBuffer();
+
+        List<Map> arrayContexts = CaseFormat.getFormatDataMap(context, arrayName);
+        if(arrayContexts == null || arrayContexts.size() <=0){
+            sb.append(String.format(TPConfig.FORMAT_ERROR, arrayName));
+            sb.append(TPConfig.WRAP_CHAR);
+            return sb.toString();
+        }
 
         for (int i = 0; i < arrayContexts.size(); i++) {
             Map c = arrayContexts.get(i);

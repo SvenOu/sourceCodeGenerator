@@ -11,14 +11,15 @@ $tp-repeat(arrayName-arrayFormator~formatorStr){{
 $dir{{elementName-stringFormator}}
 $file-repeat(arrayName){{$(elementName-stringFormator)}}
 
+// 注意: 所有表达式都支持"."号操作
 // example:
-public class ${{voClassName}} implements Serializable {
-  $tp-repeat(fields){{private $(type) $(name-underlineToCame);
+public class ${{a.b.voClassName}} implements Serializable {
+  $tp-repeat(a.b.fields){{private $(type) $(name-underlineToCame);
   }}
   @Override
   public String toString() {
     return String.format(
-    "${{voClassName}}{$tp-repeat(fields-suffixNotIncludeEnd~,){{$(name-underlineToCame)='%s'}} }",
-        $tp-repeat(fields-suffixNotIncludeEnd~,){{$(name-underlineToCame)}});
+    "${{voClassName}}{$tp-repeat(a.b.fields-suffixNotIncludeEnd~,){{$(name-underlineToCame)='%s'}} }",
+        $tp-repeat(a.b.fields-suffixNotIncludeEnd~,){{$(name-underlineToCame)}});
   }
 }
