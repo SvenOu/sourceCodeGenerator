@@ -2,10 +2,9 @@ Ext.define('CGT.view.common.FileActionWindow',{
 	extend:'Ext.window.Window',
 	alias : 'widget.fileactionwindow',
 	closeAction:'destroy',
-	modal: true,
+	modal: false,
 	cls: 'main-common-file-action-window',
-	width: 1000,
-	// height: 700,
+	width: 600,
 	padding: 15,
 	liveDrag : true,
 	// custom attr
