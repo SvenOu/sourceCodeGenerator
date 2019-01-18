@@ -120,8 +120,7 @@ Ext.define('CGT.controller.TemplateController', {
                 me.getSidebarDataView().getSelectionModel().select(3);
                 mainContainer.getLayout().setActiveItem(templateDetailPanel);
                 // path 多了反斜杠,需要slice去掉
-                var path = record.get('path')
-                    .slice(0, -1)
+                var path = record.get('path').slice(0, -1)
                     .replace('#tplRoot/','#SourceFileInfoRoot/');
                 var rec = codeTreePanel.getStore()
                     .getRootNode()
