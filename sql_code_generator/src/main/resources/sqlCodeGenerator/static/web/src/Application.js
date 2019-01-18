@@ -65,7 +65,7 @@ Ext.application({
                      responseText = Ext.JSON.decode(response.responseText);
                 }catch (e) {}
 
-		    	if(responseText.success == true){
+		    	if(responseText.success === true){
 					app.user = responseText.data;
 					Ext.create('CGT.view.common.Viewport');
 					Ext.get('loading').fadeOut({
