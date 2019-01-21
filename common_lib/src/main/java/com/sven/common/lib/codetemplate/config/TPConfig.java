@@ -2,6 +2,11 @@ package com.sven.common.lib.codetemplate.config;
 
 public class TPConfig {
     /**
+     * 引用数据的根
+     */
+    public static final String STRING_ROOT_SCOPE = "#root";
+
+    /**
      * 查找单个string 数值的正则表达式
      */
     public static final String STRING_PATTERN = "\\$\\{\\{[\\S\\s]+?(}+)";

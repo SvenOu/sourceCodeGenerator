@@ -7,10 +7,13 @@ $tp-repeat(arrayName-arrayFormator~formatorStr){{
  $(elementName-stringFormator)
 }}
 
-//dir, file 表达式,仅仅用于文件夹生成
+//dir, file..表达式,用于文件夹生成
 $dir{{elementName-stringFormator}}
 $file{{elementName-stringFormator}}
 $file-repeat(arrayName){{$(elementName-stringFormator)}}
+
+// #root 引用数据的根变量
+example: ${{#root.dirName1-upCaseFirst}}
 
 // 注意: 所有表达式都支持"."号操作
 // example:

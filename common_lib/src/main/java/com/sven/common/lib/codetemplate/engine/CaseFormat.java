@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -125,9 +126,12 @@ public class CaseFormat {
         return param;
     }
 
-    public static List<Map> getFormatDataMap(Map data, String key){
+    public static List<Map> getFormatDataMap(Map data, String key, Map rootContext){
         String[] keyArray = key.split("\\s*\\.\\s*");
         try {
+            if(TPConfig.STRING_ROOT_SCOPE.equalsIgnoreCase(keyArray[0])){
+                return getKeyArrayFormatDataMap(rootContext, Arrays.copyOfRange(keyArray, 1, keyArray.length),0);
+            }
             return getKeyArrayFormatDataMap(data, keyArray,0);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -145,9 +149,12 @@ public class CaseFormat {
         }
     }
 
-    public static String getFormatData(Map data, String key){
+    public static String getFormatData(Map data, String key, Map rootData){
         String[] keyArray = key.split("\\s*\\.\\s*");
         try {
+            if(TPConfig.STRING_ROOT_SCOPE.equalsIgnoreCase(keyArray[0])){
+                return getKeyArrayFormatData(rootData, Arrays.copyOfRange(keyArray, 1, keyArray.length),0);
+            }
             return getKeyArrayFormatData(data, keyArray,0);
         } catch (Exception e) {
             log.error(e.getMessage());

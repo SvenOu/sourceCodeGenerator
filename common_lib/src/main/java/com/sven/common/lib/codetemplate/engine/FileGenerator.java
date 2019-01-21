@@ -1,7 +1,6 @@
 package com.sven.common.lib.codetemplate.engine;
 
 import com.sven.common.lib.codetemplate.config.TPConfig;
-import com.sven.common.lib.codetemplate.dataBean.TplSourceFileInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.FileSystemUtils;
@@ -49,8 +48,8 @@ public class FileGenerator {
                             arrayNameStr.length() - TPConfig.DIR_ARRAY_PATTERN_FOR_NAME_END.length());
                     String repeatStrContent = repeatStr.substring(arrayNameStr.length(), repeatStr.length() - 2);
 
-                    List<Map> arrayContexts = CaseFormat.getFormatDataMap(rootData, arrayName);
-                    if(arrayContexts == null || arrayContexts.size() <=0){
+                    List<Map> arrayContexts = CaseFormat.getFormatDataMap(rootData, arrayName, rootData);
+                    if(arrayContexts == null || arrayContexts.size() <= 0){
                         String name = String.format(TPConfig.FORMAT_ERROR, arrayName);
                         f.renameTo(new File(f.getParent() + "/" + name));
                         continue;
@@ -72,7 +71,7 @@ public class FileGenerator {
                                 formatType = key.substring(formatIndex + 1);
                                 key = key.substring(0, formatIndex);
                             }
-                            String value = CaseFormat.getFormatData(c, key);
+                            String value = CaseFormat.getFormatData(c, key, rootData);
                             if (formatType != null) {
                                 value = CaseFormat.formatString(value, formatType);
                             }
@@ -99,7 +98,7 @@ public class FileGenerator {
                         formatType = key.substring(formatIndex + 1);
                         key = key.substring(0, formatIndex);
                     }
-                    String value = CaseFormat.getFormatData(rootData, key);
+                    String value = CaseFormat.getFormatData(rootData, key, rootData);
                     if (formatType != null) {
                         value = CaseFormat.formatString(value, formatType);
                     }

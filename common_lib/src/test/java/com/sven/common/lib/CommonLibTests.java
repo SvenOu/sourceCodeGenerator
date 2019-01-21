@@ -46,7 +46,7 @@ public class CommonLibTests {
         String tmlPath = resource.getFile().getAbsolutePath();
         String disPath = "E:\\IntenlliJ_IDEA_workspace\\sourceCodeGenerator\\sql_code_generator\\generateCode\\tempFiles\\SpLogs-dis.java";
 
-        engine.progress(tmlPath, disPath, context);
+        engine.progress(tmlPath, disPath, context, context);
     }
 
     @Test

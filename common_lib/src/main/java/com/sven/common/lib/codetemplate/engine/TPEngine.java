@@ -7,7 +7,6 @@ import com.sven.common.lib.codetemplate.utils.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.FileSystemUtils;
-import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +48,6 @@ public class TPEngine {
         SourceFileInfo generateTplInfo = FileUtils.getSourceFileInfo(tempTplsPath);
 
         progressSourceFileInfo(generateTplInfo, tempDirName, rootContext);
-
         // FIXME: 可以不删除，用于debug
         FileSystemUtils.deleteRecursively(Paths.get(tempTplsPath));
     }
@@ -85,8 +83,8 @@ public class TPEngine {
                         arrayStrForNameKey = arrayStrForNameKey.substring(0, formatIndex);
                     }
 
-                    data= CaseFormat.getFormatDataMap(rootContext, arrayStrForNameKey);
-                    if(data == null || data.size() <=0){
+                    data= CaseFormat.getFormatDataMap(rootContext, arrayStrForNameKey, rootContext);
+                    if(data == null || data.size() <= 0){
                         data = new ArrayList<>(0);
                     }
 
@@ -106,13 +104,13 @@ public class TPEngine {
                         }
 
                         for (Map d : data) {
-                            String name = CaseFormat.getFormatData(d, attrKey);
+                            String name = CaseFormat.getFormatData(d, attrKey, rootContext);
                             if (formatType != null) {
                                 name = CaseFormat.formatString(name, formatType);
                             }
                             String newFileName = fileName.replace(arrayStr, repeatStrContent.replace(attrStrForName, name));
                             String newFilePath = newDirName + '/' + newFileName;
-                            progress(tplPath, newFilePath, d);
+                            progress(tplPath, newFilePath, d, rootContext);
                         }
                     }
                 }
@@ -127,7 +125,7 @@ public class TPEngine {
                     formatType = key.substring(formatIndex + 1);
                     key = key.substring(0, formatIndex);
                 }
-                String value = CaseFormat.getFormatData(rootContext, key);
+                String value = CaseFormat.getFormatData(rootContext, key, rootContext);
                 if (formatType != null) {
                     value = CaseFormat.formatString(value, formatType);
                 }
@@ -136,12 +134,12 @@ public class TPEngine {
 
                 String[] keyArray = key.split("\\s*\\.\\s*");
                 if(keyArray!= null && keyArray.length >0){
-                    progress(tplPath, newFilePath, (Map) rootContext.get(keyArray[0]));
+                    progress(tplPath, newFilePath, (Map) rootContext.get(keyArray[0]), rootContext);
                 }
             }
             else {//notthing  matcher
                 String newFilePath = newDirName + '/' + fileName;
-                progress(tplPath, newFilePath, rootContext);
+                progress(tplPath, newFilePath, rootContext, rootContext);
             }
         } else {
             List<SourceFileInfo> childs = (List<SourceFileInfo>) tplInfo.getChildren();
@@ -153,7 +151,7 @@ public class TPEngine {
         }
     }
 
-    public void progress(String tplPath, String disPath, Map context) throws IOException {
+    public void progress(String tplPath, String disPath, Map context, Map rootContext) throws IOException {
         Path path = Paths.get(tplPath);
 
         File parentDir = new File(disPath).getParentFile();
@@ -164,7 +162,7 @@ public class TPEngine {
         Charset charset = StandardCharsets.UTF_8;
         String content = new String(Files.readAllBytes(path), charset);
 
-        String result =  applyStringAndArrayValues(content, context,
+        String result =  applyStringAndArrayValues(content, context, rootContext,
                 TPConfig.STRING_PATTERN,
                 TPConfig.STRING_PATTERN_START,
                 TPConfig.STRING_PATTERN_END,
@@ -182,7 +180,7 @@ public class TPEngine {
         Files.write(Paths.get(disPath), result.getBytes(charset));
     }
 
-    private String applyStringAndArrayValues(String content, Map context,
+    private String applyStringAndArrayValues(String content, Map context, Map rootContext,
                                         String stringPattern,
                                         String stringPatternStart,
                                         String stringPatternEnd,
@@ -193,10 +191,10 @@ public class TPEngine {
                                         String arrayPatternForAttribute,
                                         String arrayPatternForAttributeStart,
                                         String arrayPatternForAttributeEnd) {
-        String result1 = applyStringValues(content, context,
+        String result1 = applyStringValues(content, context, rootContext,
                 stringPattern, stringPatternStart, stringPatternEnd);
 
-        String result2 = applyArrayValues(result1, context,
+        String result2 = applyArrayValues(result1, context, rootContext,
                 arrayPattern,
                 arrayPatternForName,
                 arrayPatternForNameStart,
@@ -207,7 +205,7 @@ public class TPEngine {
         return result2;
     }
 
-    private String applyArrayValues(String content, Map context,
+    private String applyArrayValues(String content, Map context, Map rootContext,
                                     String arrayPattern,
                                     String arrayPatternForName,
                                     String arrayPatternForNameStart,
@@ -220,7 +218,7 @@ public class TPEngine {
         Matcher matcher = pattern.matcher(content);
         while (matcher.find()) {
             String s = matcher.group();
-            String replaceText = applyTpRepeat(s, context,
+            String replaceText = applyTpRepeat(s, context, rootContext,
                     arrayPatternForName,
                     arrayPatternForNameStart,
                     arrayPatternForNameEnd,
@@ -233,7 +231,7 @@ public class TPEngine {
         return sb.toString();
     }
 
-    private String applyTpRepeat(String repeatStr, Map context,
+    private String applyTpRepeat(String repeatStr, Map context, Map rootContext,
                                  String arrayPatternForName,
                                  String arrayPatternForNameStart,
                                  String arrayPatternForNameEnd,
@@ -267,8 +265,7 @@ public class TPEngine {
             arrayName = arrayFormatName.substring(0, arrayFormatIndex);
         }
         StringBuffer sb = new StringBuffer();
-
-        List<Map> arrayContexts = CaseFormat.getFormatDataMap(context, arrayName);
+        List<Map> arrayContexts = CaseFormat.getFormatDataMap(context, arrayName, rootContext);
         if(arrayContexts == null || arrayContexts.size() <=0){
             sb.append(String.format(TPConfig.FORMAT_ERROR, arrayName));
             sb.append(TPConfig.WRAP_CHAR);
@@ -291,7 +288,7 @@ public class TPEngine {
                     formatType = key.substring(formatIndex + 1);
                     key = key.substring(0, formatIndex);
                 }
-                String value = CaseFormat.getFormatData(c, key);
+                String value = CaseFormat.getFormatData(c, key, rootContext);
                 if (formatType != null) {
                     value = CaseFormat.formatString(value, formatType);
                 }
@@ -306,7 +303,7 @@ public class TPEngine {
         return sb.toString();
     }
 
-    private String applyStringValues(String content, Map context,
+    private String applyStringValues(String content, Map context, Map rootContext,
                                      String stringPattern,
                                      String stringPatternStart,
                                      String stringPatternEnd) {
@@ -324,7 +321,7 @@ public class TPEngine {
                 formatType = key.substring(formatIndex + 1);
                 key = key.substring(0, formatIndex);
             }
-            String value = CaseFormat.getFormatData(context, key);
+            String value = CaseFormat.getFormatData(context, key, rootContext);
             if (formatType != null) {
                 value = CaseFormat.formatString(value, formatType);
             }
