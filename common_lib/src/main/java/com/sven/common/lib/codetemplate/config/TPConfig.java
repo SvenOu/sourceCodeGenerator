@@ -33,6 +33,11 @@ public class TPConfig {
     public static final String DIR_STRING_PATTERN_START = "$dir{{";
     public static final String DIR_STRING_PATTERN_END = "}}";
 
+    public static final String DIR_ARRAY_PATTERN = "(\\$dir-repeat\\(.+?\\{\\{).+?}}";
+    public static final String DIR_ARRAY_PATTERN_FOR_NAME = "\\$dir-repeat\\(.+?\\)\\{\\{";
+    public static final String DIR_ARRAY_PATTERN_FOR_NAME_START = "$dir-repeat(";
+    public static final String DIR_ARRAY_PATTERN_FOR_NAME_END = "){{";
+
     public static final String FILE_STRING_PATTERN = "\\$file\\{\\{[\\S\\s]+?(}+)";
     public static final String FILE_STRING_PATTERN_START = "$file{{";
     public static final String FILE_STRING_PATTERN_END = "}}";

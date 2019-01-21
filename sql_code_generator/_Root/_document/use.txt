@@ -9,6 +9,7 @@ $tp-repeat(arrayName-arrayFormator~formatorStr){{
 
 //dir, file 表达式,仅仅用于文件夹生成
 $dir{{elementName-stringFormator}}
+$file{{elementName-stringFormator}}
 $file-repeat(arrayName){{$(elementName-stringFormator)}}
 
 // 注意: 所有表达式都支持"."号操作

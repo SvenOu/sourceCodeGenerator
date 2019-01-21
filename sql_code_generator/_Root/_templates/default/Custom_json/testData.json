@@ -1,8 +1,34 @@
 {
     "dirName1": "文件夹1",
     "dirName2": "文件夹2",
+    "dirArray": [
+        {
+            "name": "dirArray1_1",
+            "namet": "dirArray1_1t",
+            "dirArray2": [
+                {
+                    "name2": "dirArray1_1_2_1"
+                },
+                {
+                    "name2": "dirArray1_1_2_2"
+                }
+            ]
+        },
+        {
+            "name": "dirArray1_2",
+            "namet": "dirArray1_2t",
+            "dirArray2": [
+                {
+                    "name2": "dirArray1_2_2_1"
+                },
+                {
+                    "name2": "dirArray1_2_2_2"
+                }
+            ]
+        }
+    ],
     "testObject": {
-        "testFileName": "我是单个文件名",
+        "testFileName": "I am single file",
         "a": {
             "b": {
                 "testArray": [

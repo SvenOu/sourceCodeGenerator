@@ -272,8 +272,9 @@ public class CodeServiceImpl implements CodeService {
     @Override
     public CommonResponse resetDefaultUserTemplate() throws IOException {
         String userTplFileDir = fileService.getUserTemplateFileDir();
-        File userDbFileDirFile = new File(userTplFileDir);
-        FileSystemUtils.copyRecursively(new File(fileService.getDefaultTemplateRootPath()), userDbFileDirFile);
+        File userTplFileDirFile = new File(userTplFileDir);
+        FileSystemUtils.deleteRecursively(userTplFileDirFile);
+        FileSystemUtils.copyRecursively(new File(fileService.getDefaultTemplateRootPath()), userTplFileDirFile);
         return CommonResponse.SIMPLE_SUCCESS;
     }
 

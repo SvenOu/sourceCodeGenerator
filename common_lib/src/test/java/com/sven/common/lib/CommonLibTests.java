@@ -68,6 +68,6 @@ public class CommonLibTests {
         rootData.put("data", data);
 
         FileGenerator fileGenerator = new FileGenerator();
-        fileGenerator.generateTempTpls(rootData, rootPath, generateRootPath, rootInfo);
+        fileGenerator.generateTempTpls(rootData, rootPath, generateRootPath);
     }
 }

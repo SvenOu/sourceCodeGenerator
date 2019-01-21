@@ -45,7 +45,7 @@ public class TPEngine {
         String tempDirName = "/#tempTemplates/";
         String tempTplsPath = disPath + tempDirName;
         FileGenerator fileGenerator = new FileGenerator();
-        fileGenerator.generateTempTpls(rootContext, rootInfo.getPath(), tempTplsPath, rootInfo);
+        fileGenerator.generateTempTpls(rootContext, rootInfo.getPath(), tempTplsPath);
         SourceFileInfo generateTplInfo = FileUtils.getSourceFileInfo(tempTplsPath);
 
         progressSourceFileInfo(generateTplInfo, tempDirName, rootContext);
@@ -53,7 +53,6 @@ public class TPEngine {
         // FIXME: 可以不删除，用于debug
         FileSystemUtils.deleteRecursively(Paths.get(tempTplsPath));
     }
-
 
     private void progressSourceFileInfo(SourceFileInfo tplInfo, String tempDirName, Map rootContext) throws IOException {
         if (tplInfo.isLeaf()) {
@@ -92,7 +91,8 @@ public class TPEngine {
                     }
 
                     String repeatStrContent = arrayStr.substring(arrayStrForName.length(), arrayStr.length() - 2);
-                    Matcher matcherFileArrayForAttr = Pattern.compile(TPConfig.FILE_ARRAY_PATTERN_FOR_ATTIBUTE, Pattern.DOTALL).matcher(repeatStrContent);
+                    Matcher matcherFileArrayForAttr = Pattern.compile(TPConfig.FILE_ARRAY_PATTERN_FOR_ATTIBUTE,
+                            Pattern.DOTALL).matcher(repeatStrContent);
                     if(matcherFileArrayForAttr.find()){
                         String attrStrForName = matcherFileArrayForAttr.group();
                         String attrKey = attrStrForName.substring(TPConfig.FILE_ARRAY_PATTERN_FOR_ATTIBUTE_START.length(),
@@ -133,7 +133,11 @@ public class TPEngine {
                 }
                 fileName = fileName.replace(s, value);
                 String newFilePath = newDirName + '/' + fileName;
-                progress(tplPath, newFilePath, rootContext);
+
+                String[] keyArray = key.split("\\s*\\.\\s*");
+                if(keyArray!= null && keyArray.length >0){
+                    progress(tplPath, newFilePath, (Map) rootContext.get(keyArray[0]));
+                }
             }
             else {//notthing  matcher
                 String newFilePath = newDirName + '/' + fileName;
@@ -160,7 +164,7 @@ public class TPEngine {
         Charset charset = StandardCharsets.UTF_8;
         String content = new String(Files.readAllBytes(path), charset);
 
-        String result =  applyStringAndValues(content, context,
+        String result =  applyStringAndArrayValues(content, context,
                 TPConfig.STRING_PATTERN,
                 TPConfig.STRING_PATTERN_START,
                 TPConfig.STRING_PATTERN_END,
@@ -178,7 +182,7 @@ public class TPEngine {
         Files.write(Paths.get(disPath), result.getBytes(charset));
     }
 
-    private String applyStringAndValues(String content, Map context,
+    private String applyStringAndArrayValues(String content, Map context,
                                         String stringPattern,
                                         String stringPatternStart,
                                         String stringPatternEnd,
