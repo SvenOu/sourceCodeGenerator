@@ -45,7 +45,7 @@ public class SqlCodeController {
 		return commonService.getUserGenerateRootCodeFileInfo();
 	}
 
-	@RequestMapping(value = "/getSourceFileCode", method = RequestMethod.GET)
+	@RequestMapping(value = "/getSourceFileCode", method = RequestMethod.GET, produces="text/plain;charset=UTF-8")
 	public @ResponseBody String getSourceFileCode(String path) throws IOException {
 		return commonService.getSourceFileCode(path);
 	}
