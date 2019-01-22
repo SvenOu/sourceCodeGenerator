@@ -31,10 +31,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -256,7 +254,8 @@ public class CommonServiceImpl implements CommonService {
         if(ext.equalsIgnoreCase("zip") || !file.isFile()){
             return "";
         }
-        BufferedReader reader = new BufferedReader(new FileReader(path));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                        new FileInputStream(path), StandardCharsets.UTF_8));
         StringBuilder builder = new StringBuilder();
         String currentLine = reader.readLine();
         while (currentLine != null) {

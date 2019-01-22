@@ -1,0 +1,103 @@
+{
+    "dirName1": "文件夹1",
+    "dirName2": "文件夹2",
+    "dirArray": [
+        {
+            "name": "dirArray1_1",
+            "namet": "dirArray1_1t",
+            "dirArray2": [
+                {
+                    "name2": "dirArray1_1_2_1"
+                },
+                {
+                    "name2": "dirArray1_1_2_2"
+                }
+            ]
+        },
+        {
+            "name": "dirArray1_2",
+            "namet": "dirArray1_2t",
+            "dirArray2": [
+                {
+                    "name2": "dirArray1_2_2_1"
+                },
+                {
+                    "name2": "dirArray1_2_2_2"
+                }
+            ]
+        }
+    ],
+    "testObject": {
+        "testFileName": "I am single file",
+        "a": {
+            "b": {
+                "testArray": [
+                    {
+                        "title": "testArray title",
+                        "name": "testArray name"
+                    }
+                ]
+            }
+        }
+    },
+    "extraData": [
+        {
+            "title": "extraData title",
+            "name": "extraData name"
+        }
+    ],
+    "extraData2": [
+        {
+            "title2": "extraData title2",
+            "name2": "extraData name2 呵呵",
+            "test": {
+                "t1": {
+                    "t2": "hahaJaaa"
+                }
+            }
+        },
+        {
+            "title2": "extraData title3",
+            "name2": "extraData name3 呵呵",
+            "test": {
+                "t1": {
+                    "t2": "xixiHoppPp"
+                }
+            }
+        }
+    ],
+    "data": [
+        {
+            "attr1": "record1-attr1",
+            "attr2": "record1-attr2",
+            "test": {
+                "t1": {
+                    "t2": {
+                        "fieldsValues": [
+                            {
+                                "fieldAttr1": "record1-fieldAttr1",
+                                "fieldAttr2": "record1-fieldAttr2"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "attr1": "record2-attr1",
+            "attr2": "record2-attr2",
+            "test": {
+                "t1": {
+                    "t2": {
+                        "fieldsValues": [
+                            {
+                                "fieldAttr1": "record2-fieldAttr1",
+                                "fieldAttr2": "record2-fieldAttr2"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}
