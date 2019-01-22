@@ -2,13 +2,14 @@ package com.sql.code.generator.modules.common.service.impl;
 
 import com.sql.code.generator.commom.utils.SecurityUtils;
 import com.sql.code.generator.modules.common.service.FileService;
+import com.sven.common.lib.config.GlobalAppConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FileServiceImpl implements FileService {
 
-    @Value("${sql-code-templates.baseRoot}")
     private String baseRootPath;
 
     @Value("${sql-code-generator.templates.default.root.path}")
@@ -37,6 +38,11 @@ public class FileServiceImpl implements FileService {
 
     @Value("${sql-code-generator.db.file.dir}")
     private String dbFileDirPath;
+
+    @Autowired
+    public FileServiceImpl(GlobalAppConfig globalAppConfig) {
+        this.baseRootPath = globalAppConfig.getSqlCodeTemplatesBaseRoot();
+    }
 
     @Override
     public String getUserGeneratorDirPath() {

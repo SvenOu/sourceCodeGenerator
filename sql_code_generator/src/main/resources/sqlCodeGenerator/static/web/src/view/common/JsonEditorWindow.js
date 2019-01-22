@@ -16,42 +16,8 @@ Ext.define('CGT.view.common.JsonEditorWindow', {
     m_dataSourceId: '',
     m_dataSourceName: '',
     m_defaultJsonData: {
-	    dirName1: "文件夹1",
-	    dirName2: "文件夹2",
-        extraData: [
-            {
-                title: 'extraData title',
-                name: 'extraData name'
-            }
-        ],
-        extraData2: [
-            {
-                title2: 'extraData title2',
-                name2: 'extraData name2 呵呵'
-            }
-        ],
-	    data: [
-            {
-                attr1: 'record1-attr1',
-                attr2: 'record1-attr2',
-                fieldsValues:[
-                    {
-                        fieldAttr1: 'record1-fieldAttr1',
-                        fieldAttr2: 'record1-fieldAttr2'
-                    }
-                ]
-            },
-            {
-                attr1: 'record2-attr1',
-                attr2: 'record2-attr2',
-                fieldsValues:[
-                    {
-                        fieldAttr1: 'record2-fieldAttr1',
-                        fieldAttr2: 'record2-fieldAttr2'
-                    }
-                ]
-            }
-        ]
+	    title: "hello world",
+	    content: "some text!"
     },
     me_defaultConvertJasonDataFunction : "function convertJasonData(data){\n" +
     "    // write your code\n" +
