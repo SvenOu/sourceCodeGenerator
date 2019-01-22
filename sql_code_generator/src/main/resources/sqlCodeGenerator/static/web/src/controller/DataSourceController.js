@@ -301,7 +301,7 @@ Ext.define('CGT.controller.DataSourceController', {
                 me.getDataSourceGrid().getStore().load();
                 sqlFileConfigForm.setLoading(false);
                 sqlfileConfigWindow.close();
-
+                me.refreshDbFilesTreePanelContainer();
             },
             failure: function(form, action) {
                 app.method.toastMsg('Warning', 'upload db file fail');

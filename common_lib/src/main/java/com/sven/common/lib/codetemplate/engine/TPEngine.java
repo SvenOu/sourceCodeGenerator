@@ -44,15 +44,15 @@ public class TPEngine {
         String tempDirName = "/#tempTemplates/";
         String tempTplsPath = disPath + tempDirName;
         FileGenerator fileGenerator = new FileGenerator();
-        fileGenerator.generateTempTpls(rootContext, rootInfo.getPath(), tempTplsPath);
+        Map repeatScopeMapping = fileGenerator.generateTempTpls(rootContext, rootInfo.getPath(), tempTplsPath);
         SourceFileInfo generateTplInfo = FileUtils.getSourceFileInfo(tempTplsPath);
 
-        progressSourceFileInfo(generateTplInfo, tempDirName, rootContext);
+        progressSourceFileInfo(generateTplInfo, tempDirName, rootContext, repeatScopeMapping);
         // FIXME: 可以不删除，用于debug
         FileSystemUtils.deleteRecursively(Paths.get(tempTplsPath));
     }
 
-    private void progressSourceFileInfo(SourceFileInfo tplInfo, String tempDirName, Map rootContext) throws IOException {
+    private void progressSourceFileInfo(SourceFileInfo tplInfo, String tempDirName, Map rootContext, Map repeatScopeMapping) throws IOException {
         if (tplInfo.isLeaf()) {
             String tplPath = tplInfo.getPath();
             String parentDirPath = new File(tplPath).getParent();
@@ -83,7 +83,13 @@ public class TPEngine {
                         arrayStrForNameKey = arrayStrForNameKey.substring(0, formatIndex);
                     }
 
-                    data= CaseFormat.getFormatDataMap(rootContext, arrayStrForNameKey, rootContext);
+                    if(repeatScopeMapping.containsKey(tplInfo.getParent().getPath())){
+                        data= CaseFormat.getFormatDataMap((Map) repeatScopeMapping.get(tplInfo.getParent().getPath()),
+                                arrayStrForNameKey, rootContext);
+                    }else {
+                        data= CaseFormat.getFormatDataMap(rootContext, arrayStrForNameKey, rootContext);
+                    }
+
                     if(data == null || data.size() <= 0){
                         data = new ArrayList<>(0);
                     }
@@ -138,14 +144,20 @@ public class TPEngine {
                 }
             }
             else {//notthing  matcher
+                Map scope = null;
+                if(repeatScopeMapping.containsKey(tplInfo.getParent().getPath())){
+                    scope = (Map) repeatScopeMapping.get(tplInfo.getParent().getPath());
+                }else {
+                    scope = rootContext;
+                }
                 String newFilePath = newDirName + '/' + fileName;
-                progress(tplPath, newFilePath, rootContext, rootContext);
+                progress(tplPath, newFilePath, scope, rootContext);
             }
         } else {
             List<SourceFileInfo> childs = (List<SourceFileInfo>) tplInfo.getChildren();
             if (null != childs) {
                 for (SourceFileInfo c : childs) {
-                    progressSourceFileInfo(c, tempDirName, rootContext);
+                    progressSourceFileInfo(c, tempDirName, rootContext, repeatScopeMapping);
                 }
             }
         }

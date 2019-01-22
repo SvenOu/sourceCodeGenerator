@@ -1,8 +1,3 @@
-dirName1: ${{dirName1}}
-dirName2: ${{dirName2}}
+name2: ${{name2}}
 
-extraData: ${{extraData}}
-
-data: ${{data}}
-
-extraData2: ${{extraData2}}
+#root.dirName2-upCaseFirst:    ${{#root.dirName2-upCaseFirst}}

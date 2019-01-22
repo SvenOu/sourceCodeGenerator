@@ -1,5 +1,4 @@
-${{title-lowerCaseFirst}}
-${{name-upCaseFirst}}
+${{name2-upCaseFirst}}
 
 ${{#root.dirName1-upCaseFirst}}
 

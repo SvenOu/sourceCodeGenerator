@@ -8,6 +8,7 @@ import org.springframework.util.FileSystemUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -16,12 +17,14 @@ import java.util.regex.Pattern;
 public class FileGenerator {
     private static Log log = LogFactory.getLog(FileGenerator.class);
 
-    public void generateTempTpls(Map rootData, String rootPath, String tempRootPath) throws IOException {
+    public Map generateTempTpls(Map rootData, String rootPath, String tempRootPath) throws IOException {
         FileSystemUtils.copyRecursively(Paths.get(rootPath), Paths.get(tempRootPath));
-        modifyDirs(tempRootPath, rootData);
+        Map repeatScopeMapping = new LinkedHashMap();
+        modifyDirs(tempRootPath, rootData, repeatScopeMapping);
+        return repeatScopeMapping;
     }
 
-    private void modifyDirs(String rootPath, Map rootData) throws IOException {
+    private void modifyDirs(String rootPath, Map rootData, Map repeatScopeMapping) throws IOException {
         File tempRootDir = new File(rootPath);
         File[] childFiles = tempRootDir.listFiles();
         if(childFiles == null || childFiles.length <= 0){
@@ -82,8 +85,10 @@ public class FileGenerator {
                         if(!newDirFile.exists()){
                             newDirFile.mkdir();
                         }
+                        String key = newDirFile.getAbsolutePath().replaceAll("\\\\", TPConfig.PATH_SEPARATOR);
+                        repeatScopeMapping.put(key, c);
                         FileSystemUtils.copyRecursively(f, newDirFile);
-                        modifyDirs(newDirFile.getAbsolutePath(), c);
+                        modifyDirs(newDirFile.getAbsolutePath(), c, repeatScopeMapping);
                     }
                     FileSystemUtils.deleteRecursively(f);
 
@@ -107,7 +112,7 @@ public class FileGenerator {
                     String dirName = f.getName().replace(s, sb);
                     File newDirFile = new File(f.getParent() + "/"+ dirName);
                     f.renameTo(newDirFile);
-                    modifyDirs(newDirFile.getAbsolutePath(), rootData);
+                    modifyDirs(newDirFile.getAbsolutePath(), rootData, repeatScopeMapping);
                 }
             }
         }
