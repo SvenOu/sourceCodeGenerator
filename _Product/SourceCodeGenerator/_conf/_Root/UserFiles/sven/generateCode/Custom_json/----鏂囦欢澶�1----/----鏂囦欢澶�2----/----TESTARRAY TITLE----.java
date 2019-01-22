@@ -1,2 +1,0 @@
-testArray title
-TestArray name
