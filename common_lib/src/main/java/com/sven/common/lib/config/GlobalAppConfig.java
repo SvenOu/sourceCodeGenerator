@@ -13,6 +13,9 @@ public class GlobalAppConfig {
     @Value("${sql-code-templates.baseRoot}")
     private String sqlCodeTemplatesBaseRoot;
 
+    @Value("${server.port}")
+    private int serverPort;
+
     public String getJdbcSqliteUrl() {
         return jdbcSqliteUrl;
     }
@@ -21,11 +24,16 @@ public class GlobalAppConfig {
         return sqlCodeTemplatesBaseRoot;
     }
 
+    public int getServerPort() {
+        return serverPort;
+    }
+
     @Override
     public String toString() {
         return "GlobalAppConfig{" +
                 "jdbcSqliteUrl='" + jdbcSqliteUrl + '\'' +
                 ", sqlCodeTemplatesBaseRoot='" + sqlCodeTemplatesBaseRoot + '\'' +
+                ", serverPort='" + serverPort + '\'' +
                 '}';
     }
 }
