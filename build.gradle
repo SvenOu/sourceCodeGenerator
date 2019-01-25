@@ -26,6 +26,8 @@ buildscript {
 
     // 以下是当前 gradle 脚本环境配置
     repositories {
+        maven { url 'https://maven.aliyun.com/repository/spring-plugin'}
+        mavenLocal()
         mavenCentral()
     }
     dependencies {
@@ -46,12 +48,17 @@ subprojects {
     sourceCompatibility = 1.8
 
     repositories {
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.aliyun.com/repository/spring/'}
+        mavenLocal()
         mavenCentral()
     }
 
     // 子 gradle 脚本环境配置
     buildscript {
         repositories {
+            maven { url 'https://maven.aliyun.com/repository/spring-plugin'}
+            mavenLocal()
             mavenCentral()
         }
     }
