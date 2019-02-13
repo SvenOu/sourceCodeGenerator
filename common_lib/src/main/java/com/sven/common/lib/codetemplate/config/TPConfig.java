@@ -26,6 +26,21 @@ public class TPConfig {
     public static final String ARRAY_PATTERN_FOR_ATTIBUTE_START = "$(";
     public static final String ARRAY_PATTERN_FOR_ATTIBUTE_END = ")";
 
+    /**
+     * 多重数组正则表达式
+     */
+    public static final String MUTI_ARRAY_PATTERN = "(\\$muti-repeat%s\\(.+?\\{\\{).+?\\$end%s}}";
+//    public static final String MUTI_ARRAY_PATTERN_LEVEL = "([0-9]?-[0-9]?)";
+
+    public static final String MUTI_ARRAY_PATTERN_FOR_NAME = "\\$muti-repeat%s\\(.+?\\)\\{\\{";
+    public static final String MUTI_ARRAY_PATTERN_FOR_NAME_START = "\\$muti-repeat%s\\(";
+    public static final String MUTI_ARRAY_PATTERN_FOR_NAME_END = "){{";
+    public static final String MUTI_ARRAY_PATTERN_FOR_END = "\\$end%s}}";
+
+    public static final String MUTI_ARRAY_PATTERN_FOR_ATTIBUTE = "\\$\\(.+?\\)";
+    public static final String MUTI_ARRAY_PATTERN_FOR_ATTIBUTE_START = "$(";
+    public static final String MUTI_ARRAY_PATTERN_FOR_ATTIBUTE_END = ")";
+
     public static final String FORMAT_SEPARATE_CHAR = "-";
     public static final String ARRAY_FORMAT_SEPARATE_CHAR = "~";
     public static final String WRAP_CHAR = "";
@@ -58,5 +73,6 @@ public class TPConfig {
 
     //错误反馈表达式
     public static final String FORMAT_ERROR = "[errorForKey-%s]";
+    public static final String FORMAT_ERROR_CONTENT = "[errorForContent-%s]";
 
 }

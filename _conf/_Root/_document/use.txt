@@ -15,6 +15,16 @@ $file-repeat(arrayName){{$(elementName-stringFormator)}}
 // #root 引用数据的根变量
 example: ${{#root.dirName1-upCaseFirst}}
 
+// 高级多重循环 see Android_theme模板
+$muti-repeatN(arrayName-arrayFormator~formatorStr){{
+    $(elementName-stringFormator)
+
+    $muti-repeatN2(arrayName-arrayFormator~formatorStr){{
+        $(elementName-stringFormator)
+    $endN2}
+
+$endN}
+
 // 注意: 所有表达式都支持"."号操作
 // example:
 public class ${{a.b.voClassName}} implements Serializable {

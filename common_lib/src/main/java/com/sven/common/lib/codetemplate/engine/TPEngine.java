@@ -7,7 +7,6 @@ import com.sven.common.lib.codetemplate.utils.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.FileSystemUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -206,7 +205,9 @@ public class TPEngine {
         String result1 = applyStringValues(content, context, rootContext,
                 stringPattern, stringPatternStart, stringPatternEnd);
 
-        String result2 = applyArrayValues(result1, context, rootContext,
+        String result2 = applyMutiArrayValues(result1, context, rootContext, 1);
+
+        String result3 = applyArrayValues(result2, context, rootContext,
                 arrayPattern,
                 arrayPatternForName,
                 arrayPatternForNameStart,
@@ -214,7 +215,156 @@ public class TPEngine {
                 arrayPatternForAttribute,
                 arrayPatternForAttributeStart,
                 arrayPatternForAttributeEnd);
-        return result2;
+        return result3;
+    }
+
+    private String applyMutiArrayValues(String content, Map context, Map rootContext, int level) {
+        StringBuffer sb = new StringBuffer();
+
+        String arrayPatternLevelText = generateArrayPatternLevelText(level);
+        String arrayPattern = String.format(TPConfig.MUTI_ARRAY_PATTERN, arrayPatternLevelText, arrayPatternLevelText);
+
+        level ++;
+        Pattern pattern = Pattern.compile(arrayPattern, Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(content);
+        while (matcher.find()) {
+            String s = matcher.group();
+            String replaceText = applyMutiTpRepeat(s, context, rootContext, level, arrayPatternLevelText, arrayPattern);
+            matcher.appendReplacement(sb, replaceText);
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
+    }
+
+    private String applyMutiTpRepeat(String repeatStr, Map context, Map rootContext, int level, String arrayPatternLevelText, String arrayPattern) {
+        String arrayPatternForName = String.format(TPConfig.MUTI_ARRAY_PATTERN_FOR_NAME, arrayPatternLevelText);
+        Pattern arrayPat = Pattern.compile(arrayPatternForName, Pattern.DOTALL);
+        Matcher arrayMatcher = arrayPat.matcher(repeatStr);
+        if (!arrayMatcher.find()) {
+            return "";
+        }
+        String arrayNameStr = arrayMatcher.group();
+        //$muti-repeat%s(  and  ){{
+        String arrayPatternForNameStart = "";
+        String arrayPatternForNameStartReg = String.format(TPConfig.MUTI_ARRAY_PATTERN_FOR_NAME_START, arrayPatternLevelText);
+        String arrayPatternForNameEnd = String.format(TPConfig.MUTI_ARRAY_PATTERN_FOR_NAME_END, arrayPatternLevelText);
+        Matcher arrayPatternForNameStartRegMatcher = Pattern.compile(arrayPatternForNameStartReg, Pattern.DOTALL).matcher(repeatStr);
+        if(arrayPatternForNameStartRegMatcher.find()){
+            arrayPatternForNameStart = arrayPatternForNameStartRegMatcher.group();
+        }else {
+            return String.format(TPConfig.FORMAT_ERROR_CONTENT, repeatStr);
+        }
+        String arrayFormatName = arrayNameStr.substring(arrayPatternForNameStart.length(),
+                arrayNameStr.length() - arrayPatternForNameEnd.length());
+
+        String arrayPatternForEnd = "";
+        Matcher arrayPatternForEndMatcher = Pattern.compile(String.format(TPConfig.MUTI_ARRAY_PATTERN_FOR_END, arrayPatternLevelText),
+                Pattern.DOTALL).matcher(repeatStr);
+        if(arrayPatternForEndMatcher.find()){
+            arrayPatternForEnd = arrayPatternForEndMatcher.group();
+        }else {
+            return String.format(TPConfig.FORMAT_ERROR_CONTENT, repeatStr);
+        }
+
+        String repeatStrContent = repeatStr.substring(arrayNameStr.length(), repeatStr.length() - arrayPatternForEnd.length());
+        String arrayName = arrayFormatName;
+        String prefix = "";
+        String suffix = "";
+        int arrayFormatIndex = arrayFormatName.indexOf(TPConfig.FORMAT_SEPARATE_CHAR);
+        String arrayFormatType = null;
+        String[] formats = new String[2];
+        if (arrayFormatIndex > 0) {
+            arrayFormatType = arrayFormatName.substring(arrayFormatIndex + 1);
+            formats = arrayFormatType.split(TPConfig.ARRAY_FORMAT_SEPARATE_CHAR);
+            if (CaseFormat.SUFFIX_NOT_INCLUDE_END.equals(formats[0]) || CaseFormat.SUFFIX.equals(formats[0])) {
+                suffix = formats[1];
+            }
+            if (CaseFormat.PREFIX.equals(formats[0])) {
+                prefix = formats[1];
+            }
+            arrayName = arrayFormatName.substring(0, arrayFormatIndex);
+        }
+        StringBuffer sb = new StringBuffer();
+        List<Map> arrayContexts = CaseFormat.getFormatDataMap(context, arrayName, rootContext);
+        if(arrayContexts == null || arrayContexts.size() <=0){
+            sb.append(String.format(TPConfig.FORMAT_ERROR, arrayName));
+            sb.append(TPConfig.WRAP_CHAR);
+            return sb.toString();
+        }
+        String arrayPatternForAttribute = TPConfig.MUTI_ARRAY_PATTERN_FOR_ATTIBUTE;
+        String arrayPatternForAttributeStart = TPConfig.MUTI_ARRAY_PATTERN_FOR_ATTIBUTE_START;
+        String arrayPatternForAttributeEnd = TPConfig.MUTI_ARRAY_PATTERN_FOR_ATTIBUTE_END;
+        for (int i = 0; i < arrayContexts.size(); i++) {
+            Map c = arrayContexts.get(i);
+            StringBuffer tempSb1 = new StringBuffer();
+            StringBuffer tempSb3 = new StringBuffer();
+            Pattern pat = Pattern.compile(arrayPatternForAttribute, Pattern.DOTALL);
+
+            StringBuffer tempSb2 = new StringBuffer();
+            List<String> tempContents = new ArrayList<>();
+            String tempArrayPatternLevelText = generateArrayPatternLevelText(level);
+            String tempArrayPattern = String.format(TPConfig.MUTI_ARRAY_PATTERN, tempArrayPatternLevelText, tempArrayPatternLevelText);
+            Pattern tempPattern = Pattern.compile(tempArrayPattern, Pattern.DOTALL);
+            Matcher tempMatcher = tempPattern.matcher(repeatStrContent);
+            String replaceText = "##TC##";
+            while (tempMatcher.find()) {
+                String s = tempMatcher.group();
+                tempContents.add(s);
+                tempMatcher.appendReplacement(tempSb2, replaceText);
+            }
+            tempMatcher.appendTail(tempSb2);
+            tempSb1.append(prefix);
+
+            Matcher matcher = pat.matcher(tempSb2.toString());
+            while (matcher.find()) {
+                String s = matcher.group();
+                //$(  )
+                String key = s.substring(arrayPatternForAttributeStart.length(), s.length() - arrayPatternForAttributeEnd.length());
+
+                int formatIndex = key.indexOf(TPConfig.FORMAT_SEPARATE_CHAR);
+                String formatType = null;
+                if (formatIndex > 0) {
+                    formatType = key.substring(formatIndex + 1);
+                    key = key.substring(0, formatIndex);
+                }
+                String value = CaseFormat.getFormatData(c, key, rootContext);
+                if (formatType != null) {
+                    value = CaseFormat.formatString(value, formatType);
+                }
+                matcher.appendReplacement(tempSb1, value);
+            }
+            matcher.appendTail(tempSb1);
+            if (!(CaseFormat.SUFFIX_NOT_INCLUDE_END.equals(formats[0]) && i == (arrayContexts.size() - 1))) {
+                tempSb1.append(suffix);
+            }
+            tempSb1.append(TPConfig.WRAP_CHAR);
+            String[] tempResultArray = tempSb1.toString().split(replaceText);
+
+            for (int j = 0; j < tempResultArray.length; j++) {
+                tempSb3.append(tempResultArray[j]);
+                if(j != tempResultArray.length -1){
+                    tempSb3.append(tempContents.get(j));
+                }
+            }
+
+            String tempResult = applyMutiArrayValues(tempSb3.toString(), c, rootContext, level);
+            sb.append(tempResult);
+        }
+
+        return sb.toString();
+    }
+
+    private String generateArrayPatternLevelText(int level) {
+        String digitalTextReg = "[0-9]?";
+        String digitalSeprator = "-";
+        StringBuilder arrayPattern = new StringBuilder();
+        for (int i = 0; i < level; i++) {
+            if(i >0){
+                arrayPattern.append(digitalSeprator);
+            }
+            arrayPattern.append(digitalTextReg);
+        }
+        return "(" + arrayPattern.toString() + ")";
     }
 
     private String applyArrayValues(String content, Map context, Map rootContext,
