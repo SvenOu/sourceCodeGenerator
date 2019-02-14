@@ -1,0 +1,58 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+           xmlns:tools="http://schemas.android.com/tools"
+           tools:ignore="MissingPrefix">
+
+
+    $muti-repeat1(buttonGroups){{
+        ---color: -- $(color) ----
+        $muti-repeat1-1(fontFamilys){{
+            ---fontFamily: -- $(fontFamily) ----
+            $muti-repeat1-1-1(fontSizes){{
+                ---fontSize: -- $(fontSize) ----
+            $end1-1-1}}
+
+            $muti-repeat1-1-2(fontSizes){{
+                ---fontSize333: -- $(fontSize) ----
+            $end1-1-2}}
+        $end1-1}}
+    ---color2: -- $(color) ----
+        $muti-repeat1-2(fontFamilys){{
+            ---fontFamily222: -- $(fontFamily) ----
+            $muti-repeat1-2-1(fontSizes){{
+                ---fontSize: -- $(fontSize) ----
+            $end1-2-1}}
+
+            $muti-repeat1-2-2(fontSizes){{
+                ---fontSize333: -- $(fontSize) ----
+            $end1-2-2}}
+        $end1-2}}
+    --------------------------------
+    $end1}}
+/*******************************第二层*******************************************/
+    $muti-repeat2(buttonGroups){{
+        ---color: -- $(color) ----
+        $muti-repeat2-1(fontFamilys){{
+            ---fontFamily: -- $(fontFamily) ----
+            $muti-repeat2-1-1(fontSizes){{
+                ---fontSize: -- $(fontSize) ----
+            $end2-1-1}}
+
+            $muti-repeat2-1-2(fontSizes){{
+                ---fontSize333: -- $(fontSize) ----
+            $end2-1-2}}
+        $end2-1}}
+    ---color2: -- $(color) ----
+        $muti-repeat2-2(fontFamilys){{
+            ---fontFamily222: -- $(fontFamily) ----
+            $muti-repeat2-2-1(fontSizes){{
+                ---fontSize: -- $(fontSize) ----
+            $end2-2-1}}
+
+            $muti-repeat2-2-2(fontSizes){{
+                ---fontSize333: -- $(fontSize) ----
+            $end2-2-2}}
+        $end2-2}}
+    --------------------------------
+    $end2}}
+
+</resources>

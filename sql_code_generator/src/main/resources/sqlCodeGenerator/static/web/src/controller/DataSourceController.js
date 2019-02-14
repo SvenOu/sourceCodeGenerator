@@ -87,7 +87,7 @@ Ext.define('CGT.controller.DataSourceController', {
         Ext.Ajax.request({
             type : "POST",
             dataType : 'json',
-            params: params,
+            jsonData: params,
             url : app.API_PREFIX + '/saveJsonDataSource',
             success: function(response){
                 var responseText = Ext.JSON.decode(response.responseText);

@@ -3,6 +3,7 @@ package com.sql.code.generator.web.controller;
 import com.sql.code.generator.configs.anotation.APIController;
 import com.sql.code.generator.modules.common.service.CodeService;
 import com.sql.code.generator.modules.common.vo.DataSource;
+import com.sql.code.generator.modules.common.vo.JsonDataSource;
 import com.sven.common.lib.bean.CommonResponse;
 import com.sven.common.lib.codetemplate.dataBean.SourceFileInfo;
 import com.sql.code.generator.modules.common.service.CommonService;
@@ -12,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -109,8 +111,9 @@ public class SqlCodeController {
 	}
 
 	@RequestMapping(value = "/saveJsonDataSource",method = RequestMethod.POST)
-	public @ResponseBody CommonResponse saveJsonDataSource(String dataSourceId, String type, String dataSourceName, String jsonData) throws IOException {
-		return codeService.saveJsonDataSource(dataSourceId, type, dataSourceName, jsonData);
+	public @ResponseBody CommonResponse saveJsonDataSource(@RequestBody JsonDataSource jsonDataSource) throws IOException {
+		return codeService.saveJsonDataSource(jsonDataSource.getDataSourceId(), jsonDataSource.getType(),
+				jsonDataSource.getDataSourceName(), jsonDataSource.getJsonData());
 	}
 
 	@RequestMapping(value = "/deleteCodeTemplate",method = RequestMethod.POST)
