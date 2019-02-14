@@ -3,8 +3,8 @@
            tools:ignore="MissingPrefix">
 
 
-    $muti-repeat1(buttonGroups){{
-        ---color: -- $(color) ----
+    $muti-repeat1(textGroups){{
+        ---name: -- $(name) ----
         $muti-repeat1-1(fontFamilys){{
             ---fontFamily: -- $(fontFamily) ----
             $muti-repeat1-1-1(fontSizes){{
@@ -29,8 +29,8 @@
     --------------------------------
     $end1}}
 /*******************************第二层*******************************************/
-    $muti-repeat2(buttonGroups){{
-        ---color: -- $(color) ----
+    $muti-repeat2(textGroups){{
+        ---name: -- $(name) ----
         $muti-repeat2-1(fontFamilys){{
             ---fontFamily: -- $(fontFamily) ----
             $muti-repeat2-1-1(fontSizes){{
