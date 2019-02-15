@@ -25,6 +25,16 @@ $muti-repeatN(arrayName-arrayFormator~formatorStr){{
 
 $endN}
 
+// 各种if表达式,格式: xxxif(javacript脚本){ xxxxxx $endxxxif}
+$if 最外层使用
+    $if(showA > 0 && showA <10){---- showA: ${{showA}}  ----$endif}
+
+$rpif 用于 $tp-repeat 循环体内
+    $rpif(name !== 'testArray name'){--哈哈哈哈---$endrpif}
+
+$mutirpif 用于 $muti-repeatN 循环体内
+    $mutirpif(shape){--哈哈哈哈 $(shape)---$endmutirpif}
+
 // 注意: 所有表达式都支持"."号操作
 // example:
 public class ${{a.b.voClassName}} implements Serializable {

@@ -1,23 +1,28 @@
+var text_default = 'default';
 data = {
     textGroups: [],
     buttonGroups: [],
     buttonBackground: {
+        'shape_default':[],
         'rectangle_corner': [],
         'rectangle': []
     }
 };
 var shapes = [
+    'shape_'+ text_default,
     'rectangle_corner',
     'rectangle'
 ];
 
 var textColors = [
+    'textColors_' + text_default,
     'text_red',
     'text_white',
     'text_dark'
 ];
 
 var colors = [
+    'color_'+text_default,
     'light',
     'stable',
     'positive',
@@ -30,6 +35,7 @@ var colors = [
 ];
 
 var fontFamilys = [
+    'font_family_'+ text_default,
     'font_family_1',
     'font_family_2',
     'font_family_3',
@@ -124,7 +130,7 @@ for (var l = 0; l < shapes.length; l++) {
                 return false;
             }
         });
-        if(!contains){
+        if(!contains && colorObj.background.indexOf(text_default) === -1){
             data.buttonBackground[shapeObj.shape].push(bgDrawalbleObj);
         }
 
@@ -142,25 +148,40 @@ for (var l = 0; l < shapes.length; l++) {
                     parent: textColorObj.name,
                     name: textColorObj.name + '.' + fontFamily,
                     fontFamily: fontFamily,
-                    fontSizes: []
+                    textAllCaps: false
+                },fontFamilyObjUpperCase = {
+                    parent: textColorObj.name,
+                    name: textColorObj.name + '.' + fontFamily+ '.UPPER_CASE',
+                    fontFamily: fontFamily,
+                    textAllCaps: true
                 };
-                for (var k = 0; k < fontSizes.length; k++) {
-                    var fontSize = fontSizes[k];
-                    var fontSizeObjUpperCase = {
-                        parent: fontFamilyObj.name,
-                        name: fontFamilyObj.name+ '.' + fontSize + '.UPPER_CASE',
-                        textAllCaps: true,
-                        fontSize: fontSize
-                    },fontSizeObjLowerCase = {
-                        parent: fontFamilyObj.name,
-                        name: fontFamilyObj.name+ '.' + fontSize,
-                        textAllCaps: false,
-                        fontSize: fontSize
-                    };
-                    fontFamilyObj.fontSizes.push(fontSizeObjLowerCase);
-                    fontFamilyObj.fontSizes.push(fontSizeObjUpperCase);
-                }
                 textColorObj.fontFamilys.push(fontFamilyObj);
+                textColorObj.fontFamilys.push(fontFamilyObjUpperCase);
+
+                // fontSizes 太多引起文件太大所以去掉
+                // var fontFamilyObj = {
+                //     parent: textColorObj.name,
+                //     name: textColorObj.name + '.' + fontFamily,
+                //     fontFamily: fontFamily,
+                //     fontSizes: []
+                // };
+                // for (var k = 0; k < fontSizes.length; k++) {
+                //     var fontSize = fontSizes[k];
+                //     var fontSizeObjUpperCase = {
+                //         parent: fontFamilyObj.name,
+                //         name: fontFamilyObj.name+ '.' + fontSize + '.UPPER_CASE',
+                //         textAllCaps: true,
+                //         fontSize: fontSize
+                //     },fontSizeObjLowerCase = {
+                //         parent: fontFamilyObj.name,
+                //         name: fontFamilyObj.name+ '.' + fontSize,
+                //         textAllCaps: false,
+                //         fontSize: fontSize
+                //     };
+                //     fontFamilyObj.fontSizes.push(fontSizeObjLowerCase);
+                //     fontFamilyObj.fontSizes.push(fontSizeObjUpperCase);
+                // }
+                // textColorObj.fontFamilys.push(fontFamilyObj);
             }
             colorObj.textColors.push(textColorObj);
         }

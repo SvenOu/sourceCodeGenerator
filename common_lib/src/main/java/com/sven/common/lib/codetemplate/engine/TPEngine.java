@@ -4,9 +4,11 @@ import com.sven.common.lib.codetemplate.config.TPConfig;
 import com.sven.common.lib.codetemplate.dataBean.SourceFileInfo;
 import com.sven.common.lib.codetemplate.dataBean.TplSourceFileInfo;
 import com.sven.common.lib.codetemplate.utils.FileUtils;
+import com.sven.common.lib.codetemplate.utils.JsScriptUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.FileSystemUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -202,7 +204,14 @@ public class TPEngine {
                                         String arrayPatternForAttribute,
                                         String arrayPatternForAttributeStart,
                                         String arrayPatternForAttributeEnd) {
-        String result1 = applyStringValues(content, context, rootContext,
+        String ifPattern = TPConfig.IF_PATTERN;
+        String ifPatternForName = TPConfig.IF_PATTERN_FOR_NAME;
+        String ifPatternForNameStart = TPConfig.IF_PATTERN_FOR_NAME_START;
+        String ifPatternForNameEnd = TPConfig.IF_PATTERN_FOR_NAME_END;
+        String ifPatternEnd = TPConfig.IF_PATTERN_END;
+        String result1AfterIf = progressIf(content, context, rootContext,
+                ifPattern, ifPatternForName, ifPatternForNameStart, ifPatternForNameEnd, ifPatternEnd);
+        String result1 = applyStringValues(result1AfterIf, context, rootContext,
                 stringPattern, stringPatternStart, stringPatternEnd);
 
         String result2 = applyMutiArrayValues(result1, context, rootContext, 1);
@@ -305,6 +314,7 @@ public class TPEngine {
             String tempArrayPatternLevelText = generateArrayPatternLevelText(level);
             String tempArrayPattern = String.format(TPConfig.MUTI_ARRAY_PATTERN, tempArrayPatternLevelText, tempArrayPatternLevelText);
             Pattern tempPattern = Pattern.compile(tempArrayPattern, Pattern.DOTALL);
+
             Matcher tempMatcher = tempPattern.matcher(repeatStrContent);
             String replaceText = "##TC##";
             while (tempMatcher.find()) {
@@ -315,7 +325,16 @@ public class TPEngine {
             tempMatcher.appendTail(tempSb2);
             tempSb1.append(prefix);
 
-            Matcher matcher = pat.matcher(tempSb2.toString());
+            String tempSb2Str = tempSb2.toString();
+            String ifPattern = TPConfig.MUTI_RP_IF_PATTERN;
+            String ifPatternForName = TPConfig.MUTI_RP_IF_PATTERN_FOR_NAME;
+            String ifPatternForNameStart = TPConfig.MUTI_RP_IF_PATTERN_FOR_NAME_START;
+            String ifPatternForNameEnd = TPConfig.MUTI_RP_IF_PATTERN_FOR_NAME_END;
+            String ifPatternEnd = TPConfig.MUTI_RP_IF_PATTERN_END;
+            tempSb2Str = progressIf(tempSb2Str, c, rootContext,
+                    ifPattern, ifPatternForName, ifPatternForNameStart, ifPatternForNameEnd, ifPatternEnd);
+
+            Matcher matcher = pat.matcher(tempSb2Str);
             while (matcher.find()) {
                 String s = matcher.group();
                 //$(  )
@@ -409,6 +428,7 @@ public class TPEngine {
         //$tp-repeat(  and  ){{
         String arrayFormatName = arrayNameStr.substring(arrayPatternForNameStart.length(), arrayNameStr.length() - arrayPatternForNameEnd.length());
         String repeatStrContent = repeatStr.substring(arrayNameStr.length(), repeatStr.length() - 2);
+
         String arrayName = arrayFormatName;
         String prefix = "";
         String suffix = "";
@@ -437,6 +457,15 @@ public class TPEngine {
         for (int i = 0; i < arrayContexts.size(); i++) {
             Map c = arrayContexts.get(i);
             Pattern pat = Pattern.compile(arrayPatternForAttribute, Pattern.DOTALL);
+
+            String ifPattern = TPConfig.RP_IF_PATTERN;
+            String ifPatternForName = TPConfig.RP_IF_PATTERN_FOR_NAME;
+            String ifPatternForNameStart = TPConfig.RP_IF_PATTERN_FOR_NAME_START;
+            String ifPatternForNameEnd = TPConfig.RP_IF_PATTERN_FOR_NAME_END;
+            String ifPatternEnd = TPConfig.RP_IF_PATTERN_END;
+            repeatStrContent = progressIf(repeatStrContent, c, rootContext,
+                    ifPattern, ifPatternForName, ifPatternForNameStart, ifPatternForNameEnd, ifPatternEnd);
+
             Matcher matcher = pat.matcher(repeatStrContent);
             sb.append(prefix);
             while (matcher.find()) {
@@ -465,6 +494,43 @@ public class TPEngine {
         return sb.toString();
     }
 
+    private String progressIf(String content, Map context, Map rootContext,
+                              String ifPattern, String ifPatternForName, String ifPatternForNameStart,
+                              String ifPatternForNameEnd, String ifPatternEnd) {
+        StringBuffer sb = new StringBuffer();
+        Pattern pattern = Pattern.compile(ifPattern, Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(content);
+        boolean hasFind = false;
+        String tempSign = "#dollar_sign#";
+        while (matcher.find()) {
+            hasFind = true;
+            //$if(xxx){ xxx $endif}
+            String repeatStr = matcher.group();
+            Pattern ifPat = Pattern.compile(ifPatternForName, Pattern.DOTALL);
+            Matcher ifMatcher = ifPat.matcher(repeatStr);
+            if (!ifMatcher.find()) {
+                return "";
+            }
+            //$if(xxx){
+            String ifNameStr = ifMatcher.group();
+            String ifExcuteble = ifNameStr.substring(ifPatternForNameStart.length(), ifNameStr.length() - ifPatternForNameEnd.length());
+            String repeatStrContent = repeatStr.substring(ifNameStr.length(), repeatStr.length() - ifPatternEnd.length());
+            Boolean excuteResult = JsScriptUtils.runBooleanScript(ifExcuteble, context, rootContext);
+            if(excuteResult){
+                repeatStrContent = repeatStrContent.replaceAll("\\$",tempSign);
+                matcher.appendReplacement(sb, repeatStrContent);
+            }else {
+                matcher.appendReplacement(sb, "");
+            }
+        }
+        if(!hasFind){
+            return content;
+        }else {
+            matcher.appendTail(sb);
+            return sb.toString()
+                    .replaceAll(tempSign,"\\$");
+        }
+    }
     private String applyStringValues(String content, Map context, Map rootContext,
                                      String stringPattern,
                                      String stringPatternStart,

@@ -47,6 +47,28 @@ public class TPConfig {
     public static final String PATH_SEPARATOR = "/";
 
     /**
+     * 各种 if 的正则表达式
+     */
+
+    public static final String IF_PATTERN = "\\$if\\(.+?\\)\\{.+?\\$endif\\}";
+    public static final String IF_PATTERN_FOR_NAME = "\\$if\\(.+?\\)\\{";
+    public static final String IF_PATTERN_FOR_NAME_START = "$if(";
+    public static final String IF_PATTERN_FOR_NAME_END = "){";
+    public static final String IF_PATTERN_END = "$endif}";
+
+    public static final String RP_IF_PATTERN = "\\$rpif\\(.+?\\)\\{.+?\\$endrpif\\}";
+    public static final String RP_IF_PATTERN_FOR_NAME = "\\$rpif\\(.+?\\)\\{";
+    public static final String RP_IF_PATTERN_FOR_NAME_START = "$rpif(";
+    public static final String RP_IF_PATTERN_FOR_NAME_END = "){";
+    public static final String RP_IF_PATTERN_END = "$endrpif}";
+
+    public static final String MUTI_RP_IF_PATTERN = "\\$mutirpif\\(.+?\\)\\{.+?\\$endmutirpif\\}";
+    public static final String MUTI_RP_IF_PATTERN_FOR_NAME = "\\$mutirpif\\(.+?\\)\\{";
+    public static final String MUTI_RP_IF_PATTERN_FOR_NAME_START = "$mutirpif(";
+    public static final String MUTI_RP_IF_PATTERN_FOR_NAME_END = "){";
+    public static final String MUTI_RP_IF_PATTERN_END = "$endmutirpif}";
+
+    /**
      * 用于文件夹的正则表达式
      */
     public static final String DIR_STRING_PATTERN = "\\$dir\\{\\{[\\S\\s]+?(}+)";
