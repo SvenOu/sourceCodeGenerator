@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -12,26 +13,29 @@ import java.util.Map;
 
 public class JsScriptUtils {
     private static Log log = LogFactory.getLog(JsScriptUtils.class);
-    private static ScriptEngineManager manager = new ScriptEngineManager();
+    private static ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
     public static Boolean runBooleanScript(String jsExcuteble, Map context, Map rootContext){
-        ScriptEngine engine = manager.getEngineByName("JavaScript");
         bindRootContext(engine, rootContext);
         bindContext(engine, context);
-        try {
-            Object val = engine.eval(jsExcuteble);
-            if(val == null){
+        Object val;
+        synchronized(JsScriptUtils.class) {
+            try {
+                engine.getBindings(ScriptContext.ENGINE_SCOPE).clear();
+                val = engine.eval(jsExcuteble);
+            } catch (ScriptException e) {
+//                e.printStackTrace();
+                log.warn(e.getMessage());
                 return false;
             }
-            if(val instanceof String && !StringUtils.isEmpty(val)){
-                return true;
-            }
-            else {
-                return (Boolean) val;
-            }
-        } catch (ScriptException e) {
-            e.printStackTrace();
-            log.warn(e.getMessage());
+        }
+        if(val == null){
             return false;
+        }
+        if(val instanceof String && !StringUtils.isEmpty(val)){
+            return true;
+        }
+        else {
+            return (Boolean) val;
         }
     }
 
