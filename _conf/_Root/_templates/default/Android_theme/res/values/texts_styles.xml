@@ -8,14 +8,16 @@
 	$muti-repeat1(textGroups){{
 	<style name="$(name-upCaseALL)" parent="$(parent-upCaseALL)">
 		$mutirpif(textColor.indexOf('default') < 0){<item name="android:textColor">@color/$(textColor)</item>$endmutirpif}
-		<item name="android:background">@android:color/transparent</item>
 	</style>
-	$muti-repeat1-1(fontFamilys){{
+	$muti-repeat1-1(colors){{
+	<style name="$(name-upCaseALL)" parent="$(parent-upCaseALL)">$mutirpif(color.indexOf('default') < 0){<item name="android:background">@color/$(color)</item>$endmutirpif}
+	$mutirpif(color.indexOf('default') >= 0){<item name="android:background">@android:color/transparent</item>$endmutirpif}</style>
+	$muti-repeat1-1-1(fontFamilys){{
 	<style name="$(name-upCaseALL)" parent="$(parent-upCaseALL)">$mutirpif(fontFamily.indexOf('default') < 0){<item name="fontPath">@string/$(fontFamily)</item>$endmutirpif}</style>
-	$muti-repeat1-1-1(fontSizes){{
+	$muti-repeat1-1-1-1(fontSizes){{
 	<style name="$(name-upCaseALL)" parent="$(parent-upCaseALL)">
 		<item name="android:textSize">@dimen/$(fontSize)</item>
 		<item name="android:textAllCaps">$(textAllCaps)</item>
 	</style>
-	$end1-1-1}} $end1-1}} $end1}}
+	$end1-1-1-1}} $end1-1-1}} $end1-1}} $end1}}
 </resources>

@@ -65,34 +65,47 @@ for (var i = 0; i < textColors.length; i++) {
         parent: text,
         name: text + '.' + textColor,
         textColor: textColor,
-        fontFamilys: []
+        colors: []
     };
-    for (var j = 0; j < fontFamilys.length; j++) {
-        var fontFamily = fontFamilys[j];
-        var fontFamilyObj = {
+    for (var m = 0; m < colors.length; m++) {
+        var color = colors[m];
+        var colorObj = {
             parent: textColorObj.name,
-            name: textColorObj.name + '.' + fontFamily,
-            fontFamily: fontFamily,
-            fontSizes: []
+            name: textColorObj.name + '.' + color,
+            color: color,
+            fontFamilys: []
         };
-        for (var k = 0; k < fontSizes.length; k++) {
-            var fontSize = fontSizes[k];
-            var fontSizeObjUpperCase = {
-                parent: fontFamilyObj.name,
-                name: fontFamilyObj.name+ '.' + fontSize + '.UPPER_CASE',
-                textAllCaps: true,
-                fontSize: fontSize
-            },fontSizeObjLowerCase = {
-                parent: fontFamilyObj.name,
-                name: fontFamilyObj.name+ '.' + fontSize,
-                textAllCaps: false,
-                fontSize: fontSize
+
+        for (var j = 0; j < fontFamilys.length; j++) {
+            var fontFamily = fontFamilys[j];
+            var fontFamilyObj = {
+                parent: colorObj.name,
+                name: colorObj.name + '.' + fontFamily,
+                fontFamily: fontFamily,
+                fontSizes: []
             };
-            fontFamilyObj.fontSizes.push(fontSizeObjLowerCase);
-            fontFamilyObj.fontSizes.push(fontSizeObjUpperCase);
+            for (var k = 0; k < fontSizes.length; k++) {
+                var fontSize = fontSizes[k];
+                var fontSizeObjUpperCase = {
+                    parent: fontFamilyObj.name,
+                    name: fontFamilyObj.name+ '.' + fontSize + '.UPPER_CASE',
+                    textAllCaps: true,
+                    fontSize: fontSize
+                },fontSizeObjLowerCase = {
+                    parent: fontFamilyObj.name,
+                    name: fontFamilyObj.name+ '.' + fontSize,
+                    textAllCaps: false,
+                    fontSize: fontSize
+                };
+                fontFamilyObj.fontSizes.push(fontSizeObjLowerCase);
+                fontFamilyObj.fontSizes.push(fontSizeObjUpperCase);
+            }
+            colorObj.fontFamilys.push(fontFamilyObj);
         }
-        textColorObj.fontFamilys.push(fontFamilyObj);
+
+        textColorObj.colors.push(colorObj);
     }
+
     data.textGroups.push(textColorObj);
 }
 
