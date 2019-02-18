@@ -25,7 +25,8 @@ $muti-repeatN(arrayName-arrayFormator~formatorStr){{
 
 $endN}
 
-// 各种if表达式,格式: xxxif(javacript脚本){ xxxxxx $endxxxif}
+// 各种if表达式,格式: xxxif(javacript脚本){ xxxxxx $endxxxif} ,
+// 注意： 解析javacript脚本会出现性能问题，$mutirpif不要在超大的循环体中使用
 $if //用于最外层
     $if(showA > 0 && showA <10){---- showA: ${{showA}}  ----$endif}
 
