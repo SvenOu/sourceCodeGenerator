@@ -15,12 +15,12 @@ public class JsScriptUtils {
     private static Log log = LogFactory.getLog(JsScriptUtils.class);
     private static ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
     public static Boolean runBooleanScript(String jsExcuteble, Map context, Map rootContext){
+        engine.getBindings(ScriptContext.ENGINE_SCOPE).clear();
         bindRootContext(engine, rootContext);
         bindContext(engine, context);
         Object val;
         synchronized(JsScriptUtils.class) {
             try {
-                engine.getBindings(ScriptContext.ENGINE_SCOPE).clear();
                 val = engine.eval(jsExcuteble);
             } catch (ScriptException e) {
 //                e.printStackTrace();
