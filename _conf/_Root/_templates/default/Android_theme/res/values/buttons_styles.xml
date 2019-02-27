@@ -4,6 +4,8 @@
     <style name="BUTTON">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/normal_btn_height</item>
+        <item name="android:padding">@dimen/normal_text_padding</item>
+        <item name="android:layout_margin">@dimen/normal_text_padding</item>
     </style>
     $muti-repeat1(buttonGroups){{
     <style name="$(name-upCaseALL)" parent="$(parent-upCaseALL)"></style>
