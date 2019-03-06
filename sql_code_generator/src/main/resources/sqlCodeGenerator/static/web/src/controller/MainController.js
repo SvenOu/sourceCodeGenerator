@@ -14,7 +14,8 @@ Ext.define('CGT.controller.MainController', {
         {ref: 'generateCodeEditor', selector: 'generatorPanel codeeditor[name=generateCodeEditor]'},
         {ref: 'fileActionWindow', selector: 'fileactionwindow'},
         {ref: 'winDoActionBtn', selector: 'fileactionwindow button[name=doActionBtn]'},
-        {ref: 'winFileName', selector: 'fileactionwindow textfield[name=fileName]'}
+        {ref: 'winFileName', selector: 'fileactionwindow textfield[name=fileName]'},
+        {ref: 'androidFileManagerPanel', selector: 'androidfilemanagerpanel'}
     ],
     init: function(application) {
    	this.control({
@@ -140,6 +141,10 @@ Ext.define('CGT.controller.MainController', {
 
         if (functionCode === 'templateDetail') {
             mainContainer.getLayout().setActiveItem(this.getTemplateDetailPanel());
+        }
+
+        if (functionCode === 'androidAppFileManager') {
+            mainContainer.getLayout().setActiveItem(this.getAndroidFileManagerPanel());
         }
     }
 });

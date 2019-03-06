@@ -5,7 +5,10 @@
 	height: 100%;
 	background: #fff;
 }
-
+.cls-field-auto-warp .x-form-display-field{
+	word-break: break-word;
+	white-space: normal;
+}
 .loading-indicator {
 	font: bold 20px Tahoma, Verdana, Arial, Helvetica, sans-serif;
 	position: absolute;

@@ -12,18 +12,20 @@ Ext.define('CGT.view.common.FileSystemTree', {
     root: {
         expanded: true,
         dir: true,
+        readonly: false,
         text: "root"
     },
     initComponent: function(){
 		var me = this;
-        if(me.root && 'undefined' === typeof(me.root.dir)){
+
+        if('undefined' === typeof(me.root.dir)){
             me.root.dir = true;
         }
         me.on('itemcontextmenu',me.selfItemContextMenu, me);
 		me.callParent();
 	},
     selfItemContextMenu: function(panel, record, item, index, e, eOpts){
-	    if(!record.parentNode){
+	    if(!record.parentNode || this.root.readonly){
 	        return false;
         }
         var me = this, menusArray = ['edit name', 'new folder', 'new file'];
@@ -33,6 +35,7 @@ Ext.define('CGT.view.common.FileSystemTree', {
             menusArray.push('new child folder');
         }
         menusArray.push('delete');
+
         Ext.Array.each(menusArray, function(menu, index, menusArraySelf) {
             items.push(Ext.create('Ext.Action', {
                 m_record : record,

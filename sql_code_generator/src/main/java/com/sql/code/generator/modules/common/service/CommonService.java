@@ -6,6 +6,7 @@ import net.lingala.zip4j.exception.ZipException;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -13,6 +14,7 @@ import java.io.IOException;
  */
 public interface CommonService {
     String getSourceFileCode(String path) throws IOException;
+    String getSourceFileCode(File file) throws IOException;
 
     SourceFileInfo getCodeFileInfo(String packageName,
                                    String dataSourceId,

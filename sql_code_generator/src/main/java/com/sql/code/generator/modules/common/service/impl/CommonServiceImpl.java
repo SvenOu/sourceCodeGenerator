@@ -250,12 +250,16 @@ public class CommonServiceImpl implements CommonService {
     public String getSourceFileCode(String path) throws IOException {
         path = path.replace(SourceFileInfo.TEMPLATE_VIRTUAL_ROOT, fileService.getUserBaseRootPath());
         File file = new File(path);
-        String ext = FileUtils.getFileExtension(file);
-        if(ext.equalsIgnoreCase("zip") || !file.isFile()){
-            return "";
+        return getSourceFileCode(file);
+    }
+
+    @Override
+    public String getSourceFileCode(File file) throws IOException {
+        if(file.length() > 5 * 1024 * 1024 || !file.isFile()){
+            return file.getPath() + ": size greater than 5M";
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(
-                        new FileInputStream(path), StandardCharsets.UTF_8));
+                new FileInputStream(file), StandardCharsets.UTF_8));
         StringBuilder builder = new StringBuilder();
         String currentLine = reader.readLine();
         while (currentLine != null) {

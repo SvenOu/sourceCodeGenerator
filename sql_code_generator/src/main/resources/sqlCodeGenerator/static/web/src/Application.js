@@ -12,7 +12,8 @@ Ext.application({
     	'MainController',
     	'TemplatesDetailController',
     	'TemplateController',
-    	'GeneratorController'
+    	'GeneratorController',
+    	'AndroidFileManagerController'
 	],
     models: [
 		'main.SideDataView',
@@ -26,7 +27,7 @@ Ext.application({
         'generator.CodeView',
         'generator.Datasource',
         'generator.DatasourceType',
-        'generator.Template',
+        'generator.Template'
     ],
     views: [
     	// comman
@@ -49,7 +50,8 @@ Ext.application({
         'main.GeneratorPanel',
         'main.TemplatesPanel',
         'main.DatasourcesPanel',
-        'main.TemplateDetailPanel'
+        'main.TemplateDetailPanel',
+        'main.AndroidFileManagerPanel'
 	],
     //remove the loading-indicator after EXTAPP has been launched
 	launch: function() {

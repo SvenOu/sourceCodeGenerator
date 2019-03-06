@@ -16,6 +16,9 @@ app = {
 
 Ext.apply(app, {
 	method: {
+		getFileNameFromPath: function(filePath){
+			return filePath.replace(/^.*([\\/])/, "");
+		},
         CommonResponseEequest: function(option){
             /*
 	        var option = {
