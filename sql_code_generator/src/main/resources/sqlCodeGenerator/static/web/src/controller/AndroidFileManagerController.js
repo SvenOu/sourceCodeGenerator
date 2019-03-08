@@ -209,8 +209,11 @@ Ext.define('CGT.controller.AndroidFileManagerController', {
         var packageName = this.getPackageName(),
             androidServerPort = this.getAndroidServerPort(),
             ipAddress = this.getIpAddress();
-
-        return ipAddress.getValue()+ ":" +
+        var ipAddressVal = ipAddress.getValue();
+        if( !ipAddressVal.startsWith('http')){
+            ipAddressVal = 'http://' + ipAddressVal;
+        }
+        return ipAddressVal+ ":" +
             androidServerPort.getValue()+ "/"+
             packageName.getValue()+
             subUrl;
