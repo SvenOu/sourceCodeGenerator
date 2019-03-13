@@ -1,6 +1,13 @@
 <resources>
     <dimen name="normal_action_bar_height">58dp</dimen>
     <dimen name="normal_btn_height">48dp</dimen>
+
     <dimen name="normal_text_padding">5dp</dimen>
     <dimen name="normal_padding_margin">10dp</dimen>
+
+    <dimen name="middle_text_padding">8dp</dimen>
+    <dimen name="middle_padding_margin">18dp</dimen>
+
+    <dimen name="large_text_padding">12dp</dimen>
+    <dimen name="large_padding_margin">25dp</dimen>
 </resources>

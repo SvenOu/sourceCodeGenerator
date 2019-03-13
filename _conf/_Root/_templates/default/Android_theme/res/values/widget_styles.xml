@@ -25,4 +25,13 @@
         <item name="android:windowBackground">@android:color/transparent</item> <!-- 自己想要的背景 -->
         <item name="android:backgroundDimEnabled">true</item> <!-- 模糊 -->
     </style>
+
+    <!--  diliver  start -->
+    $muti-repeat1(allColors){{$mutirpif(color.indexOf('default') < 0){<style name="$(color-lowerCaseALL)_diliver">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/$(color)</item>
+    </style>$endmutirpif}
+    $end1}}
+    <!--  diliver  end -->
 </resources>

@@ -6,7 +6,8 @@ data = {
         'shape_default':[],
         'rectangle_corner': [],
         'rectangle': []
-    }
+    },
+    allColors: []
 };
 var shapes = [
     'shape_'+ text_default,
@@ -75,6 +76,17 @@ for (var i = 0; i < textColors.length; i++) {
             color: color,
             fontFamilys: []
         };
+        
+        var hasColorInAllColors = false;
+        Ext.Array.each(data.allColors, function(colorObj2) {
+            if(colorObj2 && colorObj2.color === color){
+                hasColorInAllColors = true;
+                return false;
+            }
+        });
+        if(!hasColorInAllColors){
+            data.allColors.push({color: color});
+        }
 
         for (var j = 0; j < fontFamilys.length; j++) {
             var fontFamily = fontFamilys[j];
