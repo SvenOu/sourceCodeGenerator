@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--主题颜色-->
+    <color name="light">#ffffff</color>
+    <color name="light_pressed">#e5ffffff</color>
+    <color name="light_selected">#e5ffffff</color>
+    <color name="light_disabled">#aaa</color>
+
+    <color name="stable">#f8f8f8</color>
+    <color name="stable_pressed">#ffffff</color>
+    <color name="stable_selected">#ffffff</color>
+    <color name="stable_disabled">#aaa</color>
+
+    <color name="positive">#387ef5</color>
+    <color name="positive_pressed">#7aadff</color>
+    <color name="positive_selected">#7aadff</color>
+    <color name="positive_disabled">#aaa</color>
+
+    <color name="calm">#11c1f3</color>
+    <color name="calm_pressed">#6bf4ff</color>
+    <color name="calm_selected">#6bf4ff</color>
+    <color name="calm_disabled">#aaa</color>
+
+    <color name="balanced">#33cd5f</color>
+    <color name="balanced_pressed">#72ff8e</color>
+    <color name="balanced_selected">#72ff8e</color>
+    <color name="balanced_disabled">#aaa</color>
+
+    <color name="energized">#ffc900</color>
+    <color name="energized_pressed">#fffc50</color>
+    <color name="energized_selected">#fffc50</color>
+    <color name="energized_disabled">#aaa</color>
+
+    <color name="assertive">#ef473a</color>
+    <color name="assertive_pressed">#ff7b65</color>
+    <color name="assertive_selected">#ff7b65</color>
+    <color name="assertive_disabled">#aaa</color>
+
+    <color name="royal">#886aea</color>
+    <color name="royal_pressed">#bc99ff</color>
+    <color name="royal_selected">#bc99ff</color>
+    <color name="royal_disabled">#aaa</color>
+
+    <color name="dark">#444444</color>
+    <color name="dark_pressed">#6f6f6f</color>
+    <color name="dark_selected">#6f6f6f</color>
+    <color name="dark_disabled">#aaa</color>
+
+    <!--文字颜色-->
+    <color name="text_red">#e71a1c</color>
+    <color name="text_white">#ffffff</color>
+    <color name="text_dark">#000000</color>
+
+    <!--默认-->
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+</resources>

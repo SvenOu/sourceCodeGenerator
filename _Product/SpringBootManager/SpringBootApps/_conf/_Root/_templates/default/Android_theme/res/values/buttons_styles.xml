@@ -1,0 +1,22 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+           xmlns:tools="http://schemas.android.com/tools"
+           tools:ignore="MissingPrefix">
+    <style name="BUTTON">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/normal_btn_height</item>
+        <item name="android:padding">@dimen/normal_text_padding</item>
+        <item name="android:layout_margin">@dimen/normal_text_padding</item>
+    </style>
+    $muti-repeat1(buttonGroups){{
+    <style name="$(name-upCaseALL)" parent="$(parent-upCaseALL)"></style>
+    $muti-repeat1-1(colors){{
+    <style name="$(name-upCaseALL)" parent="$(parent-upCaseALL)">$mutirpif(background.indexOf('default') < 0){<item name="android:background">@drawable/$(background-lowerCaseALL)</item>$endmutirpif}</style>
+    $muti-repeat1-1-1(textColors){{
+    <style name="$(name-upCaseALL)" parent="$(parent-upCaseALL)">$mutirpif(textColor.indexOf('default') < 0){<item name="android:textColor">@color/$(textColor)</item>$endmutirpif}</style>
+    $muti-repeat1-1-1-1(fontFamilys){{
+    <style name="$(name-upCaseALL)" parent="$(parent-upCaseALL)">
+        $mutirpif(fontFamily.indexOf('default') < 0){<item name="fontPath">@string/$(fontFamily)</item>$endmutirpif}
+        <item name="android:textAllCaps">$(textAllCaps)</item>
+    </style>
+    $end1-1-1-1}} $end1-1-1}} $end1-1}} $end1}}
+</resources>

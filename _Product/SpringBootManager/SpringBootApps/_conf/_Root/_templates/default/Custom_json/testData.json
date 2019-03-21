@@ -29,6 +29,8 @@
     ],
     "testObject": {
         "testFileName": "I am single file",
+        "showA":"8",
+        "showB":"呵呵",
         "a": {
             "b": {
                 "testArray": [

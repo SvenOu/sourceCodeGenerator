@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <!--对应asset里面的字体文件-->
+   <string name="font_family_1" translatable="false">fonts/Futura_Bold.ttf</string>
+   <string name="font_family_2" translatable="false">fonts/Archer_Bold_Pro.otf</string>
+   <string name="font_family_3" translatable="false">fonts/Archer_Semibold_Pro.otf</string>
+   <string name="font_family_4" translatable="false">fonts/Archer_Medium_Pro.otf</string>
+   <string name="font_family_5" translatable="false">fonts/Sport_Script.ttf</string>
+
+   <!--字体大小-->
+   <dimen name="f1">10sp</dimen>
+   <dimen name="f2">14sp</dimen>
+   <dimen name="f3">16sp</dimen>
+   <dimen name="f4">17sp</dimen>
+   <dimen name="f5">18sp</dimen>
+   <dimen name="f6">19sp</dimen>
+   <dimen name="f7">20sp</dimen>
+   <dimen name="f8">21sp</dimen>
+   <dimen name="f9">23sp</dimen>
+   <dimen name="f10">24sp</dimen>
+   <dimen name="f11">27sp</dimen>
+   <dimen name="f12">28sp</dimen>
+   <dimen name="f13">62sp</dimen>
+</resources>

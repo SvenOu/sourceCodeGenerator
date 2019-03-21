@@ -8,11 +8,8 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="SpringBootManager.jar" size="41783" download="eager" />
-    <jar href="jackson-annotations-2.9.4.jar" size="66981" download="eager" />
-    <jar href="jackson-core-2.9.4.jar" size="320923" download="eager" />
-    <jar href="jackson-databind-2.9.4.jar" size="1345154" download="eager" />
+    <jar href="SpringBootManager.jar" size="1784098" download="eager" />
   </resources>
-  <jfx:javafx-desc  width="1200" height="600" main-class="main.Main"  name="SpringBootManager" />
+  <jfx:javafx-desc  width="1200" height="600" main-class="com.sven.springbootmanager.main.BootMangerApp"  name="SpringBootManager" />
   <update check="background"/>
 </jnlp>
