@@ -8,6 +8,7 @@ public enum DatasourceEnum {
      *
      */
     MSSQL("mssql", "net.sourceforge.jtds.jdbc.Driver", "jdbc:jtds:sqlserver://"),
+    MYSQL("mysql", "com.mysql.cj.jdbc.Driver", "jdbc:mysql://"),
     SQLITE("sqlite", "org.sqlite.JDBC", "jdbc:sqlite:"),
     CUSTOM_JSON("custom_json", "", "");
 

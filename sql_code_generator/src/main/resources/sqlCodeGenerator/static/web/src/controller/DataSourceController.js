@@ -207,6 +207,22 @@ Ext.define('CGT.controller.DataSourceController', {
                 m_dataSourceId: record.get('dataSourceId')
             };
             me.sqlRemoteConfigWindow.show();
+        }else if(type === 'mysql'){
+            if(me.sqlRemoteConfigWindow && me.sqlRemoteConfigWindow.isVisible(true)){
+                me.sqlRemoteConfigWindow.close();
+                return;
+            }
+            me.sqlRemoteConfigWindow = Ext.create('CGT.view.common.SqlRemoteConfigWindow');
+            me.sqlRemoteConfigWindow.contentValues = {
+                m_type: record.get('type'),
+                m_url: record.get('url').replace(/\s*jdbc:mysql:\/\/\s*/g,""),
+                m_username: record.get('username'),
+                m_password: record.get('password'),
+                m_exampleUrl:'localhost:3306/new_routines?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT',
+                m_urlEmptyText:'a db url',
+                m_dataSourceId: record.get('dataSourceId')
+            };
+            me.sqlRemoteConfigWindow.show();
         }
     },
     dataSourceDeleteBtnClick: function(view, rowIndex, colIndex, item, e, record, row){
@@ -273,7 +289,8 @@ Ext.define('CGT.controller.DataSourceController', {
             app.method.toastMsg("Message","user name require not empty");
             return false;
         }
-        if(me.getWinPassword().isVisible() &&!me.getWinPassword().isValid()){
+        if(me.getWinPassword().isVisible() &&!me.getWinPassword().isValid()
+            && me.getSqlRemoteConfigWindow().contentValues.m_type !== 'mysql'){
             app.method.toastMsg("Message","password require not empty");
             return false;
         }
@@ -338,6 +355,20 @@ Ext.define('CGT.controller.DataSourceController', {
                 m_username: '',
                 m_password: '',
                 m_exampleUrl:'sql30.easternphoenix.com:1433/ChurchsYMTC',
+                m_urlEmptyText:'a db url',
+            };
+            me.sqlRemoteConfigWindow.show();
+        }else if(dbType == 'mysql'){
+            if(me.sqlRemoteConfigWindow && me.sqlRemoteConfigWindow.isVisible(true)){
+                return;
+            }
+            me.sqlRemoteConfigWindow = Ext.create('CGT.view.common.SqlRemoteConfigWindow');
+            me.sqlRemoteConfigWindow.contentValues = {
+                m_type: dbType,
+                m_url: '',
+                m_username: '',
+                m_password: '',
+                m_exampleUrl:'localhost:3306/new_routines?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT',
                 m_urlEmptyText:'a db url',
             };
             me.sqlRemoteConfigWindow.show();

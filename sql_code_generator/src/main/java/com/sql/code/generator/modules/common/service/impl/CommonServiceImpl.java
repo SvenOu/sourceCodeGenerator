@@ -62,6 +62,10 @@ public class CommonServiceImpl implements CommonService {
     @Qualifier("mssql")
     private CodeGenerator sCodeGenerator;
 
+    @Autowired
+    @Qualifier("mysql")
+    private CodeGenerator mysqlCodeGenerator;
+
 
     @Autowired
     private TPEngine tpEngine;
@@ -88,7 +92,13 @@ public class CommonServiceImpl implements CommonService {
             url = DatasourceEnum.MSSQL.getUrlPrefix() + url;
             rootContext = sCodeGenerator.generateCodeModel(packageName, driverClassName, url, username, password);
             sCodeGenerator.generateCodeFiles(rootContext, getTplPath(codeTpl), path);
-        } else
+        }else
+            if (DatasourceEnum.MYSQL.getValue().equalsIgnoreCase(dataSource.getType())) {
+            url = DatasourceEnum.MYSQL.getUrlPrefix() + url;
+            rootContext = mysqlCodeGenerator.generateCodeModel(packageName, driverClassName, url, username, password);
+                mysqlCodeGenerator.generateCodeFiles(rootContext, getTplPath(codeTpl), path);
+        }
+        else
             if (DatasourceEnum.SQLITE.getValue().equalsIgnoreCase(dataSource.getType())) {
                 url = DatasourceEnum.SQLITE.getUrlPrefix() + fileService.getUserBaseRootPath() + url;
                 rootContext = codeGenerator.generateCodeModel(packageName, driverClassName, url, username, password);

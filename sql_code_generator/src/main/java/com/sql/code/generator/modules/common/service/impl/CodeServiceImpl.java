@@ -169,7 +169,8 @@ public class CodeServiceImpl implements CodeService {
 
     @Override
     public CommonResponse saveDbConfig(DataSource dataSource) {
-        if(!DatasourceEnum.MSSQL.getValue().equals(dataSource.getType())){
+        if(!DatasourceEnum.MSSQL.getValue().equals(dataSource.getType()) &&
+                !DatasourceEnum.MYSQL.getValue().equals(dataSource.getType()) ){
             throw new RuntimeException("do not support this type: " + dataSource.getType());
         }
         DataSource dbDataSource = null;
@@ -179,14 +180,22 @@ public class CodeServiceImpl implements CodeService {
         if(dbDataSource != null){
             dbDataSource.setUserName(dataSource.getUserName());
             dbDataSource.setPassword(dataSource.getPassword());
+            dbDataSource.setUrl(dataSource.getUrl());
             return CommonResponse.success(dataSourceDao.save(dbDataSource));
-        }else {
+        }else if(DatasourceEnum.MSSQL.getValue().equals(dataSource.getType())){
             dataSource.setDataSourceId(IdUtils.getId(DatasourceEnum.MSSQL.getValue()));
             dataSource.setDriveClass(DatasourceEnum.MSSQL.getDriveClass());
             dataSource.setLock(false);
             dataSource.setOwner(SecurityUtils.getCurrentUserDetails().getUsername());
             return CommonResponse.success(dataSourceDao.save(dataSource));
+        }else if(DatasourceEnum.MYSQL.getValue().equals(dataSource.getType())){
+            dataSource.setDataSourceId(IdUtils.getId(DatasourceEnum.MYSQL.getValue()));
+            dataSource.setDriveClass(DatasourceEnum.MYSQL.getDriveClass());
+            dataSource.setLock(false);
+            dataSource.setOwner(SecurityUtils.getCurrentUserDetails().getUsername());
+            return CommonResponse.success(dataSourceDao.save(dataSource));
         }
+        return null;
     }
 
     @Override

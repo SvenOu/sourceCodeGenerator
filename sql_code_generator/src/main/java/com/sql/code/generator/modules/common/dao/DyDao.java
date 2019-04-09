@@ -21,12 +21,18 @@ public class DyDao {
     protected String url;
     protected String username;
     protected String password;
+    protected String dataBaseName;
 
     public void configDyDao(String driverClassName, String url, String username, String password) {
         this.driverClassName = driverClassName;
         this.url = url;
         this.username = username;
         this.password = password;
+    }
+
+    public void configDyDao(String driverClassName, String url, String username, String password, String dataBaseName) {
+        configDyDao(driverClassName, url, username, password);
+        this.dataBaseName = dataBaseName;
     }
 
     public <T> List<T> queryForList(Class<T> mappedClass, String sql){
@@ -87,5 +93,13 @@ public class DyDao {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getDataBaseName() {
+        return dataBaseName;
+    }
+
+    public void setDataBaseName(String dataBaseName) {
+        this.dataBaseName = dataBaseName;
     }
 }
