@@ -1,6 +1,3 @@
-package ${{daoImplPackageName}};
-
-import ${{daoPackageName}}.${{daoClassName}};
 import java.lang.Exception;
 import java.lang.Override;
 import java.lang.String;
@@ -16,7 +13,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.util.StringUtils;
-import ${{voPackageName}}.${{voClassName}};
+import org.springframework.stereotype.Repository;
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+
 
 @Repository
 public class ${{daoImplClassName}} extends NamedParameterJdbcDaoSupport implements ${{daoClassName}} {
@@ -49,11 +49,11 @@ public class ${{daoImplClassName}} extends NamedParameterJdbcDaoSupport implemen
   }
 
   private static final String SQL_FIND_BY_KEY = "SELECT $tp-repeat(sqlFields-suffixNotIncludeEnd~, ){{$(name)}} FROM ${{voSqlName}} " +
-          " WHERE key = :key";
+          " WHERE key = :key LIMIT 1";
   @Override
   public ${{voClassName}} findByKey(String key) {
     try {
-      return this.getJdbcTemplate().queryForObject(SQL_FIND_BY_KEY + " LIMIT 1", ${{voSqlName-upCaseALL}}_ROW_MAPPER, key);
+      return this.getJdbcTemplate().queryForObject(SQL_FIND_BY_KEY, ${{voSqlName-upCaseALL}}_ROW_MAPPER, key);
     }
     catch(Exception e) {
       log.error("Error : " + e.getMessage());
