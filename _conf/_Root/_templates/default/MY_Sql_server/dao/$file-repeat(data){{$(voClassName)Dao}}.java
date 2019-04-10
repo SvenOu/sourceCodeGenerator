@@ -4,7 +4,6 @@ import java.lang.Object;
 import java.lang.String;
 import java.util.List;
 import java.util.Map;
-import ${{voPackageName}}.${{voClassName}};
 
 public interface ${{daoClassName}} {
   int insert(${{voClassName}} ${{voSqlName-underlineToCame}});

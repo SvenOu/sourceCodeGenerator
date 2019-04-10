@@ -49,11 +49,11 @@ public class ${{daoImplClassName}} extends NamedParameterJdbcDaoSupport implemen
   }
 
   private static final String SQL_FIND_BY_KEY = "SELECT $tp-repeat(sqlFields-suffixNotIncludeEnd~, ){{$(name)}} FROM ${{voSqlName}} " +
-          " WHERE key = :key LIMIT 1";
+          " WHERE key = :key";
   @Override
   public ${{voClassName}} findByKey(String key) {
     try {
-      return this.getJdbcTemplate().queryForObject(SQL_FIND_BY_KEY, ${{voSqlName-upCaseALL}}_ROW_MAPPER, key);
+      return this.getJdbcTemplate().queryForObject(SQL_FIND_BY_KEY + " LIMIT 1", ${{voSqlName-upCaseALL}}_ROW_MAPPER, key);
     }
     catch(Exception e) {
       log.error("Error : " + e.getMessage());
@@ -120,11 +120,11 @@ public class ${{daoImplClassName}} extends NamedParameterJdbcDaoSupport implemen
 
   private String getKeyByFields(String prefix, String[] fields) {
     StringBuilder sb = new StringBuilder(prefix);
-    for(String key : fields) {
-      if(!StringUtils.isEmpty(key)) {
+    for(String field : fields) {
+      if(!StringUtils.isEmpty(field)) {
         sb.append("+");
       }
-      sb.append(key);
+      sb.append(field);
     }
     return sb.toString();
   }
