@@ -10,18 +10,18 @@ import java.util.Date;
  * Created by sven-ou on 2017/2/16.
  */
 public enum MysqlServerWithJavaClassType {
-    BIT("bit", String.class), TINYINT("tinyint", int.class), BOOL("bool", boolean.class), BOOLEAN("boolean", boolean.class),
-    SMALLINT("smallint", int.class), MEDIUMINT("mediumint", int.class), INT("int", int.class), INTEGER("int", int.class),
+    BIT("bit", String.class), TINYINT("tinyint", Integer.class), BOOL("bool", Boolean.class), BOOLEAN("boolean", Boolean.class),
+    SMALLINT("smallint", Integer.class), MEDIUMINT("mediumint", Integer.class), INT("int", Integer.class), INTEGER("int", Integer.class),
     BIGINT("bigint", BigInteger.class), FLOAT("float", Float.class), DOUBLE("double", Double.class),
 
     DECIMAL("decimal", BigDecimal.class), DATE("date", Date.class), DATETIME("datetime", Date.class), TIMESTAMP("timestamp", Date.class),
     TIME("time", Time.class), YEAR("year", Date.class), CHAR("char", String.class),
-    VARCHAR("varchar", String.class), BINARY("binary", byte[].class),
+    VARCHAR("varchar", String.class), BINARY("binary", Byte[].class),
 
-    VARBINARY("varbinary", byte[].class), TINYBLOB("tinyblob", byte[].class), TINYTEXT("tinytext", String.class),
+    VARBINARY("varbinary", Byte[].class), TINYBLOB("tinyblob", Byte[].class), TINYTEXT("tinytext", String.class),
 
-    BLOB("blob", byte[].class), TEXT("text", String.class), MEDIUMBLOB("mediumblob", byte[].class),
-    MEDIUMTEXT("mediumtext", String.class), LONGBLOB("longblob", byte[].class),
+    BLOB("blob", Byte[].class), TEXT("text", String.class), MEDIUMBLOB("mediumblob", Byte[].class),
+    MEDIUMTEXT("mediumtext", String.class), LONGBLOB("longblob", Byte[].class),
 
     LONGTEXT("longtext", String.class), ENUM("enum", String.class), SET("set", String.class);
 
