@@ -12,7 +12,7 @@ import java.util.Date;
 public enum MysqlServerWithJavaClassType {
     BIT("bit", String.class), TINYINT("tinyint", int.class), BOOL("bool", boolean.class), BOOLEAN("boolean", boolean.class),
     SMALLINT("smallint", int.class), MEDIUMINT("mediumint", int.class), INT("int", int.class), INTEGER("int", int.class),
-    BIGINT("bigint", BigInteger.class), FLOAT("float", float.class), DOUBLE("double", double.class),
+    BIGINT("bigint", BigInteger.class), FLOAT("float", Float.class), DOUBLE("double", Double.class),
 
     DECIMAL("decimal", BigDecimal.class), DATE("date", Date.class), DATETIME("datetime", Date.class), TIMESTAMP("timestamp", Date.class),
     TIME("time", Time.class), YEAR("year", Date.class), CHAR("char", String.class),
