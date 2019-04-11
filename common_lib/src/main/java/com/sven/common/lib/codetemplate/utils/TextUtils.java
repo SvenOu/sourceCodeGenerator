@@ -31,11 +31,11 @@ public final class TextUtils {
         StringBuffer result = new StringBuffer();
         if (name != null && name.length() > 0) {
             result.append(name.substring(0, 1).toLowerCase());
-            for (int camelCaseName = 1; camelCaseName < name.length(); ++camelCaseName) {
-                String s = name.substring(camelCaseName, camelCaseName + 1);
+            for (int i = 1; i < name.length(); ++i) {
+                String s = name.substring(i, i + 1);
                 if (UNDERSCORE_CHAR.equals(s)) {
-                    s = name.substring(camelCaseName + 1, camelCaseName + 2).toUpperCase();
-                    ++camelCaseName;
+                    s = name.substring(i + 1, i + 2).toUpperCase();
+                    ++i;
                 }
 
                 result.append(s);

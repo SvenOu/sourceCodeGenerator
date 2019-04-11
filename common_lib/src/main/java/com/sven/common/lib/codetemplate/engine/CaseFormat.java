@@ -88,7 +88,10 @@ public class CaseFormat {
         StringBuilder sb = new StringBuilder(len);
         for (int i = 0; i < len; i++) {
             char c = param.charAt(i);
-            if (c == UNDERLINE) {
+            if (c == UNDERLINE && (
+                    (i + 1 < len) &&
+                            !Character.isDigit(param.charAt(i + 1)))
+            ) {
                 if (++i < len) {
                     sb.append(Character.toUpperCase(param.charAt(i)));
                 }
