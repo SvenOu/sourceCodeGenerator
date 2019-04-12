@@ -84,6 +84,9 @@ public class CaseFormat {
         if (param == null || "".equals(param.trim())) {
             return "";
         }
+        if(isNumeric(param)){
+            return "j_" + param;
+        }
         int len = param.length();
         StringBuilder sb = new StringBuilder(len);
         for (int i = 0; i < len; i++) {
@@ -174,5 +177,16 @@ public class CaseFormat {
         }else {
             return getKeyArrayFormatData((Map) curData, keyArray,  index);
         }
+    }
+
+    public static boolean isNumeric(String str)
+    {
+        for (char c : str.toCharArray())
+        {
+            if (!Character.isDigit(c)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

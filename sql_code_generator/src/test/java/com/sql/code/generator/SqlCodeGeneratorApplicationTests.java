@@ -2,7 +2,6 @@ package com.sql.code.generator;
 
 import com.sql.code.generator.modules.common.service.CodeGenerator;
 import com.sql.code.generator.modules.sqlite.dao.SqliteDao;
-import com.sql.code.generator.modules.common.composite.SqlType;
 import com.sven.common.lib.codetemplate.config.TPConfig;
 import com.sven.common.lib.codetemplate.dataBean.SourceFileInfo;
 import com.sql.code.generator.modules.common.service.CommonService;
