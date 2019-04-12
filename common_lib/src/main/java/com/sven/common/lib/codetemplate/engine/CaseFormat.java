@@ -84,7 +84,7 @@ public class CaseFormat {
         if (param == null || "".equals(param.trim())) {
             return "";
         }
-        if(isNumeric(param)){
+        if( Character.isDigit(param.charAt(0))){
             return "j_" + param;
         }
         int len = param.length();
@@ -177,16 +177,5 @@ public class CaseFormat {
         }else {
             return getKeyArrayFormatData((Map) curData, keyArray,  index);
         }
-    }
-
-    public static boolean isNumeric(String str)
-    {
-        for (char c : str.toCharArray())
-        {
-            if (!Character.isDigit(c)) {
-                return false;
-            }
-        }
-        return true;
     }
 }
