@@ -1,2 +1,0 @@
-${{title-lowerCaseFirst}}
-${{name-upCaseFirst}}
